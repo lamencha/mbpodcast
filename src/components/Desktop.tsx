@@ -1,16 +1,15 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { type ReactNode, useEffect, useRef, useState } from 'react';
 import './Desktop.css';
 
 interface DesktopProps {
   children: ReactNode;
   backgroundVideo: string;
-  onBackgroundChange: (video: string) => void;
+  onBackgroundChange?: (video: string) => void;
 }
 
-const Desktop: React.FC<DesktopProps> = ({ children, backgroundVideo, onBackgroundChange }) => {
+const Desktop: React.FC<DesktopProps> = ({ children, backgroundVideo }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoError, setVideoError] = useState(false);
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -38,7 +37,6 @@ const Desktop: React.FC<DesktopProps> = ({ children, backgroundVideo, onBackgrou
 
       const handleError = (e: Event) => {
         console.error('Video error:', e, backgroundVideo);
-        setVideoError(true);
         setVideoLoaded(false);
         
         // Set fallback background image

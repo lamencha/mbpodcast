@@ -13,7 +13,6 @@ interface WindowProps {
 }
 
 const Window: React.FC<WindowProps> = ({
-  id,
   title,
   content,
   position,

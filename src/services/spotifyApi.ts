@@ -62,7 +62,7 @@ class SpotifyAPI {
         this.accessToken = null;
       }, (data.expires_in - 60) * 1000); // Refresh 1 minute before expiry
 
-      return this.accessToken;
+      return this.accessToken!;
     } catch (error) {
       console.error('Error getting Spotify access token:', error);
       throw error;

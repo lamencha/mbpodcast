@@ -26,7 +26,6 @@ function App() {
   const [windows, setWindows] = useState<WindowData[]>([]);
   const [backgroundVideo, setBackgroundVideo] = useState('/brand_assets/PodcastVideo.mp4');
   const [spotifyPlaylist, setSpotifyPlaylist] = useState<Track[]>([]);
-  const [isLoadingPlaylist, setIsLoadingPlaylist] = useState(true);
 
   const spotifyApi = new SpotifyAPI();
   const playlistUrl = 'https://open.spotify.com/playlist/0Xcz3hthquSf6HBXOYaGYg?si=Tm5cEcZ0SCSsFF-kUFDQaQ&pi=DL1meuZxR8-J8&nd=1&dlsi=0ea8f883c7b64594';
@@ -34,7 +33,6 @@ function App() {
   useEffect(() => {
     const loadPlaylist = async () => {
       try {
-        setIsLoadingPlaylist(true);
         const playlistId = SpotifyAPI.extractPlaylistId(playlistUrl);
         if (playlistId) {
           const tracks = await spotifyApi.getPlaylist(playlistId);
@@ -59,8 +57,6 @@ function App() {
           { name: "Stay", artist: "The Kid LAROI, Justin Bieber", duration: "2:21", id: "4" },
           { name: "Good 4 U", artist: "Olivia Rodrigo", duration: "2:58", id: "5" }
         ]);
-      } finally {
-        setIsLoadingPlaylist(false);
       }
     };
 

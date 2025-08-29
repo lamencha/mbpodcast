@@ -17,11 +17,10 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(50);
-  const [batteryLevel, setBatteryLevel] = useState(85);
+  const [batteryLevel] = useState(85);
   const menuItemsRef = useRef<HTMLDivElement>(null);
   const lastClickTimeRef = useRef<number>(0);
-  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const clickTimeoutRef = useRef<number | null>(null);
 
   const menuItems = [
     { name: 'Music' },
@@ -102,7 +101,7 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
     if (timeDifference < 300) {
       // Double-click detected - go back to previous screen regardless of position
       if (clickTimeoutRef.current) {
-        clearTimeout(clickTimeoutRef.current);
+        window.clearTimeout(clickTimeoutRef.current!);
         clickTimeoutRef.current = null;
       }
       
@@ -181,7 +180,7 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
   useEffect(() => {
     return () => {
       if (clickTimeoutRef.current) {
-        clearTimeout(clickTimeoutRef.current);
+        window.clearTimeout(clickTimeoutRef.current!);
       }
     };
   }, []);
