@@ -1,0 +1,45 @@
+:root {
+  --primary-green: #9aff00;
+  --primary-pink: #ff00ff;
+  --dark-bg: #0a0a0a;
+  --window-bg: rgba(20, 20, 20, 0.95);
+  --border-glow: rgba(154, 255, 0, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: var(--dark-bg);
+  color: #fff;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+  font-family: inherit;
+}
+
+button:focus {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
+}
+
+a {
+  color: var(--primary-green);
+  text-decoration: none;
+}
+
+a:hover {
+  text-shadow: 0 0 10px var(--primary-green);
+}

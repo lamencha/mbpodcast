@@ -1,0 +1,18 @@
+# Dependencies
+node_modules
+/.pnp
+.pnp.js
+
+# Production
+/dist
+/build
+
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Large media files
+*.mp4
+public/brand_assets/PodcastVideo4k.mp4

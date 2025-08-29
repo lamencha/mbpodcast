@@ -1,0 +1,370 @@
+.ipod-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+  padding: 20px;
+}
+
+.ipod-body {
+  width: 220px;
+  height: 380px;
+  background: linear-gradient(145deg, #ffffff, #f5f5f5);
+  border-radius: 25px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  position: relative;
+}
+
+.ipod-screen {
+  width: 190px;
+  height: 140px;
+  background: #000;
+  border-radius: 8px;
+  border: 2px solid #333;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.screen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  background: linear-gradient(180deg, #1a1a1a, #000);
+  color: #fff;
+  font-size: 9px;
+  font-family: 'Helvetica', sans-serif;
+}
+
+.screen-title {
+  flex: 1;
+  text-align: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.battery {
+  width: 20px;
+  height: 8px;
+  border: 1px solid #fff;
+  border-radius: 1px;
+  position: relative;
+}
+
+.battery::after {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: 2px;
+  width: 1px;
+  height: 4px;
+  background: #fff;
+  border-radius: 0 1px 1px 0;
+}
+
+.battery-level {
+  height: 100%;
+  background: linear-gradient(90deg, #00ff00, #ffff00, #ff0000);
+  border-radius: 1px;
+  transition: width 0.3s ease;
+}
+
+.time {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.screen-content {
+  height: calc(100% - 20px);
+  color: #fff;
+  font-family: 'Helvetica', sans-serif;
+  font-size: 11px;
+}
+
+.ipod-menu {
+  height: 100%;
+  padding: 8px;
+}
+
+.ipod-title {
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 4px;
+}
+
+.menu-items {
+  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer/Edge */
+}
+
+.menu-items::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 3px 6px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  margin-bottom: 1px;
+}
+
+.menu-item.selected {
+  background: linear-gradient(90deg, #0066cc, #004499);
+  color: #fff;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-item.selected:hover {
+  background: linear-gradient(90deg, #0077dd, #0055aa);
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 10px;
+}
+
+.menu-arrow {
+  font-size: 8px;
+  color: #888;
+}
+
+.menu-item.selected .menu-arrow {
+  color: #fff;
+}
+
+.track-item {
+  flex-direction: column;
+  align-items: stretch;
+  padding: 4px 6px;
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.track-name {
+  font-size: 10px;
+  font-weight: bold;
+  margin-bottom: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-artist {
+  font-size: 9px;
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-duration {
+  font-size: 9px;
+  color: #888;
+  align-self: flex-end;
+}
+
+.playlist-items {
+  padding-right: 4px;
+}
+
+.now-playing {
+  height: 100%;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.track-artwork {
+  text-align: center;
+  font-size: 24px;
+  background: linear-gradient(135deg, #333, #111);
+  border-radius: 4px;
+  padding: 16px;
+  margin: 8px 0;
+}
+
+.track-details {
+  text-align: center;
+  margin: 6px 0;
+}
+
+.current-track-name {
+  font-size: 11px;
+  font-weight: bold;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.current-track-artist {
+  font-size: 9px;
+  color: #aaa;
+}
+
+.playback-controls {
+  margin: 6px 0;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 2px;
+  background: #333;
+  border-radius: 1px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0066cc, #004499);
+  transition: width 0.3s ease;
+}
+
+.time-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  color: #888;
+}
+
+.play-status {
+  text-align: center;
+  font-size: 9px;
+  color: #ccc;
+}
+
+.ipod-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.click-wheel {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #f8f8f8, #e8e8e8);
+  border: 2px solid #ddd;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.control-button {
+  position: absolute;
+  background: transparent;
+  border: none;
+  font-size: 8px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.control-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+.control-button:focus {
+  outline: none;
+}
+
+.menu-btn {
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 7px;
+  letter-spacing: 0.5px;
+}
+
+.prev-btn {
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+}
+
+.next-btn {
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+}
+
+.play-btn {
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+}
+
+.center-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #f0f0f0, #d0d0d0);
+  border: 1px solid #ccc;
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  outline: none;
+}
+
+.center-button:hover {
+  background: linear-gradient(145deg, #f5f5f5, #d5d5d5);
+}
+
+.center-button:focus {
+  outline: none;
+}
+
+.center-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  border: 1px solid #e0e0e0;
+  margin: auto;
+}
