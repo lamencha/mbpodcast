@@ -137,62 +137,8 @@ function App() {
         });
       }
     } else if (buttonNumber === 3) {
-      // OSRS Noob themed window
-      const windowTitle = "OSRS Noob";
-      const existingWindow = windows.find(w => w.title === windowTitle);
-      
-      if (existingWindow) {
-        if (existingWindow.isMinimized) {
-          updateWindow(existingWindow.id, { isMinimized: false });
-        } else {
-          updateWindow(existingWindow.id, { isMinimized: true });
-        }
-      } else {
-        openWindow({
-          title: windowTitle,
-          content: (
-            <div className="osrs-window">
-              <div className="osrs-header">
-                <h2>🏰 Old School RuneScape Tools</h2>
-                <p>Your ultimate OSRS companion</p>
-              </div>
-              <div className="osrs-content">
-                <div className="osrs-features">
-                  <div className="feature-card">
-                    <span className="feature-icon">📊</span>
-                    <h3>XP Calculators</h3>
-                    <p>Track your skill progression</p>
-                  </div>
-                  <div className="feature-card">
-                    <span className="feature-icon">💰</span>
-                    <h3>GP Trackers</h3>
-                    <p>Monitor your wealth</p>
-                  </div>
-                  <div className="feature-card">
-                    <span className="feature-icon">🗺️</span>
-                    <h3>Quest Guides</h3>
-                    <p>Complete every quest</p>
-                  </div>
-                  <div className="feature-card">
-                    <span className="feature-icon">⚔️</span>
-                    <h3>Combat Tools</h3>
-                    <p>Optimize your battles</p>
-                  </div>
-                </div>
-                <button 
-                  className="osrs-launch-btn"
-                  onClick={() => window.open('https://osrsnoob.vercel.app/', '_blank', 'noopener,noreferrer')}
-                >
-                  🚀 Launch OSRS Noob Tools
-                </button>
-              </div>
-            </div>
-          ),
-          position: { x: 150, y: 50 },
-          size: { width: 500, height: 400 },
-          isMinimized: false,
-        });
-      }
+      // OSRS Noob website - open in new tab due to CSP restrictions
+      window.open('https://osrsnoob.vercel.app/', '_blank', 'noopener,noreferrer');
     } else {
       // Other placeholder windows
       const windowTitle = `App ${buttonNumber}`;
