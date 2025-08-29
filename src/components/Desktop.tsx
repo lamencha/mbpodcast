@@ -40,6 +40,15 @@ const Desktop: React.FC<DesktopProps> = ({ children, backgroundVideo, onBackgrou
         console.error('Video error:', e, backgroundVideo);
         setVideoError(true);
         setVideoLoaded(false);
+        
+        // Set fallback background image
+        const desktop = video.parentElement as HTMLDivElement;
+        if (desktop) {
+          desktop.style.backgroundImage = 'url(/brand_assets/PodcastBg.jpg)';
+          desktop.style.backgroundSize = 'cover';
+          desktop.style.backgroundPosition = 'center';
+          desktop.style.backgroundRepeat = 'no-repeat';
+        }
       };
 
       const handleLoadStart = () => {

@@ -24,7 +24,7 @@ interface Track {
 
 function App() {
   const [windows, setWindows] = useState<WindowData[]>([]);
-  const [backgroundVideo, setBackgroundVideo] = useState('/brand_assets/PodcastVideo4k.mp4');
+  const [backgroundVideo, setBackgroundVideo] = useState('/brand_assets/PodcastVideo.mp4');
   const [spotifyPlaylist, setSpotifyPlaylist] = useState<Track[]>([]);
   const [isLoadingPlaylist, setIsLoadingPlaylist] = useState(true);
 
