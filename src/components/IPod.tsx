@@ -6,6 +6,7 @@ interface Track {
   artist: string;
   duration: string;
   id: string;
+  videoId?: string;
 }
 
 interface IPodProps {
@@ -54,6 +55,7 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
       if (playlist[selectedIndex]) {
         setCurrentTrack(playlist[selectedIndex]);
         setCurrentScreen('nowplaying');
+        setIsPlaying(true); // Auto-play when song is selected
       }
     } else if (currentScreen === 'nowplaying') {
       setIsPlaying(!isPlaying);
@@ -244,7 +246,22 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
       case 'nowplaying':
         return (
           <div className="now-playing">
-            <div className="track-artwork">♫</div>
+            {currentTrack?.videoId ? (
+              <div className="ipod-video-player">
+                <iframe
+                  width="100%"
+                  height="120"
+                  src={`https://www.youtube.com/embed/${currentTrack.videoId}?autoplay=${isPlaying ? 1 : 0}&rel=0&modestbranding=1&enablejsapi=1&mute=0`}
+                  title={currentTrack.name}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ borderRadius: '4px' }}
+                />
+              </div>
+            ) : (
+              <div className="track-artwork">♫</div>
+            )}
             <div className="track-details">
               <div className="current-track-name">{currentTrack?.name}</div>
               <div className="current-track-artist">{currentTrack?.artist}</div>
@@ -254,12 +271,12 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
                 <div className="progress-fill" style={{ width: '35%' }}></div>
               </div>
               <div className="time-info">
-                <span>1:23</span>
+                <span>0:00</span>
                 <span>{currentTrack?.duration}</span>
               </div>
             </div>
             <div className="play-status">
-              {isPlaying ? '⏸️ Playing' : '▶️ Paused'}
+              {isPlaying ? '⏸️ Playing' : '▶️ Ready'}
             </div>
           </div>
         );

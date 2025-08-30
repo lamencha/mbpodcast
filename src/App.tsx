@@ -3,7 +3,7 @@ import Desktop from './components/Desktop';
 import Sidebar from './components/Sidebar';
 import Window from './components/Window';
 import IPod from './components/IPod';
-import SpotifyAPI from './services/spotifyApi';
+import { YouTubePlaylistService } from './services/youtubePlaylistService';
 import './App.css';
 
 interface WindowData {
@@ -20,48 +20,42 @@ interface Track {
   artist: string;
   duration: string;
   id: string;
+  videoId?: string;
 }
 
 function App() {
   const [windows, setWindows] = useState<WindowData[]>([]);
   const [backgroundVideo, setBackgroundVideo] = useState('/brand_assets/PodcastVideo.mp4');
-  const [spotifyPlaylist, setSpotifyPlaylist] = useState<Track[]>([]);
+  const [youtubePlaylist, setYoutubePlaylist] = useState<Track[]>([]);
+  const [isLoadingPlaylist, setIsLoadingPlaylist] = useState(true);
+  
+  // Your YouTube playlist URL
+  const playlistUrl = 'https://www.youtube.com/playlist?list=PLxbvPE06_NH8YemvEqC9_5IXnydp9s2v7';
 
-  const spotifyApi = new SpotifyAPI();
-  const playlistUrl = 'https://open.spotify.com/playlist/0Xcz3hthquSf6HBXOYaGYg?si=Tm5cEcZ0SCSsFF-kUFDQaQ&pi=DL1meuZxR8-J8&nd=1&dlsi=0ea8f883c7b64594';
-
+  // Load playlist data on component mount (only once)
   useEffect(() => {
     const loadPlaylist = async () => {
+      setIsLoadingPlaylist(true);
       try {
-        const playlistId = SpotifyAPI.extractPlaylistId(playlistUrl);
-        if (playlistId) {
-          const tracks = await spotifyApi.getPlaylist(playlistId);
-          setSpotifyPlaylist(tracks);
-        } else {
-          // Fallback if playlist ID extraction fails
-          setSpotifyPlaylist([
-            { name: "Anti-Hero", artist: "Taylor Swift", duration: "3:20", id: "1" },
-            { name: "As It Was", artist: "Harry Styles", duration: "2:47", id: "2" },
-            { name: "Heat Waves", artist: "Glass Animals", duration: "3:58", id: "3" },
-            { name: "Stay", artist: "The Kid LAROI, Justin Bieber", duration: "2:21", id: "4" },
-            { name: "Good 4 U", artist: "Olivia Rodrigo", duration: "2:58", id: "5" }
-          ]);
-        }
+        const playlistData = await YouTubePlaylistService.fetchPlaylistData(playlistUrl);
+        setYoutubePlaylist(playlistData);
+        console.log('Loaded playlist:', playlistData);
       } catch (error) {
-        console.error('Failed to load Spotify playlist:', error);
-        // Use fallback playlist on error
-        setSpotifyPlaylist([
-          { name: "Anti-Hero", artist: "Taylor Swift", duration: "3:20", id: "1" },
-          { name: "As It Was", artist: "Harry Styles", duration: "2:47", id: "2" },
-          { name: "Heat Waves", artist: "Glass Animals", duration: "3:58", id: "3" },
-          { name: "Stay", artist: "The Kid LAROI, Justin Bieber", duration: "2:21", id: "4" },
-          { name: "Good 4 U", artist: "Olivia Rodrigo", duration: "2:58", id: "5" }
-        ]);
+        console.error('Failed to load playlist:', error);
+        // Use fallback data - this should not happen since we're using static data
+        const fallbackData = [
+          { name: "DISTANT - The Undying", artist: "Century Media Records", duration: "5:08", id: "1", videoId: "_8mRmkERONI" },
+          { name: "dying in designer - LimeWire", artist: "dying in designer", duration: "2:21", id: "2", videoId: "biQt4ApSz80" },
+          { name: "Bloom - Withered", artist: "Pure Noise Records", duration: "3:47", id: "3", videoId: "hf2DK1Ic1qA" }
+        ];
+        setYoutubePlaylist(fallbackData);
+      } finally {
+        setIsLoadingPlaylist(false);
       }
     };
 
     loadPlaylist();
-  }, []);
+  }, []); // Empty dependency array - only run once on mount
 
   const openWindow = (window: Omit<WindowData, 'id'>) => {
     const newWindow: WindowData = {
@@ -126,7 +120,19 @@ function App() {
       } else {
         openWindow({
           title: windowTitle,
-          content: <IPod playlist={spotifyPlaylist} />,
+          content: isLoadingPlaylist ? (
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              height: '100%', 
+              color: '#fff' 
+            }}>
+              Loading playlist...
+            </div>
+          ) : (
+            <IPod playlist={youtubePlaylist} />
+          ),
           position: { x: 200, y: 80 },
           size: { width: 300, height: 450 },
           isMinimized: false,
