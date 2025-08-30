@@ -26,6 +26,7 @@ const Window: React.FC<WindowProps> = ({
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isMinimizing, setIsMinimizing] = useState(false);
   const windowRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget || (e.target as HTMLElement).className === 'window-title') {
@@ -34,16 +35,26 @@ const Window: React.FC<WindowProps> = ({
         x: e.clientX - position.x,
         y: e.clientY - position.y,
       });
+      // Prevent text selection during drag
+      e.preventDefault();
     }
   }, [position]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (isDragging) {
-      onUpdate({
-        position: {
-          x: e.clientX - dragOffset.x,
-          y: e.clientY - dragOffset.y,
-        },
+      // Cancel any pending animation frame
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+      
+      // Use requestAnimationFrame for smooth updates
+      rafRef.current = requestAnimationFrame(() => {
+        onUpdate({
+          position: {
+            x: e.clientX - dragOffset.x,
+            y: e.clientY - dragOffset.y,
+          },
+        });
       });
     }
   }, [isDragging, dragOffset, onUpdate]);
@@ -51,6 +62,11 @@ const Window: React.FC<WindowProps> = ({
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
     setIsResizing(false);
+    // Cancel any pending animation frame
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    }
   }, []);
 
   React.useEffect(() => {
@@ -63,6 +79,15 @@ const Window: React.FC<WindowProps> = ({
       };
     }
   }, [isDragging, isResizing, handleMouseMove, handleMouseUp]);
+
+  // Cleanup animation frame on unmount
+  React.useEffect(() => {
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, []);
 
   const handleMinimize = () => {
     setIsMinimizing(true);
@@ -77,13 +102,13 @@ const Window: React.FC<WindowProps> = ({
   return (
     <div
       ref={windowRef}
-      className={`window ${isMinimizing ? 'minimizing' : ''}`}
+      className={`window ${isMinimizing ? 'minimizing' : ''} ${isDragging ? 'dragging' : ''}`}
       style={{
-        left: position.x,
-        top: position.y,
+        '--window-x': `${position.x}px`,
+        '--window-y': `${position.y}px`,
         width: size.width,
         height: size.height,
-      }}
+      } as React.CSSProperties}
     >
       <div className="window-header" onMouseDown={handleMouseDown}>
         <div className="window-controls">

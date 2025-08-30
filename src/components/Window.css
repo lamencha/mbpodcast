@@ -10,8 +10,17 @@
   min-width: 300px;
   min-height: 200px;
   user-select: none;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform-origin: center bottom;
+  /* Use CSS variables for positioning to avoid conflicts with animations */
+  transform: translate(var(--window-x, 0), var(--window-y, 0));
+}
+
+/* Add dragging state to disable expensive effects during drag */
+.window.dragging {
+  backdrop-filter: none;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  will-change: transform;
+  transform: translate(var(--window-x, 0), var(--window-y, 0)) translate3d(0, 0, 0); /* Force hardware acceleration */
 }
 
 .window.minimizing {
@@ -20,15 +29,15 @@
 
 @keyframes minimizeWindow {
   0% {
-    transform: scale(1) translateY(0);
+    transform: translate(var(--window-x, 0), var(--window-y, 0)) scale(1);
     opacity: 1;
   }
   50% {
-    transform: scale(0.8) translateY(20px);
+    transform: translate(var(--window-x, 0), calc(var(--window-y, 0) + 20px)) scale(0.8);
     opacity: 0.7;
   }
   100% {
-    transform: scale(0.1) translateY(100vh);
+    transform: translate(var(--window-x, 0), 100vh) scale(0.1);
     opacity: 0;
   }
 }
