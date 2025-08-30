@@ -251,7 +251,7 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
                 <iframe
                   width="100%"
                   height="120"
-                  src={`https://www.youtube.com/embed/${currentTrack.videoId}?autoplay=${isPlaying ? 1 : 0}&rel=0&modestbranding=1&enablejsapi=1&mute=0`}
+                  src={`https://www.youtube.com/embed/${currentTrack.videoId}?autoplay=${isPlaying ? 1 : 0}&rel=0&modestbranding=1&mute=0`}
                   title={currentTrack.name}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
