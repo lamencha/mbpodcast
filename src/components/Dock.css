@@ -1,0 +1,272 @@
+/* Flat Tile Dock - Matching Window Style */
+.dock-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.dock {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  pointer-events: all;
+  animation: dockSlideUp 0.8s ease-out;
+  padding: 0;
+}
+
+@keyframes dockSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Remove dock background - individual tiles now */
+.dock-background {
+  display: none;
+}
+
+/* Flat Tile Container */
+.dock-content {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 0;
+  position: relative;
+}
+
+/* Flat Tile Buttons - Window Style */
+.dock-item {
+  position: relative;
+  width: 80px;
+  height: 90px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  animation: dockItemFadeIn 0.6s ease-out;
+  animation-delay: var(--item-delay);
+  animation-fill-mode: both;
+  transform: skewX(-12deg);
+  transition: filter 0.3s ease-out, all 0.3s ease;
+  transform-origin: bottom center;
+}
+
+@keyframes dockItemFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8) skewX(-12deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) skewX(-12deg);
+  }
+}
+
+/* Transparent Tile Background with Border */
+.dock-item-background {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  border: 2px solid #9aff00;
+  border-radius: 12px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 
+              0 0 0 1px rgba(255, 255, 255, 0.1),
+              0 0 20px rgba(154, 255, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+/* Animated Background Fill */
+.dock-item-background::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
+  background: linear-gradient(135deg, 
+    rgba(20, 20, 20, 0.95) 0%, 
+    rgba(25, 25, 25, 0.98) 50%,
+    rgba(20, 20, 20, 0.95) 100%);
+  border-radius: 10px;
+  transition: height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: -1;
+}
+
+/* Material Icons Styling */
+.dock-item-icon {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 28px;
+  color: #9aff00;
+  z-index: 3;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: none;
+  text-shadow: 0 0 10px rgba(154, 255, 0, 0.5);
+  margin-top: 8px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  
+  /* Support for all WebKit browsers */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome */
+  text-rendering: optimizeLegibility;
+  /* Support for Firefox */
+  -moz-osx-font-smoothing: grayscale;
+  /* Support for IE */
+  font-feature-settings: 'liga';
+}
+
+/* Tile Text Label */
+.dock-item-label {
+  color: #9aff00;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  z-index: 3;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-shadow: 0 0 10px rgba(154, 255, 0, 0.5);
+  margin-bottom: 8px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Hover Effects - Keep Skewed */
+.dock-item:hover {
+  transform: skewX(-12deg) !important;
+  filter: drop-shadow(0 10px 30px rgba(154, 255, 0, 0.3));
+}
+
+.dock-item:hover .dock-item-background {
+  border-color: #b4ff1a;
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.4), 
+    0 0 0 1px rgba(255, 255, 255, 0.15),
+    0 0 30px rgba(154, 255, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Active State - App is Open */
+.dock-item.active .dock-item-background::after {
+  height: 100%;
+}
+
+/* Closing State - App is Closing */
+.dock-item.closing .dock-item-background::after {
+  height: 0%;
+  transition: height 0.4s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.dock-item:hover .dock-item-icon {
+  color: #b4ff1a;
+  text-shadow: 0 0 15px rgba(154, 255, 0, 0.8);
+  transform: scale(1.05);
+}
+
+.dock-item:hover .dock-item-label {
+  color: #b4ff1a;
+  text-shadow: 0 0 15px rgba(154, 255, 0, 0.8);
+}
+
+/* Tile Click Animation */
+.dock-item-clicked {
+  animation: tileClick 0.2s ease-out;
+}
+
+@keyframes tileClick {
+  0% { 
+    transform: skewX(-12deg) scale(1); 
+  }
+  50% { 
+    transform: skewX(-12deg) scale(0.96); 
+  }
+  100% { 
+    transform: skewX(-12deg) scale(1); 
+  }
+}
+
+/* Subtle Tile Glow */
+.dock-item-glow {
+  position: absolute;
+  inset: -4px;
+  background: radial-gradient(circle at center, 
+    rgba(154, 255, 0, 0.1) 0%, 
+    transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+  border-radius: 16px;
+}
+
+.dock-item:hover .dock-item-glow {
+  opacity: 1;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dock-container {
+    bottom: 12px;
+  }
+  
+  .dock-item {
+    width: 70px;
+    height: 80px;
+  }
+  
+  .dock-item-icon {
+    font-size: 24px;
+  }
+  
+  .dock-item-label {
+    font-size: 10px;
+  }
+  
+  .dock-content {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dock-container {
+    bottom: 8px;
+  }
+  
+  .dock-item {
+    width: 60px;
+    height: 70px;
+  }
+  
+  .dock-item-icon {
+    font-size: 22px;
+  }
+  
+  .dock-item-label {
+    font-size: 9px;
+  }
+  
+  .dock-content {
+    gap: 6px;
+  }
+}
+

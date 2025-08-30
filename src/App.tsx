@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Desktop from './components/Desktop';
-import Sidebar from './components/Sidebar';
+import Dock from './components/Dock';
 import Window from './components/Window';
 import IPod from './components/IPod';
+import MenuBar from './components/MenuBar';
 import { YouTubePlaylistService } from './services/youtubePlaylistService';
 import './App.css';
 
@@ -28,6 +29,8 @@ function App() {
   const [backgroundVideo, setBackgroundVideo] = useState('/brand_assets/PodcastVideo.mp4');
   const [youtubePlaylist, setYoutubePlaylist] = useState<Track[]>([]);
   const [isLoadingPlaylist, setIsLoadingPlaylist] = useState(true);
+  const [activeApp, setActiveApp] = useState('Finder');
+  const [showAbout, setShowAbout] = useState(false);
   
   // Your YouTube playlist URL
   const playlistUrl = 'https://www.youtube.com/playlist?list=PLxbvPE06_NH8YemvEqC9_5IXnydp9s2v7';
@@ -139,8 +142,37 @@ function App() {
         });
       }
     } else if (buttonNumber === 3) {
-      // OSRS Noob website - open in new tab due to CSP restrictions
-      window.open('https://osrsnoob.vercel.app/', '_blank', 'noopener,noreferrer');
+      // OSRS Noob website - open in app window
+      const windowTitle = "OSRS Noob";
+      const existingWindow = windows.find(w => w.title === windowTitle);
+      
+      if (existingWindow) {
+        if (existingWindow.isMinimized) {
+          updateWindow(existingWindow.id, { isMinimized: false });
+        } else {
+          updateWindow(existingWindow.id, { isMinimized: true });
+        }
+      } else {
+        openWindow({
+          title: windowTitle,
+          content: (
+            <div className="website-embed">
+              <iframe
+                src="https://osrsnoob.vercel.app/"
+                title="OSRS Noob Website"
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+              />
+            </div>
+          ),
+          position: { x: 120, y: 60 },
+          size: { width: 800, height: 600 },
+          isMinimized: false,
+        });
+      }
     } else {
       // Other placeholder windows
       const windowTitle = `App ${buttonNumber}`;
@@ -181,8 +213,133 @@ function App() {
     }
   };
 
+  // Update active app based on windows
+  useEffect(() => {
+    const hasIPod = windows.some(w => w.title === 'Classic iPod');
+    const hasYouTube = windows.some(w => w.title === 'Maidenless Behavior Playlist');
+    
+    if (hasIPod) {
+      setActiveApp('Classic iPod');
+    } else if (hasYouTube) {
+      setActiveApp('Maidenless Behavior');
+    } else if (windows.length > 0) {
+      setActiveApp(windows[windows.length - 1].title);
+    } else {
+      setActiveApp('Finder');
+    }
+  }, [windows]);
+
+  // Handle menu bar actions
+  const handleMenuAction = (action: string) => {
+    switch (action) {
+      case 'about':
+        setShowAbout(true);
+        break;
+      case 'new-window':
+        // Open a new placeholder window
+        togglePlaceholderWindow(4);
+        break;
+      case 'close-window':
+        if (windows.length > 0) {
+          closeWindow(windows[windows.length - 1].id);
+        }
+        break;
+      case 'minimize':
+        if (windows.length > 0) {
+          const lastWindow = windows[windows.length - 1];
+          updateWindow(lastWindow.id, { isMinimized: true });
+        }
+        break;
+      case 'focus-ipod':
+        const ipodWindow = windows.find(w => w.title === 'Classic iPod');
+        if (ipodWindow) {
+          updateWindow(ipodWindow.id, { isMinimized: false });
+        } else {
+          togglePlaceholderWindow(2);
+        }
+        break;
+      case 'focus-youtube':
+        const youtubeWindow = windows.find(w => w.title === 'Maidenless Behavior Playlist');
+        if (youtubeWindow) {
+          updateWindow(youtubeWindow.id, { isMinimized: false });
+        } else {
+          toggleYouTubePlaylist();
+        }
+        break;
+      case 'bring-all-front':
+        // Unminimize all windows
+        windows.forEach(window => {
+          if (window.isMinimized) {
+            updateWindow(window.id, { isMinimized: false });
+          }
+        });
+        break;
+      default:
+        console.log('Menu action:', action);
+    }
+  };
+
+  // About dialog component
+  const AboutDialog = () => showAbout ? (
+    <div 
+      className="about-overlay"
+      onClick={() => setShowAbout(false)}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 2000
+      }}
+    >
+      <div 
+        className="about-dialog"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: 'white',
+          padding: '40px',
+          borderRadius: '12px',
+          textAlign: 'center',
+          minWidth: '300px',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+        }}
+      >
+        <div style={{ fontSize: '64px', marginBottom: '16px' }}>🎵</div>
+        <h2 style={{ margin: '0 0 8px 0', color: '#333' }}>Maidenless Behavior</h2>
+        <p style={{ margin: '0 0 16px 0', color: '#666' }}>
+          A dynamic podcast landing page showcasing AI technology through interactive design.
+        </p>
+        <p style={{ margin: '0 0 24px 0', color: '#999', fontSize: '14px' }}>
+          Built with React, TypeScript, and modern web technologies.
+        </p>
+        <button 
+          onClick={() => setShowAbout(false)}
+          style={{
+            background: '#007AFF',
+            color: 'white',
+            border: 'none',
+            padding: '8px 24px',
+            borderRadius: '6px',
+            cursor: 'pointer'
+          }}
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  ) : null;
+
   return (
     <div className="app">
+      <MenuBar 
+        activeApp={activeApp}
+        onMenuAction={handleMenuAction}
+      />
       <Desktop backgroundVideo={backgroundVideo} onBackgroundChange={setBackgroundVideo}>
         {windows.map(window => (
           <Window
@@ -193,10 +350,12 @@ function App() {
           />
         ))}
       </Desktop>
-      <Sidebar 
+      <Dock 
         onYouTubeClick={toggleYouTubePlaylist}
         onPlaceholderClick={togglePlaceholderWindow}
+        openWindows={windows.map(w => w.title)}
       />
+      <AboutDialog />
     </div>
   );
 }
