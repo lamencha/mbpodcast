@@ -1,25 +1,25 @@
-/* macOS Menu Bar Styling */
+/* Themed Menu Bar - Dark Green Cyber Style */
 .menubar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 28px;
-  background: rgba(246, 246, 246, 0.85);
+  height: 36px;
+  background: rgba(10, 20, 10, 0.95);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 2px solid #9aff00;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 13px;
-  font-weight: 400;
+  font-family: 'Courier New', 'Monaco', monospace;
+  font-size: 14px;
+  font-weight: 600;
   z-index: 1000;
-  color: #333;
+  color: #9aff00;
   user-select: none;
-  padding: 0 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 0 16px;
+  box-shadow: 0 2px 8px rgba(154, 255, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .menubar-left {
@@ -48,53 +48,59 @@
 }
 
 .menu-title {
-  padding: 0 10px;
-  height: calc(100% - 4px);
+  padding: 0 14px;
+  height: calc(100% - 6px);
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
-  border-radius: 4px;
-  margin: 2px 0;
+  border-radius: 6px;
+  margin: 3px 0;
   min-width: fit-content;
+  color: #9aff00;
+  text-shadow: 0 0 5px rgba(154, 255, 0, 0.3);
 }
 
 .menu-title:hover {
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(154, 255, 0, 0.1);
+  box-shadow: 0 0 10px rgba(154, 255, 0, 0.2);
   transform: translateY(-1px);
 }
 
 .menu-title.active {
-  background: #007AFF;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+  background: rgba(154, 255, 0, 0.2);
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(154, 255, 0, 0.6);
+  box-shadow: 0 2px 8px rgba(154, 255, 0, 0.4);
 }
 
 .app-name {
-  font-weight: 600;
-  margin-left: 12px;
-  padding-left: 12px;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  font-weight: 700;
+  margin-left: 16px;
+  padding-left: 16px;
+  border-left: 1px solid rgba(154, 255, 0, 0.3);
   min-width: 120px;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(154, 255, 0, 0.5);
 }
 
-/* Dropdown Menus */
+/* Dropdown Menus - Dark Theme */
 .menu-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
   min-width: 200px;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(10, 20, 10, 0.98);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  padding: 6px 0;
+  border: 2px solid #9aff00;
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(154, 255, 0, 0.3);
+  padding: 8px 0;
   z-index: 1001;
-  font-size: 13px;
-  animation: menuFadeIn 0.1s ease-out;
+  font-size: 12px;
+  animation: menuFadeIn 0.15s ease-out;
 }
 
 @keyframes menuFadeIn {
@@ -109,96 +115,95 @@
 }
 
 .menu-item {
-  padding: 6px 16px;
+  padding: 8px 18px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background-color 0.1s ease;
-  color: #333;
+  transition: all 0.2s ease;
+  color: #9aff00;
+  font-weight: 500;
 }
 
 .menu-item:hover {
-  background: #007AFF;
-  color: white;
+  background: rgba(154, 255, 0, 0.15);
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(154, 255, 0, 0.6);
+  transform: translateX(2px);
 }
 
 .menu-separator {
   height: 1px;
-  background: rgba(0, 0, 0, 0.1);
-  margin: 6px 16px;
+  background: rgba(154, 255, 0, 0.3);
+  margin: 8px 18px;
+  box-shadow: 0 0 2px rgba(154, 255, 0, 0.5);
 }
 
 .menu-arrow {
   font-size: 10px;
-  opacity: 0.6;
+  opacity: 0.8;
+  color: #9aff00;
 }
 
-/* Status Bar Items */
+/* Status Bar Items - Themed */
 .status-item {
-  padding: 0 6px;
-  height: calc(100% - 4px);
+  padding: 0 10px;
+  height: calc(100% - 6px);
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: all 0.15s ease;
-  font-size: 12px;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 600;
   white-space: nowrap;
-  border-radius: 4px;
-  margin: 2px 1px;
+  border-radius: 6px;
+  margin: 3px 1px;
   min-width: fit-content;
+  color: #9aff00;
+  text-shadow: 0 0 5px rgba(154, 255, 0, 0.3);
 }
 
 .status-item:hover {
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(154, 255, 0, 0.1);
+  box-shadow: 0 0 8px rgba(154, 255, 0, 0.2);
   transform: translateY(-1px);
 }
 
 .status-item.time {
   font-variant-numeric: tabular-nums;
-  font-weight: 500;
-  padding: 0 8px;
-  min-width: 140px;
+  font-weight: 700;
+  padding: 0 14px;
+  min-width: 150px;
   justify-content: center;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(154, 255, 0, 0.5);
 }
 
 .status-item.wifi {
   font-size: 14px;
-  padding: 0 6px;
+  padding: 0 8px;
 }
 
 .status-item.battery {
-  font-size: 11px;
-  padding: 0 6px;
+  font-size: 14px;
+  padding: 0;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .menubar {
-    background: rgba(40, 40, 40, 0.8);
-    color: #fff;
-    border-bottom-color: rgba(255, 255, 255, 0.1);
-  }
+/* Add pulsing animation for special items */
+.menu-title:first-child {
+  animation: pulse 2s infinite;
+}
 
-  .menu-title:hover {
-    background: rgba(255, 255, 255, 0.1);
+@keyframes pulse {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(154, 255, 0, 0.3);
   }
-
-  .menu-dropdown {
-    background: rgba(60, 60, 60, 0.95);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .menu-item {
-    color: #fff;
-  }
-
-  .menu-separator {
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  .status-item:hover {
-    background: rgba(255, 255, 255, 0.1);
+  50% {
+    text-shadow: 0 0 15px rgba(154, 255, 0, 0.8), 0 0 25px rgba(154, 255, 0, 0.4);
   }
 }
 
@@ -210,15 +215,15 @@
   
   .status-item.time {
     min-width: 120px;
-    font-size: 11px;
+    font-size: 10px;
   }
 }
 
 @media (max-width: 900px) {
   .menubar {
-    font-size: 12px;
+    font-size: 11px;
     height: 26px;
-    padding: 0 6px;
+    padding: 0 8px;
   }
   
   .menu-title {
@@ -227,7 +232,7 @@
   
   .app-name {
     min-width: 80px;
-    font-size: 12px;
+    font-size: 11px;
   }
   
   .status-item {

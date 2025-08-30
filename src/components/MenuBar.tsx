@@ -151,13 +151,13 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
   return (
     <div ref={menuRef} className="menubar">
       <div className="menubar-left">
-        {/* Apple Menu */}
+        {/* Brand Menu */}
         <div className="menu-item-container">
           <div
             className={`menu-title ${activeMenu === 'apple' ? 'active' : ''}`}
             onClick={() => handleMenuClick('apple')}
           >
-            🍎
+            ⬢
           </div>
           {activeMenu === 'apple' && renderDropdown(appleMenuItems)}
         </div>
@@ -225,8 +225,8 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
       </div>
 
       <div className="menubar-right">
-        <div className="status-item wifi">📶</div>
-        <div className="status-item battery">🔋 85%</div>
+        <div className="status-item wifi">▲▲▲</div>
+        <div className="status-item battery">⚡85%</div>
         <div className="status-item time">{formatTime(currentTime)}</div>
       </div>
     </div>

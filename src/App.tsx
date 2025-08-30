@@ -14,6 +14,7 @@ interface WindowData {
   position: { x: number; y: number };
   size: { width: number; height: number };
   isMinimized: boolean;
+  zIndex: number;
 }
 
 interface Track {
@@ -31,9 +32,33 @@ function App() {
   const [isLoadingPlaylist, setIsLoadingPlaylist] = useState(true);
   const [activeApp, setActiveApp] = useState('Finder');
   const [showAbout, setShowAbout] = useState(false);
+  const [highestZIndex, setHighestZIndex] = useState(1000);
   
   // Your YouTube playlist URL
   const playlistUrl = 'https://www.youtube.com/playlist?list=PLxbvPE06_NH8YemvEqC9_5IXnydp9s2v7';
+
+  // Generate varied window positions
+  const generateWindowPosition = (index: number) => {
+    // Always generate random positions for maximum variety
+    const maxX = 600;
+    const maxY = 400;
+    const minX = 80;
+    const minY = 80;
+    
+    // Create more random and varied positions
+    const x = Math.floor(Math.random() * (maxX - minX)) + minX;
+    const y = Math.floor(Math.random() * (maxY - minY)) + minY;
+    
+    console.log(`Generating window position ${index}:`, { x, y });
+    return { x, y };
+  };
+
+  // Bring window to front
+  const bringWindowToFront = (windowId: string) => {
+    const newZIndex = highestZIndex + 1;
+    setHighestZIndex(newZIndex);
+    updateWindow(windowId, { zIndex: newZIndex });
+  };
 
   // Load playlist data on component mount (only once)
   useEffect(() => {
@@ -60,10 +85,18 @@ function App() {
     loadPlaylist();
   }, []); // Empty dependency array - only run once on mount
 
-  const openWindow = (window: Omit<WindowData, 'id'>) => {
+  const openWindow = (window: Omit<WindowData, 'id' | 'zIndex' | 'position'> & { position?: { x: number; y: number } }) => {
+    const newZIndex = highestZIndex + 1;
+    setHighestZIndex(newZIndex);
+    
+    // Use provided position or generate a varied one
+    const position = window.position || generateWindowPosition(windows.length);
+    
     const newWindow: WindowData = {
       ...window,
+      position,
       id: `window-${Date.now()}-${Math.random()}`,
+      zIndex: newZIndex,
     };
     setWindows(prev => [...prev, newWindow]);
   };
@@ -103,7 +136,6 @@ function App() {
             />
           </div>
         ),
-        position: { x: 100, y: 100 },
         size: { width: 640, height: 400 },
         isMinimized: false,
       });
@@ -138,7 +170,6 @@ function App() {
           ) : (
             <IPod playlist={youtubePlaylist} />
           ),
-          position: { x: 200, y: 80 },
           size: { width: 300, height: 450 },
           isMinimized: false,
         });
@@ -172,7 +203,6 @@ function App() {
               />
             </div>
           ),
-          position: { x: 120, y: 60 },
           size: { width: 800, height: 600 },
           isMinimized: false,
         });
@@ -209,7 +239,6 @@ function App() {
               Add button {buttonNumber} functionality later
             </div>
           ),
-          position: { x: 150 + buttonNumber * 50, y: 150 + buttonNumber * 30 },
           size: { width: 400, height: 300 },
           isMinimized: false,
         });
@@ -351,6 +380,7 @@ function App() {
             {...window}
             onClose={() => closeWindow(window.id)}
             onUpdate={(updates) => updateWindow(window.id, updates)}
+            onBringToFront={() => bringWindowToFront(window.id)}
           />
         ))}
       </Desktop>

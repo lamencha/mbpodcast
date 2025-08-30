@@ -15,12 +15,21 @@
   transform: translate(var(--window-x, 0), var(--window-y, 0));
 }
 
+/* Enhanced visual feedback for active/focused windows */
+.window:hover {
+  border-color: #b3ff33;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.15), 0 0 20px rgba(154, 255, 0, 0.3);
+}
+
 /* Add dragging state to disable expensive effects during drag */
 .window.dragging {
   backdrop-filter: none;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   will-change: transform;
   transform: translate(var(--window-x, 0), var(--window-y, 0)) translate3d(0, 0, 0); /* Force hardware acceleration */
+  pointer-events: auto;
+  /* Disable all transitions during drag for immediate response */
+  transition: none !important;
 }
 
 .window.minimizing {

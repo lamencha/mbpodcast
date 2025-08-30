@@ -1,7 +1,7 @@
 .desktop {
   width: 100vw;
-  height: calc(100vh - 28px);
-  margin-top: 28px;
+  height: calc(100vh - 36px);
+  margin-top: 36px;
   position: relative;
   overflow: hidden;
   background: url('/brand_assets/PodcastBg.jpg') center/cover no-repeat, #000;
@@ -10,15 +10,15 @@
 /* Responsive adjustments for desktop */
 @media (max-width: 900px) {
   .desktop {
-    height: calc(100vh - 26px);
-    margin-top: 26px;
+    height: calc(100vh - 34px);
+    margin-top: 34px;
   }
 }
 
 @media (max-width: 600px) {
   .desktop {
-    height: calc(100vh - 24px);
-    margin-top: 24px;
+    height: calc(100vh - 32px);
+    margin-top: 32px;
   }
 }
 
