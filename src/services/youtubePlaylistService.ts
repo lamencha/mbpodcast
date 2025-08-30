@@ -6,12 +6,6 @@ interface Track {
   videoId: string;
 }
 
-interface YouTubeVideo {
-  videoId: string;
-  title: string;
-  channelName: string;
-  duration: string;
-}
 
 export class YouTubePlaylistService {
   // Extract playlist ID from YouTube URL
@@ -33,75 +27,6 @@ export class YouTubePlaylistService {
     return this.getFallbackPlaylist();
   }
 
-  // Parse HTML to extract video information
-  private static parsePlaylistHTML(html: string): YouTubeVideo[] {
-    const videos: YouTubeVideo[] = [];
-    
-    try {
-      // Look for playlistVideoRenderer objects in the HTML
-      const rendererRegex = /"playlistVideoRenderer":\s*\{[^}]*"videoId":\s*"([^"]+)"[^}]*\}/g;
-      const titleRegex = /"title":\s*\{\s*"runs":\s*\[\{\s*"text":\s*"([^"]+)"/g;
-      const channelRegex = /"shortBylineText":\s*\{\s*"runs":\s*\[\{\s*"text":\s*"([^"]+)"/g;
-      const durationRegex = /"accessibility":\s*\{\s*"accessibilityData":\s*\{\s*"label":\s*"[^"]*?\s+(\d+)\s+minutes?,\s+(\d+)\s+seconds?"/g;
-
-      let videoMatch;
-      const videoIds: string[] = [];
-      
-      // Extract video IDs
-      while ((videoMatch = rendererRegex.exec(html)) !== null) {
-        videoIds.push(videoMatch[1]);
-      }
-
-      // Extract titles
-      const titles: string[] = [];
-      let titleMatch;
-      while ((titleMatch = titleRegex.exec(html)) !== null) {
-        titles.push(titleMatch[1]);
-      }
-
-      // Extract channel names
-      const channels: string[] = [];
-      let channelMatch;
-      while ((channelMatch = channelRegex.exec(html)) !== null) {
-        channels.push(channelMatch[1]);
-      }
-
-      // Extract durations
-      const durations: string[] = [];
-      let durationMatch;
-      while ((durationMatch = durationRegex.exec(html)) !== null) {
-        const minutes = parseInt(durationMatch[1]);
-        const seconds = parseInt(durationMatch[2]);
-        durations.push(`${minutes}:${seconds.toString().padStart(2, '0')}`);
-      }
-
-      // Combine all data
-      const minLength = Math.min(videoIds.length, titles.length, channels.length);
-      for (let i = 0; i < minLength; i++) {
-        videos.push({
-          videoId: videoIds[i],
-          title: titles[i],
-          channelName: channels[i],
-          duration: durations[i] || '0:00'
-        });
-      }
-
-    } catch (error) {
-      console.error('Error parsing playlist HTML:', error);
-    }
-
-    return videos;
-  }
-
-  // Clean up video titles (remove unnecessary parts)
-  private static cleanTitle(title: string): string {
-    return title
-      .replace(/\(OFFICIAL VIDEO\)/gi, '')
-      .replace(/\(Official Video\)/gi, '')
-      .replace(/\(Official Music Video\)/gi, '')
-      .replace(/\s+/g, ' ')
-      .trim();
-  }
 
   // Complete YouTube playlist - 17 songs from your playlist
   // All songs extracted from ytplay.md playlist data
