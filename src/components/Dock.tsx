@@ -19,7 +19,6 @@ interface DockItem {
 
 const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWindows }) => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
-  const [closingItems, setClosingItems] = useState<number[]>([]);
 
   const dockItems: DockItem[] = [
     {
@@ -93,13 +92,12 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
         <div className="dock-content">
           {dockItems.map((item, index) => {
             const isActive = openWindows.includes(item.windowTitle);
-            const isClosing = closingItems.includes(item.id);
             
             return (
             <div
               key={item.id}
               id={`dock-item-${item.id}`}
-              className={`dock-item ${hoveredItem === item.id ? 'hovered' : ''} ${isActive ? 'active' : ''} ${isClosing ? 'closing' : ''}`}
+              className={`dock-item ${hoveredItem === item.id ? 'hovered' : ''} ${isActive ? 'active' : ''}`}
               onClick={() => handleItemClick(item)}
               onMouseEnter={() => handleItemHover(item.id)}
               onMouseLeave={() => handleItemHover(null)}
