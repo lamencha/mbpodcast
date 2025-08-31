@@ -1,7 +1,7 @@
-/* Flat Tile Dock - Matching Window Style */
+/* Marathon Cyberpunk Command Interface */
 .dock-container {
   position: fixed;
-  bottom: 20px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
@@ -13,83 +13,120 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 12px;
+  gap: 8px;
   pointer-events: all;
-  animation: dockSlideUp 0.8s ease-out;
-  padding: 0;
+  animation: commandInterfaceActivate 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  padding: 8px 16px;
+  background: var(--surface-glass);
+  border: 2px solid var(--primary-accent);
+  border-radius: 4px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 20px var(--glow-primary),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  /* Scan line overlay */
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    var(--scan-line) 1px,
+    var(--scan-line) 2px
+  );
 }
 
-@keyframes dockSlideUp {
-  from {
+@keyframes commandInterfaceActivate {
+  0% {
     opacity: 0;
-    transform: translateY(100px) scale(0.8);
+    transform: translateY(80px) scaleX(0.3);
+    border-color: transparent;
+    box-shadow: none;
   }
-  to {
+  50% {
+    opacity: 0.7;
+    transform: translateY(40px) scaleX(0.8);
+    border-color: var(--primary-accent);
+  }
+  100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0) scaleX(1);
+    border-color: var(--primary-accent);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.6),
+      0 0 20px var(--glow-primary),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 }
 
-/* Remove dock background - individual tiles now */
-.dock-background {
-  display: none;
-}
-
-/* Flat Tile Container */
+/* Command Interface Container */
 .dock-content {
   display: flex;
-  align-items: flex-end;
-  gap: 12px;
+  align-items: center;
+  gap: 4px;
   padding: 0;
   position: relative;
 }
 
-/* Flat Tile Buttons - Window Style */
+/* Utilitarian Command Buttons */
 .dock-item {
   position: relative;
-  width: 80px;
-  height: 90px;
+  width: 64px;
+  height: 64px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  animation: dockItemFadeIn 0.6s ease-out;
+  gap: 4px;
+  animation: commandButtonInit 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   animation-delay: var(--item-delay);
   animation-fill-mode: both;
-  transform: skewX(-12deg);
-  transition: filter 0.3s ease-out, all 0.3s ease;
-  transform-origin: bottom center;
+  transition: all 0.15s ease;
+  transform-origin: center;
+  /* Hard geometric shape */
+  clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
 }
 
-@keyframes dockItemFadeIn {
-  from {
+@keyframes commandButtonInit {
+  0% {
     opacity: 0;
-    transform: translateY(20px) scale(0.8) skewX(-12deg);
+    transform: scale(0.4) rotateY(90deg);
+    filter: brightness(0);
   }
-  to {
+  60% {
+    opacity: 0.8;
+    transform: scale(1.1) rotateY(0deg);
+    filter: brightness(1.2);
+  }
+  100% {
     opacity: 1;
-    transform: translateY(0) scale(1) skewX(-12deg);
+    transform: scale(1) rotateY(0deg);
+    filter: brightness(1);
   }
 }
 
-/* Transparent Tile Background with Border */
+/* Hard Plastic Command Button Surface */
 .dock-item-background {
   position: absolute;
   inset: 0;
-  background: transparent;
-  border: 2px solid #9aff00;
-  border-radius: 12px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 
-              0 0 0 1px rgba(255, 255, 255, 0.1),
-              0 0 20px rgba(154, 255, 0, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--surface-bg);
+  border: 1px solid var(--primary-accent);
+  /* Hard geometric shape matching parent */
+  clip-path: inherit;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  transition: all 0.15s ease;
   overflow: hidden;
+  /* Hard synthetic material texture */
+  background-image: 
+    linear-gradient(45deg, transparent 25%, rgba(255, 255, 255, 0.02) 25%),
+    linear-gradient(-45deg, transparent 25%, rgba(255, 255, 255, 0.02) 25%);
+  background-size: 4px 4px;
 }
 
-/* Animated Background Fill */
+/* Status Indicator Bar */
 .dock-item-background::after {
   content: '';
   position: absolute;
@@ -97,27 +134,34 @@
   left: 0;
   right: 0;
   height: 0%;
-  background: linear-gradient(135deg, 
-    rgba(20, 20, 20, 0.95) 0%, 
-    rgba(25, 25, 25, 0.98) 50%,
-    rgba(20, 20, 20, 0.95) 100%);
-  border-radius: 10px;
-  transition: height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: var(--surface-elevated);
+  border-top: 1px solid var(--primary-accent);
+  box-shadow: 
+    0 0 8px var(--glow-primary),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* Vertical scan line texture - bright and visible */
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 1px,
+    rgba(255, 255, 255, 0.15) 1px,
+    rgba(255, 255, 255, 0.15) 2px
+  );
+  transition: height 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   z-index: -1;
 }
 
-/* Material Icons Styling */
+/* Utilitarian Command Icons */
 .dock-item-icon {
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 28px;
-  color: #9aff00;
+  font-size: 24px;
+  color: var(--primary-accent);
   z-index: 3;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  filter: none;
-  text-shadow: 0 0 10px rgba(154, 255, 0, 0.5);
-  margin-top: 8px;
+  transition: all 0.15s ease;
+  filter: drop-shadow(0 0 4px var(--glow-primary));
+  margin: 0;
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -126,124 +170,182 @@
   white-space: nowrap;
   direction: ltr;
   
-  /* Support for all WebKit browsers */
+  /* Crisp icon rendering */
   -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome */
   text-rendering: optimizeLegibility;
-  /* Support for Firefox */
   -moz-osx-font-smoothing: grayscale;
-  /* Support for IE */
   font-feature-settings: 'liga';
 }
 
-/* Tile Text Label */
+/* Command Label - Industrial Warning Style */
 .dock-item-label {
-  color: #9aff00;
-  font-size: 11px;
-  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 8px;
+  font-weight: 700;
   text-align: center;
   z-index: 3;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  text-shadow: 0 0 10px rgba(154, 255, 0, 0.5);
-  margin-bottom: 8px;
-  line-height: 1.2;
+  transition: all 0.15s ease;
+  margin: 2px 0 0 0;
+  line-height: 1;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  font-family: 'Inter', 'Helvetica Neue', 'Arial', monospace;
 }
 
-/* Hover Effects - Keep Skewed */
+/* Command Interface Interactions */
 .dock-item:hover {
-  transform: skewX(-12deg) !important;
-  filter: drop-shadow(0 10px 30px rgba(154, 255, 0, 0.3));
+  transform: scale(1.05);
+  filter: drop-shadow(0 4px 16px var(--glow-primary));
 }
 
 .dock-item:hover .dock-item-background {
-  border-color: #b4ff1a;
+  border-color: var(--void-white);
+  background: var(--surface-elevated);
   box-shadow: 
-    0 30px 60px rgba(0, 0, 0, 0.4), 
-    0 0 0 1px rgba(255, 255, 255, 0.15),
-    0 0 30px rgba(154, 255, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 6px 24px rgba(0, 0, 0, 0.5),
+    0 0 12px var(--glow-primary),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 
-/* Active State - App is Open */
+.dock-item:active {
+  transform: scale(0.95);
+  filter: drop-shadow(0 2px 8px var(--glow-primary));
+}
+
+/* Active State - Command Executed */
 .dock-item.active .dock-item-background::after {
   height: 100%;
 }
 
-/* Closing State - App is Closing */
+/* Deactivating State */
 .dock-item.closing .dock-item-background::after {
   height: 0%;
-  transition: height 0.4s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  transition: height 0.3s cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
 .dock-item:hover .dock-item-icon {
-  color: #b4ff1a;
-  text-shadow: 0 0 15px rgba(154, 255, 0, 0.8);
-  transform: scale(1.05);
+  color: var(--void-white);
+  filter: drop-shadow(0 0 8px var(--glow-primary));
+  transform: scale(1.1);
 }
 
 .dock-item:hover .dock-item-label {
-  color: #b4ff1a;
-  text-shadow: 0 0 15px rgba(154, 255, 0, 0.8);
+  color: var(--primary-accent);
+  filter: drop-shadow(0 0 4px var(--glow-primary));
 }
 
-/* Tile Click Animation */
+/* Command Button Activation */
 .dock-item-clicked {
-  animation: tileClick 0.2s ease-out;
+  animation: commandExecute 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-@keyframes tileClick {
+@keyframes commandExecute {
   0% { 
-    transform: skewX(-12deg) scale(1); 
+    transform: scale(1);
+    filter: drop-shadow(0 4px 16px var(--glow-primary));
   }
   50% { 
-    transform: skewX(-12deg) scale(0.96); 
+    transform: scale(0.9);
+    filter: drop-shadow(0 0 20px var(--glow-primary)) brightness(1.2);
   }
   100% { 
-    transform: skewX(-12deg) scale(1); 
+    transform: scale(1);
+    filter: drop-shadow(0 4px 16px var(--glow-primary));
   }
 }
 
-/* Subtle Tile Glow */
+/* Command Interface Glow Field */
 .dock-item-glow {
   position: absolute;
-  inset: -4px;
+  inset: -6px;
   background: radial-gradient(circle at center, 
-    rgba(154, 255, 0, 0.1) 0%, 
-    transparent 70%);
+    var(--glow-primary) 0%, 
+    transparent 60%);
   opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 0;
-  border-radius: 16px;
+  transition: opacity 0.15s ease;
+  z-index: -1;
+  /* Match parent geometric shape */
+  clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
 }
 
 .dock-item:hover .dock-item-glow {
-  opacity: 1;
+  opacity: 0.3;
 }
 
+.dock-item.active .dock-item-glow {
+  opacity: 0.5;
+  animation: commandActiveGlow 2s ease-in-out infinite alternate;
+}
 
-/* Responsive Design */
+@keyframes commandActiveGlow {
+  from { opacity: 0.3; }
+  to { opacity: 0.6; }
+}
+
+/* Subtle Interface Glitch Effect */
+.dock::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: inherit;
+  border: inherit;
+  border-radius: inherit;
+  opacity: 0;
+  z-index: -1;
+  animation: interfaceGlitch 12s ease-in-out infinite;
+}
+
+@keyframes interfaceGlitch {
+  0%, 95%, 100% { 
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  96% { 
+    opacity: 0.7;
+    transform: translate(-2px, 0);
+  }
+  97% { 
+    opacity: 0.4;
+    transform: translate(2px, -1px);
+  }
+  98% { 
+    opacity: 0.8;
+    transform: translate(-1px, 1px);
+  }
+  99% { 
+    opacity: 0.2;
+    transform: translate(1px, 0);
+  }
+}
+
+/* Responsive Command Interface */
 @media (max-width: 768px) {
   .dock-container {
     bottom: 12px;
   }
   
+  .dock {
+    padding: 6px 12px;
+    gap: 6px;
+  }
+  
   .dock-item {
-    width: 70px;
-    height: 80px;
+    width: 56px;
+    height: 56px;
   }
   
   .dock-item-icon {
-    font-size: 24px;
+    font-size: 20px;
   }
   
   .dock-item-label {
-    font-size: 10px;
+    font-size: 7px;
+    letter-spacing: 0.6px;
   }
   
   .dock-content {
-    gap: 8px;
+    gap: 3px;
   }
 }
 
@@ -252,21 +354,27 @@
     bottom: 8px;
   }
   
+  .dock {
+    padding: 4px 8px;
+    gap: 4px;
+  }
+  
   .dock-item {
-    width: 60px;
-    height: 70px;
+    width: 48px;
+    height: 48px;
   }
   
   .dock-item-icon {
-    font-size: 22px;
+    font-size: 18px;
   }
   
   .dock-item-label {
-    font-size: 9px;
+    font-size: 6px;
+    letter-spacing: 0.5px;
   }
   
   .dock-content {
-    gap: 6px;
+    gap: 2px;
   }
 }
 

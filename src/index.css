@@ -1,9 +1,35 @@
 :root {
-  --primary-green: #9aff00;
-  --primary-pink: #ff00ff;
-  --dark-bg: #0a0a0a;
-  --window-bg: rgba(20, 20, 20, 0.95);
-  --border-glow: rgba(154, 255, 0, 0.3);
+  /* Marathon Cyberpunk Color Palette */
+  --neon-cyan: #00ffff;
+  --neon-magenta: #ff0080;
+  --electric-green: #00ff41;
+  --neon-yellow: #ffff00;
+  --void-white: #f8f8f8;
+  --void-black: #000000;
+  --dark-panel: #0a0a0a;
+  --glass-panel: rgba(8, 8, 8, 0.85);
+  
+  /* Accent colors */
+  --primary-accent: var(--neon-cyan);
+  --secondary-accent: var(--neon-magenta);
+  --success-accent: var(--electric-green);
+  --warning-accent: var(--neon-yellow);
+  
+  /* UI Surface colors */
+  --surface-bg: var(--dark-panel);
+  --surface-elevated: rgba(15, 15, 15, 0.95);
+  --surface-glass: var(--glass-panel);
+  
+  /* Text colors */
+  --text-primary: var(--void-white);
+  --text-secondary: rgba(248, 248, 248, 0.7);
+  --text-accent: var(--primary-accent);
+  
+  /* Border and glow effects */
+  --border-primary: var(--primary-accent);
+  --glow-primary: rgba(0, 255, 255, 0.4);
+  --glow-secondary: rgba(255, 0, 128, 0.3);
+  --scan-line: rgba(0, 255, 255, 0.1);
 }
 
 * {
@@ -13,13 +39,24 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  background: var(--dark-bg);
-  color: #fff;
+  font-family: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  background: var(--void-black);
+  color: var(--text-primary);
   overflow: hidden;
   width: 100vw;
   height: 100vh;
   margin: 0;
+  /* Subtle scan line effect */
+  background-image: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      var(--scan-line) 2px,
+      var(--scan-line) 4px
+    );
 }
 
 button {
@@ -28,18 +65,32 @@ button {
   cursor: pointer;
   color: inherit;
   font-family: inherit;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
 }
 
 button:focus {
-  outline: 2px solid var(--primary-green);
+  outline: 2px solid var(--primary-accent);
   outline-offset: 2px;
+  box-shadow: 0 0 10px var(--glow-primary);
+}
+
+button:hover {
+  color: var(--primary-accent);
+  text-shadow: 0 0 8px var(--glow-primary);
 }
 
 a {
-  color: var(--primary-green);
+  color: var(--primary-accent);
   text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  transition: all 0.15s ease;
 }
 
 a:hover {
-  text-shadow: 0 0 10px var(--primary-green);
+  color: var(--void-white);
+  text-shadow: 0 0 12px var(--glow-primary);
 }

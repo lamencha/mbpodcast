@@ -22,6 +22,7 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
   const menuItemsRef = useRef<HTMLDivElement>(null);
   const lastClickTimeRef = useRef<number>(0);
   const clickTimeoutRef = useRef<number | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const menuItems = [
     { name: 'Music' },
@@ -148,6 +149,18 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
     handleWheelScroll('down');
   };
 
+  const handlePlayPause = () => {
+    if (currentScreen === 'nowplaying' && currentTrack?.videoId && iframeRef.current) {
+      setIsPlaying(!isPlaying);
+      // Send postMessage to YouTube iframe to control playback
+      const command = isPlaying ? 'pauseVideo' : 'playVideo';
+      iframeRef.current.contentWindow?.postMessage(
+        `{"event":"command","func":"${command}","args":""}`,
+        'https://www.youtube.com'
+      );
+    }
+  };
+
   useEffect(() => {
     if (menuItemsRef.current) {
       const container = menuItemsRef.current;
@@ -249,16 +262,16 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
             {currentTrack?.videoId ? (
               <div className="ipod-video-player">
                 <iframe
+                  ref={iframeRef}
                   width="100%"
-                  height="120"
-                  src={`https://www.youtube.com/embed/${currentTrack.videoId}?autoplay=${isPlaying ? 1 : 0}&rel=0&modestbranding=1&mute=0`}
+                  height="100%"
+                  src={`https://www.youtube.com/embed/${currentTrack.videoId}?autoplay=${isPlaying ? 1 : 0}&controls=0&showinfo=0&rel=0&modestbranding=1&mute=0&enablejsapi=1`}
                   title={currentTrack.name}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="strict-origin-when-cross-origin"
-                  style={{ borderRadius: '4px' }}
                 />
               </div>
             ) : (
@@ -319,7 +332,7 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
             </button>
             <button className="control-button prev-btn" onClick={handlePrevious}>⏮</button>
             <button className="control-button next-btn" onClick={handleNext}>⏭</button>
-            <button className="control-button play-btn">⏯</button>
+            <button className="control-button play-btn" onClick={handlePlayPause}>⏯</button>
             
             <button className="center-button" onClick={handleCenterClick}>
               <div className="center-circle"></div>

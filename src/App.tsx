@@ -27,7 +27,6 @@ interface Track {
 
 function App() {
   const [windows, setWindows] = useState<WindowData[]>([]);
-  const [backgroundVideo, setBackgroundVideo] = useState('/brand_assets/PodcastVideo.mp4');
   const [youtubePlaylist, setYoutubePlaylist] = useState<Track[]>([]);
   const [isLoadingPlaylist, setIsLoadingPlaylist] = useState(true);
   const [activeApp, setActiveApp] = useState('Finder');
@@ -39,13 +38,13 @@ function App() {
 
   // Generate varied window positions
   const generateWindowPosition = (index: number) => {
-    // Always generate random positions for maximum variety
+    // Generate positions closer to top with variation
     const maxX = 600;
-    const maxY = 400;
+    const maxY = 180;  // Much closer to top
     const minX = 80;
-    const minY = 80;
+    const minY = 50;   // Start closer to top, below menu bar
     
-    // Create more random and varied positions
+    // Create varied positions near the top
     const x = Math.floor(Math.random() * (maxX - minX)) + minX;
     const y = Math.floor(Math.random() * (maxY - minY)) + minY;
     
@@ -170,7 +169,7 @@ function App() {
           ) : (
             <IPod playlist={youtubePlaylist} />
           ),
-          size: { width: 300, height: 450 },
+          size: { width: 260, height: 380 },
           isMinimized: false,
         });
       }
@@ -203,7 +202,7 @@ function App() {
               />
             </div>
           ),
-          size: { width: 800, height: 600 },
+          size: { width: 400, height: 300 },
           isMinimized: false,
         });
       }
@@ -246,17 +245,14 @@ function App() {
     }
   };
 
-  // Update active app based on windows
+  // Update active app based on focused window (highest z-index)
   useEffect(() => {
-    const hasIPod = windows.some(w => w.title === 'Classic iPod');
-    const hasYouTube = windows.some(w => w.title === 'Maidenless Behavior Playlist');
-    
-    if (hasIPod) {
-      setActiveApp('Classic iPod');
-    } else if (hasYouTube) {
-      setActiveApp('Maidenless Behavior');
-    } else if (windows.length > 0) {
-      setActiveApp(windows[windows.length - 1].title);
+    if (windows.length > 0) {
+      // Find the window with the highest z-index (most recently focused)
+      const focusedWindow = windows.reduce((highest, current) => 
+        current.zIndex > highest.zIndex ? current : highest
+      );
+      setActiveApp(focusedWindow.title);
     } else {
       setActiveApp('Finder');
     }
@@ -373,7 +369,7 @@ function App() {
         activeApp={activeApp}
         onMenuAction={handleMenuAction}
       />
-      <Desktop backgroundVideo={backgroundVideo} onBackgroundChange={setBackgroundVideo}>
+      <Desktop>
         {windows.map(window => (
           <Window
             key={window.id}
