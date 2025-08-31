@@ -285,39 +285,55 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
       // Cancel animation frame
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+        animationRef.current = 0;
       }
       
-      // Remove event listeners properly
-      if (resizeHandler) {
-        window.removeEventListener('resize', resizeHandler);
-        resizeHandler = null;
-      }
-      if (mouseHandler) {
-        document.removeEventListener('pointermove', mouseHandler);
-        mouseHandler = null;
+      // Remove event listeners properly with error catching
+      try {
+        if (resizeHandler) {
+          window.removeEventListener('resize', resizeHandler);
+          resizeHandler = null;
+        }
+        if (mouseHandler) {
+          document.removeEventListener('pointermove', mouseHandler);
+          mouseHandler = null;
+        }
+      } catch (e) {
+        // Silently catch any event listener removal errors
       }
       
       // Clean up Three.js objects and DOM
-      if (container && container.firstChild) {
-        container.removeChild(container.firstChild);
+      try {
+        if (container && container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
+      } catch (e) {
+        // Silently catch DOM manipulation errors
       }
       
       // Clean up Three.js resources
-      if (renderer) {
-        renderer.dispose();
-        renderer = null;
-      }
-      if (rtTexture) {
-        rtTexture.dispose();
-        rtTexture = null;
-      }
-      if (rtTexture2) {
-        rtTexture2.dispose();
-        rtTexture2 = null;
+      try {
+        if (renderer) {
+          renderer.dispose();
+          renderer = null;
+        }
+        if (rtTexture) {
+          rtTexture.dispose();
+          rtTexture = null;
+        }
+        if (rtTexture2) {
+          rtTexture2.dispose();
+          rtTexture2 = null;
+        }
+      } catch (e) {
+        // Silently catch Three.js disposal errors
       }
     }
 
-    return cleanup;
+    // Use setTimeout to ensure cleanup happens after any pending browser operations
+    return () => {
+      setTimeout(cleanup, 0);
+    };
   }, []);
 
   return (

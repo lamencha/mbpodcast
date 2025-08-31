@@ -461,16 +461,27 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     init();
     animate();
 
-    return () => {
+    const cleanup = () => {
+      // Cancel animation frame
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+        animationRef.current = 0;
       }
       
-      // Clean up mouse event listener
-      if (mouseHandler) {
-        document.body.removeEventListener('mousemove', mouseHandler);
-        mouseHandler = null;
+      // Clean up mouse event listener with error catching
+      try {
+        if (mouseHandler) {
+          document.body.removeEventListener('mousemove', mouseHandler);
+          mouseHandler = null;
+        }
+      } catch (e) {
+        // Silently catch any event listener removal errors
       }
+    };
+
+    // Use setTimeout to ensure cleanup happens after any pending browser operations
+    return () => {
+      setTimeout(cleanup, 0);
     };
   }, []);
 
