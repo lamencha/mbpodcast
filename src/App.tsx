@@ -365,6 +365,10 @@ function App() {
 
   return (
     <div className="app">
+      {/* Animated gradient background */}
+      <div className="desktop-background" />
+      <h1 className="desktop-geist-text">Geist</h1>
+      
       <MenuBar 
         activeApp={activeApp}
         onMenuAction={handleMenuAction}
