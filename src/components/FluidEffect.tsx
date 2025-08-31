@@ -12,6 +12,13 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
     const container = containerRef.current;
     if (!container) return;
 
+    // Variables to track cleanup handlers
+    let resizeHandler: (() => void) | null = null;
+    let mouseHandler: ((e: PointerEvent) => void) | null = null;
+    let renderer: any = null;
+    let rtTexture: any = null;
+    let rtTexture2: any = null;
+
     // Check if Three.js is available
     if (typeof (window as any).THREE === 'undefined') {
       // Load Three.js dynamically
@@ -21,6 +28,7 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
       document.head.appendChild(script);
       
       return () => {
+        cleanup();
         if (script.parentNode) {
           document.head.removeChild(script);
         }
@@ -31,9 +39,8 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
 
     function initFluidEffect() {
       const THREE = (window as any).THREE;
-      let camera: any, scene: any, renderer: any;
+      let camera: any, scene: any;
       let uniforms: any;
-      let rtTexture: any, rtTexture2: any;
 
       const divisor = 1 / 10;
       let newmouse = { x: 0, y: 0 };
@@ -208,24 +215,30 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
         container.appendChild(renderer.domElement);
 
         onWindowResize();
-        window.addEventListener('resize', onWindowResize, false);
-
-        // Mouse movement with reduced sensitivity for subtlety
-        document.addEventListener('pointermove', (e) => {
+        
+        // Create event handlers that we can properly remove later
+        resizeHandler = () => onWindowResize();
+        mouseHandler = (e: PointerEvent) => {
+          if (!container) return;
           const rect = container.getBoundingClientRect();
           const ratio = window.innerHeight / window.innerWidth;
           newmouse.x = ((e.clientX - rect.left) - window.innerWidth / 2) / window.innerWidth / ratio * 0.5;
           newmouse.y = ((e.clientY - rect.top) - window.innerHeight / 2) / window.innerHeight * -0.5;
-        });
+        };
+
+        window.addEventListener('resize', resizeHandler, false);
+        document.addEventListener('pointermove', mouseHandler, { passive: true });
       }
 
       function onWindowResize() {
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        uniforms.u_resolution.value.x = renderer.domElement.width;
-        uniforms.u_resolution.value.y = renderer.domElement.height;
-        
-        rtTexture = new THREE.WebGLRenderTarget(window.innerWidth * 0.2, window.innerHeight * 0.2);
-        rtTexture2 = new THREE.WebGLRenderTarget(window.innerWidth * 0.2, window.innerHeight * 0.2);
+        if (renderer && uniforms) {
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          uniforms.u_resolution.value.x = renderer.domElement.width;
+          uniforms.u_resolution.value.y = renderer.domElement.height;
+          
+          rtTexture = new THREE.WebGLRenderTarget(window.innerWidth * 0.2, window.innerHeight * 0.2);
+          rtTexture2 = new THREE.WebGLRenderTarget(window.innerWidth * 0.2, window.innerHeight * 0.2);
+        }
       }
 
       function renderTexture() {
@@ -266,16 +279,43 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
       animate(0);
     }
 
-    return () => {
+    function cleanup() {
+      // Cancel animation frame
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
       
-      // Clean up Three.js objects
-      if (container.firstChild) {
+      // Remove event listeners properly
+      if (resizeHandler) {
+        window.removeEventListener('resize', resizeHandler);
+        resizeHandler = null;
+      }
+      if (mouseHandler) {
+        document.removeEventListener('pointermove', mouseHandler);
+        mouseHandler = null;
+      }
+      
+      // Clean up Three.js objects and DOM
+      if (container && container.firstChild) {
         container.removeChild(container.firstChild);
       }
-    };
+      
+      // Clean up Three.js resources
+      if (renderer) {
+        renderer.dispose();
+        renderer = null;
+      }
+      if (rtTexture) {
+        rtTexture.dispose();
+        rtTexture = null;
+      }
+      if (rtTexture2) {
+        rtTexture2.dispose();
+        rtTexture2 = null;
+      }
+    }
+
+    return cleanup;
   }, []);
 
   return (

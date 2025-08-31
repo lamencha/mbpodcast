@@ -389,12 +389,6 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
           flares.push(new Flare());
         }
       }
-
-      // Mouse movement
-      document.body.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-      });
     }
 
     function render() {
@@ -443,12 +437,76 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
       render();
     }
 
+    let mouseHandler: ((e: MouseEvent) => void) | null = null;
+
+    function init() {
+      resize();
+      
+      mouse.x = canvas.clientWidth / 2;
+      mouse.y = canvas.clientHeight / 2;
+
+      // Create particle positions
+      for (let i = 0; i < particleCount; i++) {
+        const p = new Particle();
+        particles.push(p);
+        points.push([p.x * c, p.y * c]);
+      }
+
+      // Delaunay triangulation
+      vertices = Delaunay.triangulate(points);
+      
+      // Create triangles array
+      const tri: number[] = [];
+      for (let i = 0; i < vertices.length; i++) {
+        if (tri.length == 3) {
+          triangles.push(tri.slice());
+          tri.length = 0;
+        }
+        tri.push(vertices[i]);
+      }
+
+      // Set up particle neighbors
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = 0; j < triangles.length; j++) {
+          const k = triangles[j].indexOf(i);
+          if (k !== -1) {
+            triangles[j].forEach((value) => {
+              if (value !== i && particles[i].neighbors.indexOf(value) == -1) {
+                particles[i].neighbors.push(value);
+              }
+            });
+          }
+        }
+      }
+
+      // Create flares
+      if (renderFlares) {
+        for (let i = 0; i < flareCount; i++) {
+          flares.push(new Flare());
+        }
+      }
+
+      // Mouse movement handler
+      mouseHandler = (e: MouseEvent) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      };
+      
+      document.body.addEventListener('mousemove', mouseHandler, { passive: true });
+    }
+
     init();
     animate();
 
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+      }
+      
+      // Clean up mouse event listener
+      if (mouseHandler) {
+        document.body.removeEventListener('mousemove', mouseHandler);
+        mouseHandler = null;
       }
     };
   }, []);
