@@ -378,3 +378,40 @@
   }
 }
 
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .dock-item {
+    /* Better touch feedback */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .dock-item:hover {
+    /* Remove scale transform on touch devices to prevent layout issues */
+    transform: none;
+  }
+  
+  .dock-item:active {
+    /* Provide immediate visual feedback on touch */
+    transform: scale(0.95);
+    filter: drop-shadow(0 0 12px var(--glow-primary)) brightness(1.1);
+  }
+  
+  /* Larger touch targets on mobile */
+  @media (max-width: 768px) {
+    .dock-item {
+      width: 60px;
+      height: 60px;
+      /* Slightly larger for better touch accuracy */
+    }
+    
+    .dock-item-icon {
+      font-size: 22px;
+    }
+    
+    .dock-item-label {
+      font-size: 8px;
+    }
+  }
+}
+

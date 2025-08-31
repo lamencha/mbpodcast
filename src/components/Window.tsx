@@ -33,8 +33,9 @@ const Window: React.FC<WindowProps> = ({
   const windowRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    // Bring window to front when clicked
+  // Unified pointer event handler for both mouse and touch
+  const handlePointerDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    // Bring window to front when clicked/touched
     if (onBringToFront) {
       onBringToFront();
       // Add focus animation
@@ -44,20 +45,40 @@ const Window: React.FC<WindowProps> = ({
     
     if (e.target === e.currentTarget || (e.target as HTMLElement).className === 'window-title') {
       setIsDragging(true);
+      
+      // Get coordinates from mouse or touch event
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+      
       setDragOffset({
-        x: e.clientX - position.x,
-        y: e.clientY - position.y,
+        x: clientX - position.x,
+        y: clientY - position.y,
       });
-      // Prevent text selection during drag
+      // Prevent text selection and scrolling during drag
       e.preventDefault();
     }
   }, [position, onBringToFront]);
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
+  // Legacy mouse handler for compatibility
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    handlePointerDown(e);
+  }, [handlePointerDown]);
+
+  // Touch handler
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    handlePointerDown(e);
+  }, [handlePointerDown]);
+
+  // Unified move handler for mouse and touch
+  const handlePointerMove = useCallback((e: MouseEvent | TouchEvent) => {
     if (isDragging && windowRef.current) {
+      // Get coordinates from mouse or touch event
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+      
       // Direct DOM manipulation for immediate visual feedback
-      const newX = e.clientX - dragOffset.x;
-      const newY = e.clientY - dragOffset.y;
+      const newX = clientX - dragOffset.x;
+      const newY = clientY - dragOffset.y;
       
       // Update CSS custom properties directly for immediate response
       windowRef.current.style.setProperty('--window-x', `${newX}px`);
@@ -77,7 +98,18 @@ const Window: React.FC<WindowProps> = ({
     }
   }, [isDragging, dragOffset, onUpdate]);
 
-  const handleMouseUp = useCallback(() => {
+  // Legacy mouse move handler
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    handlePointerMove(e);
+  }, [handlePointerMove]);
+
+  // Touch move handler
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    handlePointerMove(e);
+  }, [handlePointerMove]);
+
+  // Unified end handler for mouse and touch
+  const handlePointerEnd = useCallback(() => {
     if (isDragging) {
       setIsDragging(false);
       
@@ -99,16 +131,34 @@ const Window: React.FC<WindowProps> = ({
     setIsResizing(false);
   }, [isDragging, position, onUpdate]);
 
+  // Legacy mouse up handler
+  const handleMouseUp = useCallback(() => {
+    handlePointerEnd();
+  }, [handlePointerEnd]);
+
+  // Touch end handler
+  const handleTouchEnd = useCallback(() => {
+    handlePointerEnd();
+  }, [handlePointerEnd]);
+
   React.useEffect(() => {
     if (isDragging || isResizing) {
+      // Add both mouse and touch event listeners
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd);
+      document.addEventListener('touchcancel', handleTouchEnd);
+      
       return () => {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
+        document.removeEventListener('touchcancel', handleTouchEnd);
       };
     }
-  }, [isDragging, isResizing, handleMouseMove, handleMouseUp]);
+  }, [isDragging, isResizing, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
   // Cleanup animation frame on unmount
   React.useEffect(() => {
@@ -152,7 +202,11 @@ const Window: React.FC<WindowProps> = ({
       } as React.CSSProperties}
       onClick={handleWindowClick}
     >
-      <div className="window-header" onMouseDown={handleMouseDown}>
+      <div 
+        className="window-header" 
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+      >
         <div className="window-controls">
           <button className="window-control close" onClick={onClose} />
           <button className="window-control minimize" onClick={handleMinimize} />

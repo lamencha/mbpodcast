@@ -281,3 +281,66 @@
   box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
   transform: translateY(-2px);
 }
+
+/* Mobile Touch Optimizations */
+@media (max-width: 768px) {
+  .window {
+    min-width: 280px;
+    min-height: 180px;
+    /* Ensure windows don't get too small on mobile */
+  }
+  
+  .window-header {
+    height: 44px; /* Larger touch target */
+    padding: 0 16px;
+    /* Better touch interaction area */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none; /* Prevent scrolling while dragging */
+  }
+  
+  .window-control {
+    width: 20px;
+    height: 20px;
+    /* Larger touch targets for buttons */
+  }
+  
+  .window-title {
+    font-size: 14px;
+    /* Slightly larger text on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .window {
+    min-width: 260px;
+    min-height: 160px;
+  }
+  
+  .window-header {
+    height: 48px; /* Even larger touch target on small screens */
+  }
+  
+  .window-control {
+    width: 24px;
+    height: 24px;
+    /* Even larger touch targets */
+  }
+}
+
+/* Touch-specific styling */
+@media (hover: none) and (pointer: coarse) {
+  .window-header {
+    cursor: grab;
+  }
+  
+  .window-header:active,
+  .window.dragging .window-header {
+    cursor: grabbing;
+  }
+  
+  .window-control:hover {
+    /* Remove hover effects on touch devices */
+    transform: none;
+    background: var(--surface-bg);
+  }
+}
