@@ -179,12 +179,34 @@ Main Menu → Music → Playlists → "Maidenless Behavior" → Song Selection �
 3. **Mobile Support**: Comprehensive touch compatibility implementation
 4. **Performance**: Optimized rendering pipeline for multiple visual layers
 
-### Common Commands
+### Development Server Management
+**IMPORTANT**: Always stop existing dev servers before starting new ones to avoid port conflicts and resource issues.
+
+#### Proper Development Workflow:
 ```bash
-npm run dev          # Start development server
-npm run build        # Production build
+# 1. Check for running dev servers (Windows)
+netstat -ano | findstr :5173
+netstat -ano | findstr :5174
+netstat -ano | findstr :5175
+
+# 2. Kill existing servers if found (use PID from netstat)
+taskkill /PID <PID_NUMBER> /F
+
+# 3. Start fresh dev server
+npm run dev
+
+# 4. For testing builds before deployment
+npm run build        # Test production build
+npm run preview       # Preview production build locally
+```
+
+#### Common Commands
+```bash
+npm run dev          # Start development server (stop others first!)
+npm run build        # Production build for deployment testing
+npm run preview      # Preview production build locally
 npm run typecheck    # TypeScript checking
-npm run lint         # Code linting
+npm run lint         # Code linting (if available)
 ```
 
 ### Git Workflow
@@ -203,6 +225,13 @@ npm run lint         # Code linting
 - **Preserve functionality** - visual changes should never break existing features
 - **Use existing patterns** - follow established component architecture and state management
 
+### Development Server Best Practices:
+- **CRITICAL**: Always check for and stop existing dev servers before starting new ones
+- **Use netstat commands** to find running servers on ports 5173-5179
+- **Kill processes properly** using `taskkill /PID <PID> /F` to avoid resource conflicts
+- **Test builds locally** with `npm run build` before pushing to avoid deployment failures
+- **Use npm run preview** to test production builds locally
+
 ### Key Files to Check First:
 - `src/App.tsx` - Main application state and window management
 - `src/index.css` - Color system and global styles
@@ -212,9 +241,39 @@ npm run lint         # Code linting
 ### Testing Checklist:
 - Window dragging works on both mouse and touch
 - Dock buttons show active states correctly
-- iPod video playback and physical controls function
+- iPod video playbook and physical controls function
 - Mobile dock visibility and safe area handling
 - Visual effects performance on various devices
+
+### Troubleshooting Common Issues:
+
+#### Vercel Deployment Not Updating:
+1. **Check TypeScript errors**: Run `npm run build` locally first
+2. **Verify git push**: Ensure changes are actually pushed to GitHub
+3. **Check Vercel logs**: Look for build failures in Vercel dashboard
+4. **Branch mismatch**: Ensure Vercel is deploying from correct branch (main)
+
+#### Multiple Dev Servers Running:
+```bash
+# Find running servers
+netstat -ano | findstr :517
+
+# Kill specific process
+taskkill /PID <PID_NUMBER> /F
+
+# Kill all Node processes (nuclear option)
+taskkill /F /IM node.exe
+```
+
+#### Console Warnings (runtime.lastError):
+- Usually caused by browser extensions, not our code
+- Enhanced cleanup in visual effects components should minimize these
+- Can be ignored if functionality works correctly
+
+#### Build Failures:
+- Always test `npm run build` locally before pushing
+- Check for TypeScript strict mode errors
+- Ensure all imports and dependencies are correct
 
 ---
 
