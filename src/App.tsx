@@ -4,6 +4,8 @@ import Dock from './components/Dock';
 import Window from './components/Window';
 import IPod from './components/IPod';
 import MenuBar from './components/MenuBar';
+import ParticleField from './components/ParticleField';
+import FluidEffect from './components/FluidEffect';
 import { YouTubePlaylistService } from './services/youtubePlaylistService';
 import './App.css';
 
@@ -365,9 +367,11 @@ function App() {
 
   return (
     <div className="app">
-      {/* Animated gradient background */}
-      <div className="desktop-background" />
-      <h1 className="desktop-geist-text">Geist</h1>
+      {/* Animated particle field background */}
+      <ParticleField className="desktop-background" />
+      
+      {/* Fluid shader effect overlay */}
+      <FluidEffect />
       
       <MenuBar 
         activeApp={activeApp}
