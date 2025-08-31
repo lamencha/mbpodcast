@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 // Simplified Delaunay triangulation for the particle field
 const Delaunay = {
-  triangulate: function(vertices: number[][]) {
+  triangulate: function(vertices: number[][]): number[] {
     const n = vertices.length;
     if (n < 3) return [];
     
@@ -35,7 +35,7 @@ interface ParticleFieldProps {
 
 const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -77,7 +77,6 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     let n = 0;
     let nAngle = (Math.PI * 2) / noiseLength;
     let nRad = 100;
-    let nScale = 0.5;
     let nPos = { x: 0, y: 0 };
     let points: number[][] = [];
     let vertices: number[] = [];
@@ -106,6 +105,8 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
       }
 
       render() {
+        if (!context) return;
+        
         const pos = position(this.x, this.y, this.z);
         const r = ((this.z * particleSizeMultiplier) + particleSizeBase) * (sizeRatio() / 1000);
         let o = this.opacity;
@@ -155,6 +156,8 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
       }
 
       render() {
+        if (!context) return;
+        
         const pos = position(this.x, this.y, this.z);
         const r = ((this.z * flareSizeMultiplier) + flareSizeBase) * (sizeRatio() / 1000);
 
@@ -227,7 +230,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
                 points.push([pos.x, pos.y]);
               }
 
-              const linkSpeedRel = linkSpeed * 0.00001 * canvas.width;
+              const linkSpeedRel = linkSpeed * 0.00001 * (canvas?.width || 1000);
               this.traveled += linkSpeedRel;
               const d = this.distances[this.linked.length - 1];
 
@@ -290,7 +293,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
       }
 
       drawLine(points: number[][], alpha: number = linkOpacity) {
-        if (points.length > 1 && alpha > 0) {
+        if (points.length > 1 && alpha > 0 && context) {
           context.globalAlpha = alpha;
           context.beginPath();
           for (let i = 0; i < points.length - 1; i++) {
@@ -318,13 +321,17 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     }
 
     function position(x: number, y: number, z: number) {
+      const canvasWidth = canvas?.width || 1000;
+      const canvasHeight = canvas?.height || 1000;
+      
       return {
-        x: (x * canvas.width) + ((((canvas.width / 2) - mouse.x + ((nPos.x - 0.5) * noiseStrength)) * z) * motion),
-        y: (y * canvas.height) + ((((canvas.height / 2) - mouse.y + ((nPos.y - 0.5) * noiseStrength)) * z) * motion)
+        x: (x * canvasWidth) + ((((canvasWidth / 2) - mouse.x + ((nPos.x - 0.5) * noiseStrength)) * z) * motion),
+        y: (y * canvasHeight) + ((((canvasHeight / 2) - mouse.y + ((nPos.y - 0.5) * noiseStrength)) * z) * motion)
       };
     }
 
     function sizeRatio() {
+      if (!canvas) return 1000;
       return canvas.width >= canvas.height ? canvas.width : canvas.height;
     }
 
@@ -339,15 +346,17 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     }
 
     function resize() {
-      canvas.width = window.innerWidth * (window.devicePixelRatio || 1);
-      canvas.height = canvas.width * (canvas.clientHeight / canvas.clientWidth);
+      if (canvas) {
+        canvas.width = window.innerWidth * (window.devicePixelRatio || 1);
+        canvas.height = canvas.width * (canvas.clientHeight / canvas.clientWidth);
+      }
     }
 
     function init() {
       resize();
       
-      mouse.x = canvas.clientWidth / 2;
-      mouse.y = canvas.clientHeight / 2;
+      mouse.x = (canvas?.clientWidth ?? 0) / 2;
+      mouse.y = (canvas?.clientHeight ?? 0) / 2;
 
       // Create particle positions
       for (let i = 0; i < particleCount; i++) {
@@ -389,6 +398,14 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
           flares.push(new Flare());
         }
       }
+
+      // Mouse movement handler  
+      mouseHandler = (e: MouseEvent) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      };
+      
+      document.body.addEventListener('mousemove', mouseHandler, { passive: true });
     }
 
     function render() {
@@ -400,7 +417,9 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
         nPos = noisePoint(n);
       }
 
-      context.clearRect(0, 0, canvas.width, canvas.height);
+      if (context && canvas) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+      }
 
       if (renderParticles) {
         for (let i = 0; i < particleCount; i++) {
@@ -438,62 +457,6 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     }
 
     let mouseHandler: ((e: MouseEvent) => void) | null = null;
-
-    function init() {
-      resize();
-      
-      mouse.x = canvas.clientWidth / 2;
-      mouse.y = canvas.clientHeight / 2;
-
-      // Create particle positions
-      for (let i = 0; i < particleCount; i++) {
-        const p = new Particle();
-        particles.push(p);
-        points.push([p.x * c, p.y * c]);
-      }
-
-      // Delaunay triangulation
-      vertices = Delaunay.triangulate(points);
-      
-      // Create triangles array
-      const tri: number[] = [];
-      for (let i = 0; i < vertices.length; i++) {
-        if (tri.length == 3) {
-          triangles.push(tri.slice());
-          tri.length = 0;
-        }
-        tri.push(vertices[i]);
-      }
-
-      // Set up particle neighbors
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = 0; j < triangles.length; j++) {
-          const k = triangles[j].indexOf(i);
-          if (k !== -1) {
-            triangles[j].forEach((value) => {
-              if (value !== i && particles[i].neighbors.indexOf(value) == -1) {
-                particles[i].neighbors.push(value);
-              }
-            });
-          }
-        }
-      }
-
-      // Create flares
-      if (renderFlares) {
-        for (let i = 0; i < flareCount; i++) {
-          flares.push(new Flare());
-        }
-      }
-
-      // Mouse movement handler
-      mouseHandler = (e: MouseEvent) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-      };
-      
-      document.body.addEventListener('mousemove', mouseHandler, { passive: true });
-    }
 
     init();
     animate();

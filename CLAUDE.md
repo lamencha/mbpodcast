@@ -3,7 +3,7 @@
 ## 🎯 Project Overview
 **Maidenless Behavior** is a dynamic podcast landing page featuring an interactive, Marathon-inspired cyberpunk desktop OS simulation. The project demonstrates advanced React/TypeScript development with stunning layered visual effects.
 
-**Live URL**: https://maidenless-rose.vercel.app/
+**Live URL**: https://mbpodcast.vercel.app/
 **Tech Stack**: React 18 + TypeScript + Vite + Custom CSS + WebGL/Canvas
 
 ---

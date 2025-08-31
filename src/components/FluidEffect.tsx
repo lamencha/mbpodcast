@@ -6,7 +6,7 @@ interface FluidEffectProps {
 
 const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -212,12 +212,14 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setClearColor(0x000000, 0); // Transparent background
 
-        container.appendChild(renderer.domElement);
+        if (container) {
+          container.appendChild(renderer.domElement);
+        }
 
         onWindowResize();
         
         // Create event handlers that we can properly remove later
-        resizeHandler = () => onWindowResize();
+        resizeHandler = onWindowResize;
         mouseHandler = (e: PointerEvent) => {
           if (!container) return;
           const rect = container.getBoundingClientRect();
@@ -261,22 +263,22 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
         uniforms.u_renderpass.value = false;
       }
 
-      function render(delta: number) {
+      function render() {
         uniforms.u_mouse.value.x += (newmouse.x - uniforms.u_mouse.value.x) * divisor;
         uniforms.u_mouse.value.y += (newmouse.y - uniforms.u_mouse.value.y) * divisor;
         
-        uniforms.u_time.value = delta * 0.0005;
+        uniforms.u_time.value = Date.now() * 0.0005;
         renderer.render(scene, camera);
         renderTexture();
       }
 
-      function animate(delta: number) {
+      function animate() {
         animationRef.current = requestAnimationFrame(animate);
-        render(delta);
+        render();
       }
 
       init();
-      animate(0);
+      animate();
     }
 
     function cleanup() {
