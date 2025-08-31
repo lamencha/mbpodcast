@@ -6,6 +6,8 @@
   transform: translateX(-50%);
   z-index: 9999;
   pointer-events: none;
+  /* Ensure visibility on all mobile devices */
+  max-width: 95vw;
 }
 
 .dock {
@@ -322,11 +324,13 @@
 /* Responsive Command Interface */
 @media (max-width: 768px) {
   .dock-container {
-    bottom: 12px;
+    bottom: 24px;
+    /* Add safe area support for mobile devices */
+    bottom: max(24px, env(safe-area-inset-bottom, 24px));
   }
   
   .dock {
-    padding: 6px 12px;
+    padding: 8px 12px;
     gap: 6px;
   }
   
@@ -351,7 +355,9 @@
 
 @media (max-width: 480px) {
   .dock-container {
-    bottom: 8px;
+    bottom: 32px;
+    /* Ensure dock is visible above mobile browser UI */
+    bottom: max(32px, calc(env(safe-area-inset-bottom, 16px) + 16px));
   }
   
   .dock {
