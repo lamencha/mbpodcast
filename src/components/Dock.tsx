@@ -153,7 +153,6 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
                       <div className="bar bar-3"></div>
                       <div className="bar bar-4"></div>
                     </div>
-                    <div className="playlist-triangle"></div>
                   </div>
                 )}
                 {item.id === 2 && (
@@ -171,7 +170,6 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
                   <div className="br2049-icon game-icon">
                     <div className="game-reticle">
                       <div className="reticle-ring"></div>
-                      <div className="reticle-cross reticle-h"></div>
                       <div className="reticle-cross reticle-v"></div>
                       <div className="reticle-corners">
                         <div className="corner corner-tl"></div>

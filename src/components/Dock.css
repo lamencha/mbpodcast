@@ -245,13 +245,13 @@
 
 .dock-item:hover .dock-item-icon {
   color: var(--void-white);
-  filter: drop-shadow(0 0 8px var(--glow-primary));
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
   transform: scale(1.1);
 }
 
 .dock-item:hover .dock-item-label {
-  color: var(--primary-accent);
-  filter: drop-shadow(0 0 4px var(--glow-primary));
+  color: var(--void-white);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 
 /* Command Button Activation - Disabled for clean interactions */
@@ -431,11 +431,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--void-white);
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4));
 }
 
 /* 1. Playlist Icon - Geometric Bars with Play Triangle */
 .playlist-icon {
   transform: scale(0.85);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 
 .playlist-bars {
@@ -443,6 +446,7 @@
   align-items: flex-end;
   gap: 2px;
   position: relative;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 
 .playlist-bars .bar {
@@ -477,6 +481,7 @@
 /* 2. Music Icon - Hexagonal Wave Pattern */
 .music-icon {
   transform: scale(0.9);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 
 .music-hexagon {
@@ -497,16 +502,22 @@
   animation: hexWave 3s ease-in-out infinite;
 }
 
-.hex-wave-1 { animation-delay: 0s; opacity: 0.8; }
+.hex-wave-1 { 
+  animation-delay: 0s; 
+  opacity: 0.8; 
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+}
 .hex-wave-2 { 
   animation-delay: 0.5s; 
   opacity: 0.6; 
-  transform: scale(0.7); 
+  transform: scale(0.7);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 .hex-wave-3 { 
   animation-delay: 1s; 
   opacity: 0.4; 
-  transform: scale(0.4); 
+  transform: scale(0.4);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 
 @keyframes hexWave {
@@ -517,6 +528,8 @@
 /* 3. Game Icon - Angular Target Reticle */
 .game-icon {
   transform: scale(0.9);
+  color: var(--void-white);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 
 .game-reticle {
@@ -535,6 +548,7 @@
   border-radius: 50%;
   transform: translate(-50%, -50%);
   opacity: 0.7;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 
 .reticle-cross {
@@ -561,6 +575,7 @@
 .reticle-corners {
   position: absolute;
   inset: 0;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 
 .corner {
@@ -568,6 +583,13 @@
   width: 4px;
   height: 4px;
   border: 1px solid currentColor;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+  animation: cornerSpin 3s linear infinite;
+}
+
+@keyframes cornerSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .corner-tl { top: 2px; left: 2px; border-right: none; border-bottom: none; }
@@ -578,6 +600,7 @@
 /* 4. Create Icon - Geometric Crystal/Diamond */
 .create-icon {
   transform: scale(0.85);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 
 .create-diamond {
@@ -591,6 +614,12 @@
   position: absolute;
   border: 1px solid currentColor;
   animation: diamondShine 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+}
+
+@keyframes diamondSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .facet-1 {
@@ -633,6 +662,8 @@
   background: currentColor;
   transform: translate(-50%, -50%);
   opacity: 0.6;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+  animation: diamondSpin 6s linear infinite;
 }
 
 @keyframes diamondShine {
@@ -643,6 +674,7 @@
 /* 5. System Icon - Hexagonal Grid Pattern */
 .system-icon {
   transform: scale(0.85);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 
 .system-grid {
@@ -657,6 +689,13 @@
   height: 8px;
   border: 1px solid currentColor;
   clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+  animation: systemHexPulse 3s ease-in-out infinite;
+}
+
+@keyframes systemHexPulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
 }
 
 .hex-center {
@@ -689,6 +728,13 @@
   position: absolute;
   background: currentColor;
   opacity: 0.4;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+  animation: systemLinePulse 2s ease-in-out infinite;
+}
+
+@keyframes systemLinePulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
 }
 
 .line-1 {
@@ -820,7 +866,7 @@
   right: 8px;
   width: 6px;
   height: 6px;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--glow-primary);
   border-radius: 50%;
   animation: indicatorPulse 1.8s ease-in-out infinite;
 }
@@ -846,7 +892,7 @@
   width: 10px;
   height: 10px;
   background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--glow-primary);
   clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
   animation: nodeActivity 5s ease-in-out infinite;
 }

@@ -1,31 +1,30 @@
-/* Nebula OS - Clean AI System Bar */
+/* BR2049 System Status Bar */
 .menubar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 34px;
-  background: var(--surface-bg);
-  border-bottom: 2px solid var(--primary-accent);
-  /* Command header texture - same as window titles */
+  height: 28px;
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  /* Film grain overlay like other monitors */
   background-image: 
-    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%, rgba(0, 0, 0, 0.05) 100%);
+    radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 8px 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'Inter', 'SF Pro Text', system-ui, sans-serif;
-  font-size: 12px;
-  font-weight: 500;
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+  font-size: 10px;
+  font-weight: normal;
   text-transform: none;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.5px;
   z-index: 1000;
-  color: var(--text-primary);
+  color: rgba(255, 255, 255, 0.8);
   user-select: none;
-  padding: 0 20px;
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  padding: 0 16px;
+  backdrop-filter: blur(16px);
+  opacity: 0.6;
 }
 
 @keyframes nebulaSystemFlow {
@@ -71,103 +70,103 @@
 }
 
 .menu-title {
-  padding: 0 16px;
-  height: calc(100% - 6px);
+  padding: 0 8px;
+  height: calc(100% - 4px);
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.3s ease;
   white-space: nowrap;
-  border-radius: 8px;
-  margin: 3px 0;
+  margin: 2px 2px;
   min-width: fit-content;
-  color: var(--text-secondary);
-  filter: drop-shadow(var(--glow-quantum));
+  color: rgba(255, 255, 255, 0.6);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
 }
 
 .menu-title:hover {
-  background: var(--glass-neural);
-  color: var(--text-primary);
-  filter: drop-shadow(var(--glow-quantum));
-  transform: translateY(-1px);
-  box-shadow: var(--glow-quantum);
+  opacity: 1;
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .menu-title.active {
-  background: var(--glass-quantum);
-  border: 1px solid var(--primary-accent);
-  color: var(--text-primary);
-  filter: drop-shadow(var(--glow-nebula));
-  box-shadow: var(--glow-nebula);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .app-name {
-  font-weight: 600;
+  font-weight: normal;
   margin-left: 16px;
-  padding-left: 16px;
-  border-left: 1px solid var(--quantum-silver);
-  min-width: 140px;
-  color: var(--text-primary);
-  filter: drop-shadow(var(--glow-quantum));
-  background: var(--glass-neural);
-  border-radius: 8px;
-  box-shadow: inset 0 1px 0 var(--glass-quantum);
+  padding-left: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  min-width: 120px;
+  color: rgba(255, 255, 255, 0.8);
+  background: transparent;
 }
 
-/* Clean AI Dropdown Menus */
+/* BR2049 Style Dropdown Menus */
 .menu-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 220px;
-  background: var(--surface-ai);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border: 1px solid var(--quantum-silver);
-  border-radius: 12px;
-  box-shadow: var(--glow-nebula), 0 10px 40px rgba(0, 0, 0, 0.3);
+  min-width: 200px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   padding: 8px 0;
   z-index: 1001;
-  font-size: 13px;
-  animation: nebulaMenuFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 10px;
+  animation: br2049MenuFade 0.2s ease-out;
+  opacity: 0.9;
+  /* Film grain overlay */
+  background-image: 
+    radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 8px 8px;
 }
 
-@keyframes nebulaMenuFadeIn {
-  from {
+@keyframes br2049MenuFade {
+  0% {
     opacity: 0;
-    transform: translateY(-8px) scale(0.95);
+    transform: translateY(-4px);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+  100% {
+    opacity: 0.9;
+    transform: translateY(0);
   }
 }
 
 .menu-item {
-  padding: 10px 20px;
+  padding: 6px 16px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  color: var(--text-secondary);
-  font-weight: 500;
-  margin: 2px 8px;
-  border-radius: 8px;
+  transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: normal;
+  margin: 1px 4px;
+  border-radius: 1px;
+  border: 1px solid transparent;
+  background: transparent;
 }
 
 .menu-item:hover {
-  background: var(--glass-neural);
-  color: var(--text-primary);
-  box-shadow: var(--glow-quantum);
-  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .menu-separator {
   height: 1px;
-  background: var(--glass-quantum);
-  margin: 8px 20px;
-  box-shadow: var(--glow-quantum);
+  background: rgba(255, 255, 255, 0.15);
+  margin: 4px 16px;
 }
 
 .menu-arrow {
@@ -176,24 +175,28 @@
   color: var(--text-muted);
 }
 
-/* BR2049 Status Monitors */
+/* BR2049 Status Monitors - Consistent with existing monitors */
 .status-monitor {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  border-radius: 2px;
   padding: 4px 6px;
   margin: 2px;
   backdrop-filter: blur(8px);
-  opacity: 0.7;
+  opacity: 0.6;
   font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
   font-size: 7px;
   color: rgba(255, 255, 255, 0.8);
   transition: opacity 0.3s ease;
   min-width: 50px;
+  /* Film grain overlay */
+  background-image: 
+    radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 8px 8px;
 }
 
 .status-monitor:hover {
-  opacity: 0.9;
+  opacity: 0.8;
 }
 
 .monitor-header {
@@ -254,6 +257,12 @@
 /* Battery Monitor Specific */
 .status-monitor.battery {
   margin-top: -18px;
+}
+
+/* System and Network Monitor Positioning */
+.status-monitor.network,
+.status-monitor.time {
+  margin-top: 8px;
 }
 
 .status-monitor.battery .data-primary {
@@ -346,19 +355,10 @@
   background: transparent;
 }
 
-/* Brand icon nebula pulse */
+/* Simple brand icon */
 .menu-title:first-child {
-  animation: nebulaBrandPulse 4s ease-in-out infinite;
-}
-
-@keyframes nebulaBrandPulse {
-  0%, 100% {
-    filter: drop-shadow(var(--glow-quantum));
-  }
-  50% {
-    filter: drop-shadow(var(--glow-nebula));
-    color: var(--primary-accent);
-  }
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Responsive adjustments */
