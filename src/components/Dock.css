@@ -48,6 +48,45 @@
   /* Clean frosted background - no scan lines */
 }
 
+/* BR2049 Real-time Monitoring Indicator */
+.dock::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  width: 4px;
+  height: 4px;
+  background: rgba(0, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 6px rgba(0, 255, 255, 0.8),
+    0 0 12px rgba(0, 255, 255, 0.4);
+  animation: systemMonitorPulse 2s ease-in-out infinite;
+}
+
+@keyframes systemMonitorPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+    background: rgba(0, 255, 255, 0.9);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.3);
+    background: rgba(0, 255, 255, 1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+    background: rgba(255, 255, 255, 0.8);
+  }
+  75% {
+    opacity: 0.8;
+    transform: scale(1.1);
+    background: rgba(0, 255, 255, 0.95);
+  }
+}
+
 @keyframes dockGradientFlow {
   0%, 100% {
     background-position: 0% 50%;

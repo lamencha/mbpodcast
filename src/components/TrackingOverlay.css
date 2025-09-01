@@ -1,0 +1,311 @@
+/* Blade Runner 2049 Inspired Real-Time Tracking Overlay */
+.tracking-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* Organic Scanning Line - BR2049 Style */
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.2) 20%, 
+    rgba(0, 255, 255, 0.8) 50%, 
+    rgba(255, 255, 255, 0.2) 80%, 
+    transparent 100%
+  );
+  box-shadow: 
+    0 0 10px rgba(0, 255, 255, 0.5),
+    0 0 20px rgba(0, 255, 255, 0.3),
+    0 0 40px rgba(0, 255, 255, 0.1);
+  animation: scanDistortion 2.5s ease-in-out;
+}
+
+/* Organic warping effect inspired by BR2049's experimental textures */
+@keyframes scanDistortion {
+  0% { 
+    filter: blur(0px) brightness(1);
+    transform: scaleX(1);
+  }
+  25% { 
+    filter: blur(0.5px) brightness(1.2);
+    transform: scaleX(1.05);
+  }
+  50% { 
+    filter: blur(1px) brightness(0.8);
+    transform: scaleX(0.95);
+  }
+  75% { 
+    filter: blur(0.5px) brightness(1.1);
+    transform: scaleX(1.02);
+  }
+  100% { 
+    filter: blur(0px) brightness(1);
+    transform: scaleX(1);
+  }
+}
+
+/* Data Points - BR2049 Tracking Elements */
+.data-point {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  animation: dataPointAppear 0.5s ease-out, dataPointPulse 3s ease-in-out infinite 0.5s;
+}
+
+.data-point-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  animation: ringExpand 2s ease-out infinite;
+}
+
+.data-point-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  background: rgba(0, 255, 255, 0.9);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0, 255, 255, 0.8);
+}
+
+.data-point-id {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Inter', monospace;
+  font-size: 8px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  /* Organic screen burn effect */
+  filter: contrast(1.2) brightness(0.9);
+}
+
+/* Different data point types */
+.data-point-contact .data-point-center {
+  background: rgba(0, 255, 255, 0.9);
+  box-shadow: 0 0 6px rgba(0, 255, 255, 0.8);
+}
+
+.data-point-anomaly .data-point-center {
+  background: rgba(255, 0, 128, 0.9);
+  box-shadow: 0 0 6px rgba(255, 0, 128, 0.8);
+}
+
+.data-point-system .data-point-center {
+  background: rgba(0, 255, 65, 0.9);
+  box-shadow: 0 0 6px rgba(0, 255, 65, 0.8);
+}
+
+@keyframes dataPointAppear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes dataPointPulse {
+  0%, 100% { 
+    opacity: 0.8; 
+    filter: brightness(1);
+  }
+  50% { 
+    opacity: 0.4; 
+    filter: brightness(0.7);
+  }
+}
+
+@keyframes ringExpand {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* System Status Readouts - BR2049 Utilitarian Style */
+.system-status {
+  position: absolute;
+  top: 45px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: 'Inter', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.status-readout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 2px solid rgba(0, 255, 255, 0.6);
+  /* Organic texture overlay */
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 30%),
+    radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.03) 0%, transparent 40%);
+  /* Screen burn effect */
+  filter: contrast(1.1) brightness(0.95);
+  animation: statusFlicker 8s ease-in-out infinite;
+}
+
+.status-label {
+  color: rgba(255, 255, 255, 0.6);
+  min-width: 24px;
+}
+
+.status-value {
+  color: rgba(0, 255, 255, 0.9);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 4px rgba(0, 255, 255, 0.4);
+}
+
+/* Subtle screen degradation flicker */
+@keyframes statusFlicker {
+  0%, 98%, 100% { 
+    opacity: 1;
+    filter: contrast(1.1) brightness(0.95);
+  }
+  99% { 
+    opacity: 0.8;
+    filter: contrast(1.3) brightness(0.8);
+  }
+}
+
+/* Tracking Reticle - BR2049 Geometric Style */
+.tracking-reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  transform: translate(-50%, -50%);
+  opacity: 0.3;
+  animation: reticleRotate 30s linear infinite, reticleFlicker 12s ease-in-out infinite;
+}
+
+.reticle-crosshair {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+}
+
+.reticle-crosshair::before,
+.reticle-crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.reticle-crosshair::before {
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.reticle-crosshair::after {
+  left: 50%;
+  top: 10%;
+  bottom: 10%;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.reticle-rings {
+  position: absolute;
+  inset: 20px;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 50%;
+  border-style: dashed;
+  border-dash-array: 5px 10px;
+}
+
+.reticle-rings::before {
+  content: '';
+  position: absolute;
+  inset: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  border-style: dotted;
+}
+
+@keyframes reticleRotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes reticleFlicker {
+  0%, 90%, 100% { opacity: 0.3; }
+  92%, 96% { opacity: 0.1; }
+  94% { opacity: 0.5; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .system-status {
+    top: 30px;
+    right: 10px;
+    font-size: 8px;
+  }
+  
+  .tracking-reticle {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .data-point {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .data-point-id {
+    font-size: 7px;
+    top: -20px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .tracking-reticle {
+    opacity: 0.2;
+  }
+  
+  .system-status {
+    opacity: 0.8;
+  }
+}

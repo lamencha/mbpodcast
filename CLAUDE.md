@@ -18,6 +18,7 @@ src/
 │   ├── Desktop.tsx         # Base container component
 │   ├── ParticleField.tsx   # Canvas 2D particle animation system
 │   ├── FluidEffect.tsx     # WebGL shader fluid dynamics
+│   ├── TrackingOverlay.tsx # BR2049 inspired real-time tracking interface
 │   ├── Window.tsx          # Draggable/resizable windows with touch support
 │   ├── Dock.tsx           # Marathon-style command interface (5 buttons)
 │   ├── MenuBar.tsx        # Top system menu bar
@@ -27,10 +28,11 @@ src/
 └── index.css              # Marathon cyberpunk color system
 ```
 
-### Visual Effects System (3-Layer Architecture)
-1. **Base**: Solid black background maintaining Marathon aesthetic
+### Visual Effects System (4-Layer Architecture)
+1. **Base**: Solid black background with film grain and organic distortion effects
 2. **Layer 1**: `ParticleField` - 35 cyan particles with Delaunay triangulation connections
 3. **Layer 2**: `FluidEffect` - WebGL shader-based fluid dynamics with mouse interaction
+4. **Layer 3**: `TrackingOverlay` - BR2049 inspired real-time scanning and data tracking interface
 
 ---
 
@@ -79,6 +81,16 @@ src/
 - **Enhanced Visuals**: Animated nebula gradient background with horizontal scan lines overlay
 - **Material Icons**: White icons with individual colored glow effects in inactive state
 - **Interactive States**: Transparent black hover background (40% opacity) with enhanced glow effects
+- **BR2049 Monitoring**: Real-time system pulse indicator with breathing animation
+
+### Real-Time Tracking System (Blade Runner 2049 Inspired)
+- **Periodic Scanning**: Automated scans every 15-25 seconds with organic distortion effects
+- **Dynamic Data Points**: Contact, anomaly, and system detection markers with fade-out lifecycle
+- **System Metrics**: Live CONN/SIG/TRK readouts in utilitarian Territory Studio styling
+- **Tracking Reticle**: Subtle geometric overlay with continuous rotation and flicker effects
+- **Data Streams**: Window-integrated vertical/horizontal flow animations for active processing
+- **Screen Degradation**: Organic texture overlays, burn effects, and experimental visual distortion
+- **Utilitarian Design**: Minimal color palette emphasizing grayscale with cyan accents
 
 ---
 
@@ -187,6 +199,13 @@ Main Menu → Music → Playlists → "Maidenless Behavior" → Song Selection �
    - White icons/text with individual colored glow effects in inactive state
    - Added animated nebula gradient to window control button hover states
    - Alternating color scheme: dock buttons now use --nebula-rose and --nebula-teal pattern
+6. **Phase 11**: Blade Runner 2049 inspired real-time tracking interface (January 2025)
+   - Real-time scanning overlay with periodic data point detection and organic distortion effects
+   - System status readouts showing live connection, signal, and tracking metrics
+   - Data visualization streams within windows (vertical/horizontal flow animations)
+   - Screen burn and degradation effects with organic texture overlays
+   - Real-time monitoring indicator on dock with breathing pulse animation
+   - Territory Studio inspired experimental approach using organic textures and utilitarian design
 
 ### Development Server Management
 **IMPORTANT**: Always stop existing dev servers before starting new ones to avoid port conflicts and resource issues.

@@ -172,6 +172,87 @@
   );
 }
 
+/* BR2049 Data Stream Elements */
+.window-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 255, 255, 0.3) 20%,
+    rgba(0, 255, 255, 0.6) 40%,
+    rgba(0, 255, 255, 0.3) 60%,
+    transparent 80%,
+    transparent 100%
+  );
+  animation: dataStreamFlow 4s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.window-content::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(0, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.2) 80%,
+    transparent 100%
+  );
+  animation: dataStreamHorizontal 6s ease-in-out infinite reverse;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes dataStreamFlow {
+  0%, 100% {
+    opacity: 0.3;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 255, 255, 0.2) 20%,
+      rgba(0, 255, 255, 0.4) 40%,
+      rgba(0, 255, 255, 0.2) 60%,
+      transparent 80%,
+      transparent 100%
+    );
+  }
+  50% {
+    opacity: 0.7;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 255, 255, 0.4) 10%,
+      rgba(0, 255, 255, 0.8) 30%,
+      rgba(0, 255, 255, 0.6) 50%,
+      rgba(0, 255, 255, 0.4) 70%,
+      transparent 90%,
+      transparent 100%
+    );
+  }
+}
+
+@keyframes dataStreamHorizontal {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scaleX(0.8);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scaleX(1.2);
+  }
+}
+
 .youtube-embed {
   width: 100%;
   height: 100%;

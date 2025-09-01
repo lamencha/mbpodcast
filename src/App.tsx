@@ -6,6 +6,7 @@ import IPod from './components/IPod';
 import MenuBar from './components/MenuBar';
 import ParticleField from './components/ParticleField';
 import FluidEffect from './components/FluidEffect';
+import TrackingOverlay from './components/TrackingOverlay';
 import { YouTubePlaylistService } from './services/youtubePlaylistService';
 import './App.css';
 
@@ -372,6 +373,9 @@ function App() {
       
       {/* Fluid shader effect overlay */}
       <FluidEffect />
+      
+      {/* Blade Runner 2049 inspired tracking overlay */}
+      <TrackingOverlay />
       
       <MenuBar 
         activeApp={activeApp}

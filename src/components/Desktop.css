@@ -22,7 +22,26 @@
   opacity: 0.3;
   z-index: 1;
   pointer-events: none;
-  animation: filmGrainMove 0.5s steps(8, end) infinite;
+  animation: filmGrainMove 0.5s steps(8, end) infinite, screenBurnFlicker 20s ease-in-out infinite;
+}
+
+/* BR2049 Screen Burn and Degradation Effects */
+.desktop::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(135deg, transparent 0%, rgba(0, 0, 0, 0.1) 25%, transparent 50%, rgba(0, 0, 0, 0.05) 75%, transparent 100%),
+    radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.02) 0%, transparent 40%),
+    radial-gradient(circle at 15% 85%, rgba(0, 255, 255, 0.02) 0%, transparent 30%);
+  z-index: 2;
+  pointer-events: none;
+  animation: organicDistortion 25s ease-in-out infinite;
+  /* BR2049 organic texture overlay */
+  mix-blend-mode: overlay;
 }
 
 @keyframes filmGrainMove {
@@ -37,6 +56,44 @@
   80% { transform: translate(-1px, 2px); }
   90% { transform: translate(1px, -1px); }
   100% { transform: translate(0, 0); }
+}
+
+@keyframes screenBurnFlicker {
+  0%, 95%, 100% {
+    opacity: 0.3;
+    filter: brightness(1) contrast(1);
+  }
+  97% {
+    opacity: 0.1;
+    filter: brightness(0.8) contrast(1.3);
+  }
+  98% {
+    opacity: 0.5;
+    filter: brightness(1.2) contrast(0.9);
+  }
+}
+
+@keyframes organicDistortion {
+  0%, 100% {
+    background-position: 0% 0%, 85% 15%, 15% 85%;
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    background-position: 10% 10%, 75% 25%, 25% 75%;
+    opacity: 0.8;
+    transform: scale(1.02) rotate(0.5deg);
+  }
+  50% {
+    background-position: 20% 20%, 65% 35%, 35% 65%;
+    opacity: 0.6;
+    transform: scale(0.98) rotate(-0.3deg);
+  }
+  75% {
+    background-position: 15% 5%, 80% 20%, 20% 80%;
+    opacity: 0.9;
+    transform: scale(1.01) rotate(0.2deg);
+  }
 }
 
 /* Responsive adjustments for desktop */
