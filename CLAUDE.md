@@ -36,27 +36,28 @@ src/
 
 ---
 
-## 🎨 Design System - Marathon Cyberpunk Aesthetic
+## 🎨 Design System - Blade Runner 2049 Utilitarian Interface
 
 ### Color Palette (CSS Custom Properties)
 ```css
 :root {
-  --primary-accent: #00ffff;      /* Neon cyan */
-  --secondary-accent: #ff0080;    /* Neon magenta */
-  --success-accent: #00ff41;      /* Electric green */
+  --primary-accent: #00ffff;      /* Neon cyan (accent only) */
+  --secondary-accent: #ff0080;    /* Neon magenta (accent only) */
+  --success-accent: #00ff41;      /* Electric green (accent only) */
   --void-black: #000000;          /* True black background */
-  --void-white: #ffffff;          /* Pure white accents */
+  --void-white: #ffffff;          /* Primary interface color */
   --surface-glass: rgba(0, 0, 0, 0.8);  /* Dark glass surfaces */
-  --glow-primary: rgba(0, 255, 255, 0.3);  /* Cyan glow effects */
+  --glow-white: rgba(255, 255, 255, 0.6);  /* White glow effects */
 }
 ```
 
 ### Visual Principles
-- **Graphic Realism**: Marathon-inspired utilitarian sci-fi aesthetics
-- **Hard Geometry**: Angular clip-paths and geometric shapes
-- **Scan Line Textures**: CSS repeating-linear-gradient overlays throughout
-- **Neon Glow Effects**: Drop-shadow filters instead of text-shadow
-- **Typography**: Bold, all-caps utilitarian fonts with increased letter-spacing
+- **Utilitarian Minimalism**: BR2049 Territory Studio inspired clean interfaces
+- **Monochromatic Foundation**: Primarily white/grey elements with subtle cyan accents
+- **Film Grain Texture**: Radial-gradient overlays for organic visual distortion
+- **White Glow Effects**: Subtle luminous drop-shadows on all interactive elements
+- **Geometric Precision**: Clean geometric shapes with minimal ornamentation
+- **Transparency & Blur**: Backdrop-filter effects for depth and layering
 
 ---
 
@@ -74,16 +75,29 @@ src/
 - **Physical Controls**: Play/pause button controls video via postMessage API
 - **Navigation**: Main Menu → Music → Playlists → Songs (17-track playlist)
 
-### Dock System (Marathon Command Interface)
-- **5 Buttons**: playlist_play, library_music, sports_esports, palette, settings
-- **Status Indicators**: Vertical scan line bars animate when apps are active
-- **Geometric Design**: Hard clip-path shapes (15% skew) with alternating --nebula-rose/--nebula-teal colors
-- **Enhanced Visuals**: Animated nebula gradient background with horizontal scan lines overlay
-- **Material Icons**: White icons with individual colored glow effects in inactive state
-- **Interactive States**: Transparent black hover background (40% opacity) with enhanced glow effects
-- **BR2049 Monitoring**: Real-time system pulse indicator with breathing animation
+### Dock System (BR2049 Command Interface)
+- **5 Custom Icons**: Geometric BR2049-style icons replacing material icons
+  - **Playlist**: Animated vertical bars with white glow
+  - **Music**: Hexagonal wave patterns with pulsing animation
+  - **Game**: Target reticle with spinning corner elements
+  - **Create**: Crystal diamond with rotating core
+  - **System**: Hexagonal grid with pulsing elements
+- **White Glow Theme**: Consistent luminous white drop-shadows on all elements
+- **Dynamic Animations**: Spinning, pulsing, and scaling effects for visual feedback
+- **Interactive States**: White glow effects on hover instead of colored highlights
+- **Clean Geometry**: Precise geometric shapes following Territory Studio design language
+- **System Monitoring**: Real-time pulse indicator with subtle breathing animation
 
-### Real-Time Tracking System (Blade Runner 2049 Inspired)
+### Interface Systems (Blade Runner 2049 Inspired)
+
+#### MenuBar (System Status Bar)
+- **Transparent Design**: Film grain background with 60% opacity for clean integration
+- **Minimalist Layout**: 28px height with monospace typography and reduced visual noise
+- **Status Monitors**: Three compact monitoring panels (NET, PWR, SYS) with white text
+- **Subtle Interactions**: White glow hover states replacing previous colored highlights
+- **Film Grain Overlay**: Consistent radial-gradient texture across all interface elements
+
+#### Real-Time Tracking System
 - **Periodic Scanning**: Automated scans every 15-25 seconds with organic distortion effects
 - **Dynamic Data Points**: Contact, anomaly, and system detection markers with fade-out lifecycle
 - **System Metrics**: Live CONN/SIG/TRK readouts in utilitarian Territory Studio styling
@@ -188,48 +202,32 @@ Main Menu → Music → Playlists → "Maidenless Behavior" → Song Selection �
 ## 🔍 Development Context
 
 ### Recent Major Changes
-1. **Phase 8**: Complete Marathon cyberpunk visual transformation
-2. **Phase 9**: Added layered visual effects (particles + fluid dynamics)
-3. **Mobile Support**: Comprehensive touch compatibility implementation
-4. **Performance**: Optimized rendering pipeline for multiple visual layers
-5. **Phase 10**: Enhanced dock and window visual effects (January 2025)
-   - Added film grain background effect to desktop
-   - Enhanced dock with animated nebula gradient background and horizontal scan lines
-   - Improved dock button styling with increased skew (15% clip-path)
-   - White icons/text with individual colored glow effects in inactive state
-   - Added animated nebula gradient to window control button hover states
-   - Alternating color scheme: dock buttons now use --nebula-rose and --nebula-teal pattern
-6. **Phase 11**: Blade Runner 2049 inspired real-time tracking interface (January 2025)
-   - Real-time scanning overlay with periodic data point detection and organic distortion effects
-   - System status readouts showing live connection, signal, and tracking metrics
-   - Data visualization streams within windows (vertical/horizontal flow animations)
-   - Screen burn and degradation effects with organic texture overlays
-   - Real-time monitoring indicator on dock with breathing pulse animation
-   - Territory Studio inspired experimental approach using organic textures and utilitarian design
-7. **Phase 12**: Enhanced network topology with solar system architecture (January 2025)
-   - Full desktop network topology with client-server architecture distributed across entire screen
-   - 14-node network: 2 servers, 3 gateways, 5 clients, 2 satellites, 2 relays
-   - Real-time data flow visualization with thin connecting lines and subtle animations
-   - Node-specific styling: servers (12px cyan glow), gateways (10px grey), clients (6px grey), satellites (8px with orbit animation), relays (7px grey)
-   - Live data readouts: data rates (KB/s) and response times (ms) with tabular numeric fonts
-   - Status-based connection animations: active (cyan), transmitting (pulsing), idle (dim grey)
-   - Reduced opacity (0.4) and subtle visual effects to maintain clean, non-distracting BR2049 aesthetic
-   - Strategic positioning: corners for clients, edges for satellites, center distributed for servers/gateways
-8. **Phase 13**: BR2049 geometric dock icons implementation (January 2025)
+1. **Phase 8-12**: Foundation development (Marathon cyberpunk → BR2049 transition)
+   - Initial Marathon-inspired cyberpunk aesthetic with neon colors
+   - Layered visual effects system (particles + fluid dynamics + tracking overlay)
+   - Comprehensive touch compatibility and mobile optimization
+   - Network topology visualization and monitoring systems
+
+2. **Phase 13**: BR2049 geometric dock icons implementation (January 2025)
    - Replaced Material Icons with custom BR2049-inspired geometric shapes using pure CSS
-   - 5 unique icon designs: playlist (bars+triangle), music (hexagonal waves), game (target reticle), create (crystal diamond), system (hexagonal grid)
+   - 5 unique icon designs: playlist (vertical bars), music (hexagonal waves), game (target reticle), create (crystal diamond), system (hexagonal grid)
    - 300+ lines of CSS with complex clip-path geometry and subtle animations
-   - Icons maintain cyberpunk aesthetic with angular shapes, cyan/magenta glow effects, and Territory Studio design language
-   - Seamless integration with existing dock hover states and active window indicators
-   - All icons created using CSS-only approach with clip-path, transforms, and keyframe animations
-9. **Phase 14**: Comprehensive monitoring system implementation (January 2025)
+   - Territory Studio design language with geometric precision
+
+3. **Phase 14**: Comprehensive monitoring system implementation (January 2025)
    - Added three-panel monitoring interface with distinct visual styles and data types
-   - **System Monitor** (left): Process monitoring, CPU/RAM/Disk metrics, 15 active processes with real-time data (224px width)
-   - **Network Status** (top-right): Enhanced connection monitoring with 6 metrics + encryption bar, circular header design (100px width)  
-   - **Environmental Monitor** (bottom-right): Temperature, humidity, pressure, air quality, wind compass with hexagonal design (176px width)
    - All monitors: 60% opacity, greyscale color scheme, transparent backgrounds with film grain overlay integration
    - Real-time data simulation with proper error handling and NaN prevention using null coalescing operators
    - Mobile responsive design with scaled font sizes and adjusted layouts
+
+4. **Phase 15**: Clean BR2049 interface styling and enhanced animations (January 2025)
+   - **Complete visual redesign**: Transitioned from colorful Marathon cyberpunk to clean BR2049 utilitarian aesthetic
+   - **MenuBar simplification**: Reduced height (28px), transparent background, film grain overlay, monospace typography
+   - **White glow theming**: Replaced all colored glow effects with consistent white luminous drop-shadows
+   - **Enhanced dock animations**: Added dynamic spinning, pulsing, and scaling effects to all geometric icons
+   - **Cleaned icon designs**: Removed unnecessary elements (horizontal crosshair, triangle overlay) for cleaner appearance
+   - **Unified interaction system**: All hover states now use white glow effects instead of cyan/magenta highlights
+   - **Film grain consistency**: Applied radial-gradient texture across all interface elements for organic visual cohesion
 
 ### Development Server Management
 **IMPORTANT**: Always stop existing dev servers before starting new ones to avoid port conflicts and resource issues.
@@ -271,11 +269,13 @@ npm run lint         # Code linting (if available)
 ## 💡 AI Assistant Notes
 
 ### When Working on This Project:
-- **Always maintain** the Marathon cyberpunk aesthetic (neon cyan/magenta, hard geometry)
+- **Always maintain** the BR2049 utilitarian aesthetic (white/grey primary, minimal cyan accents, film grain textures)
 - **Test thoroughly** on both desktop and mobile (touch events are critical)
 - **Performance first** - multiple visual layers require optimization
 - **Preserve functionality** - visual changes should never break existing features
 - **Use existing patterns** - follow established component architecture and state management
+- **White glow consistency** - all interactive elements should use white drop-shadow effects
+- **Film grain integration** - maintain radial-gradient texture overlays across interface elements
 
 ### Development Server Best Practices:
 - **CRITICAL**: Always check for and stop existing dev servers before starting new ones
@@ -329,4 +329,4 @@ taskkill /F /IM node.exe
 
 ---
 
-This project showcases the intersection of nostalgic design, modern web technology, advanced graphics programming, and creative UX design - all wrapped in an authentic Marathon-inspired cyberpunk aesthetic that's both functional and visually stunning.
+This project showcases the intersection of nostalgic design, modern web technology, advanced graphics programming, and creative UX design - all wrapped in an authentic Blade Runner 2049-inspired utilitarian interface that emphasizes clean functionality while maintaining visual sophistication through subtle animations and luminous white accents.
