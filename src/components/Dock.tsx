@@ -108,9 +108,72 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
               } as React.CSSProperties}
             >
               <div className="dock-item-background" />
-              <span className="dock-item-icon material-icons">
-                {item.icon}
-              </span>
+              <div className="dock-item-icon">
+                {item.id === 1 && (
+                  // Playlist - BR2049 style geometric bars
+                  <div className="br2049-icon playlist-icon">
+                    <div className="playlist-bars">
+                      <div className="bar bar-1"></div>
+                      <div className="bar bar-2"></div>
+                      <div className="bar bar-3"></div>
+                      <div className="bar bar-4"></div>
+                    </div>
+                    <div className="playlist-triangle"></div>
+                  </div>
+                )}
+                {item.id === 2 && (
+                  // Music - Hexagonal wave pattern
+                  <div className="br2049-icon music-icon">
+                    <div className="music-hexagon">
+                      <div className="hex-wave hex-wave-1"></div>
+                      <div className="hex-wave hex-wave-2"></div>
+                      <div className="hex-wave hex-wave-3"></div>
+                    </div>
+                  </div>
+                )}
+                {item.id === 3 && (
+                  // Game - Angular target reticle
+                  <div className="br2049-icon game-icon">
+                    <div className="game-reticle">
+                      <div className="reticle-ring"></div>
+                      <div className="reticle-cross reticle-h"></div>
+                      <div className="reticle-cross reticle-v"></div>
+                      <div className="reticle-corners">
+                        <div className="corner corner-tl"></div>
+                        <div className="corner corner-tr"></div>
+                        <div className="corner corner-bl"></div>
+                        <div className="corner corner-br"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {item.id === 4 && (
+                  // Create - Geometric crystal/diamond
+                  <div className="br2049-icon create-icon">
+                    <div className="create-diamond">
+                      <div className="diamond-facet facet-1"></div>
+                      <div className="diamond-facet facet-2"></div>
+                      <div className="diamond-facet facet-3"></div>
+                      <div className="diamond-core"></div>
+                    </div>
+                  </div>
+                )}
+                {item.id === 5 && (
+                  // System - Hexagonal grid pattern
+                  <div className="br2049-icon system-icon">
+                    <div className="system-grid">
+                      <div className="grid-hex hex-center"></div>
+                      <div className="grid-hex hex-top"></div>
+                      <div className="grid-hex hex-bottom"></div>
+                      <div className="grid-lines">
+                        <div className="grid-line line-1"></div>
+                        <div className="grid-line line-2"></div>
+                        <div className="grid-line line-3"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
               <span className="dock-item-label">
                 {item.label}
               </span>
