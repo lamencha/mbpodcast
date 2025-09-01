@@ -16,6 +16,12 @@ interface MenuItem {
 const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [systemStatus, setSystemStatus] = useState({
+    wifiStrength: 85 + Math.random() * 15,
+    batteryLevel: 75 + Math.random() * 25,
+    networkActivity: Math.random() * 100,
+    cpuTemp: 45 + Math.random() * 20
+  });
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Update time every second
@@ -25,6 +31,20 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
     }, 1000);
 
     return () => clearInterval(timer);
+  }, []);
+
+  // Update system status periodically
+  useEffect(() => {
+    const statusTimer = setInterval(() => {
+      setSystemStatus(prev => ({
+        wifiStrength: Math.max(70, Math.min(100, prev.wifiStrength + (Math.random() - 0.5) * 5)),
+        batteryLevel: Math.max(60, Math.min(100, prev.batteryLevel + (Math.random() - 0.5) * 2)),
+        networkActivity: Math.max(0, Math.min(100, prev.networkActivity + (Math.random() - 0.5) * 20)),
+        cpuTemp: Math.max(35, Math.min(75, prev.cpuTemp + (Math.random() - 0.5) * 3))
+      }));
+    }, 2000);
+
+    return () => clearInterval(statusTimer);
   }, []);
 
   // Close menu when clicking outside
@@ -123,6 +143,17 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
       minute: '2-digit',
       hour12: true
     });
+  };
+
+  const getWifiIcon = (strength: number) => {
+    if (strength > 80) return '▲▲▲';
+    if (strength > 60) return '▲▲◦';
+    if (strength > 40) return '▲◦◦';
+    return '◦◦◦';
+  };
+
+  const getBatteryStatus = (level: number) => {
+    return level > 80 ? 'HIGH' : level > 40 ? 'MID' : 'LOW';
   };
 
   const renderMenuItem = (item: MenuItem, index: number) => {
@@ -225,9 +256,45 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
       </div>
 
       <div className="menubar-right">
-        <div className="status-item wifi">▲▲▲</div>
-        <div className="status-item battery">⚡85%</div>
-        <div className="status-item time">{formatTime(currentTime)}</div>
+        {/* Network Status Monitor */}
+        <div className="status-monitor network">
+          <div className="monitor-header">
+            <div className="monitor-icon">◈</div>
+            <div className="monitor-label">NET</div>
+          </div>
+          <div className="monitor-data">
+            <div className="data-primary">{getWifiIcon(systemStatus.wifiStrength)}</div>
+            <div className="data-value">{(systemStatus.wifiStrength || 0).toFixed(0)}%</div>
+            <div className="data-activity">
+              <div className="activity-bar" style={{ width: `${systemStatus.networkActivity}%` }}></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Battery Status Monitor */}
+        <div className="status-monitor battery">
+          <div className="monitor-header">
+            <div className="monitor-icon">⬢</div>
+            <div className="monitor-label">PWR</div>
+          </div>
+          <div className="monitor-data">
+            <div className="data-value">{(systemStatus.batteryLevel || 0).toFixed(0)}%</div>
+            <div className="data-status">{getBatteryStatus(systemStatus.batteryLevel)}</div>
+          </div>
+        </div>
+
+        {/* Time Monitor */}
+        <div className="status-monitor time">
+          <div className="monitor-header">
+            <div className="monitor-icon">◦</div>
+            <div className="monitor-label">SYS</div>
+          </div>
+          <div className="monitor-data">
+            <div className="data-time">{currentTime.toLocaleTimeString('en-US', { hour12: false })}</div>
+            <div className="data-date">{currentTime.toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}</div>
+            <div className="data-temp">{(systemStatus.cpuTemp || 0).toFixed(0)}°C</div>
+          </div>
+        </div>
       </div>
     </div>
   );

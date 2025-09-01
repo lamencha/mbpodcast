@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Dock.css';
 
 interface DockProps {
@@ -88,7 +88,42 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
   return (
     <div className="dock-container">
       <div className="dock">
-        <div className="dock-background" />
+        <div className="dock-background">
+          {/* Clean Monitoring UI Layout */}
+          <div className="monitor-layout">
+            
+            {/* Central Monitoring Hub */}
+            <div className="monitor-hub">
+              <div className="hub-ring"></div>
+            </div>
+            
+            {/* Left Monitoring Panel */}
+            <div className="monitor-panel panel-left">
+              <div className="panel-header"></div>
+              <div className="panel-indicator"></div>
+            </div>
+            
+            {/* Right Monitoring Panel */}
+            <div className="monitor-panel panel-right">
+              <div className="panel-header"></div>
+              <div className="panel-indicator"></div>
+            </div>
+            
+            {/* Status Nodes */}
+            <div className="status-node node-1"></div>
+            <div className="status-node node-2"></div>
+            <div className="status-node node-3"></div>
+            
+            {/* Connection Lines */}
+            <div className="connection-line line-main"></div>
+            <div className="connection-line line-aux"></div>
+            
+            {/* Geometric Accents */}
+            <div className="geo-accent hexagon-accent"></div>
+            <div className="geo-accent diamond-accent"></div>
+            
+          </div>
+        </div>
         <div className="dock-content">
           {dockItems.map((item, index) => {
             const isActive = openWindows.includes(item.windowTitle);

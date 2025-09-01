@@ -17,35 +17,15 @@
   justify-content: center;
   gap: 8px;
   pointer-events: all;
-  animation: 
-    commandInterfaceActivate 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    dockGradientFlow 8s ease-in-out infinite;
-  padding: 8px 16px;
-  background: rgba(0, 0, 0, 0.6);
-  background-image: 
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 255, 255, 0.1) 2px,
-      rgba(0, 255, 255, 0.1) 3px
-    ),
-    linear-gradient(135deg, 
-      rgba(64, 224, 255, 0.3), 
-      rgba(138, 43, 226, 0.3),
-      rgba(64, 224, 255, 0.3)
-    );
-  background-size: 200% 200%;
-  border: 2px solid var(--primary-accent);
+  animation: dockMonitorActivate 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  padding: 12px 20px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 4px;
+  backdrop-filter: blur(8px);
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 0 20px var(--glow-primary),
-    0 0 40px rgba(0, 255, 255, 0.3),
-    0 0 60px rgba(0, 255, 255, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 0 20px rgba(0, 255, 255, 0.05);
-  /* Clean frosted background - no scan lines */
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* BR2049 Real-time Monitoring Indicator */
@@ -87,35 +67,18 @@
   }
 }
 
-@keyframes dockGradientFlow {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes commandInterfaceActivate {
+@keyframes dockMonitorActivate {
   0% {
     opacity: 0;
-    transform: translateY(80px) scaleX(0.3);
+    transform: translateY(20px) scale(0.95);
     border-color: transparent;
-    box-shadow: none;
-  }
-  50% {
-    opacity: 0.7;
-    transform: translateY(40px) scaleX(0.8);
-    border-color: var(--primary-accent);
+    backdrop-filter: blur(0px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scaleX(1);
-    border-color: var(--primary-accent);
-    box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.6),
-      0 0 20px var(--glow-primary),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: translateY(0) scale(1);
+    border-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
   }
 }
 
@@ -752,6 +715,229 @@
   transform: translateX(-50%);
 }
 
+/* Advanced Circuit Board Dock Background */
+.dock-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+  opacity: 0.7;
+}
+
+.dock-background .circuit-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* Clean Monitoring UI Layout */
+.dock-background .monitor-layout {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* Central Monitoring Hub */
+.dock-background .monitor-hub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  transform: translate(-50%, -50%);
+}
+
+
+.dock-background .hub-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  animation: hubRotate 20s linear infinite;
+}
+
+@keyframes hubPulse {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes hubRotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Left Monitoring Panel */
+.dock-background .monitor-panel {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  animation: panelGlow 4s ease-in-out infinite;
+}
+
+.dock-background .panel-left {
+  top: 30%;
+  left: 15%;
+  width: 28px;
+  height: 40px;
+  clip-path: polygon(0% 0%, 85% 0%, 100% 25%, 85% 100%, 0% 100%);
+}
+
+.dock-background .panel-right {
+  top: 30%;
+  right: 15%;
+  width: 28px;
+  height: 40px;
+  clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 15% 100%, 0% 75%);
+}
+
+.dock-background .panel-header {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 60%;
+  height: 3px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 1px;
+  animation: headerScan 2s ease-in-out infinite;
+}
+
+.dock-background .panel-indicator {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  animation: indicatorPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes panelGlow {
+  0%, 100% { opacity: 0.5; box-shadow: none; }
+  50% { opacity: 0.8; box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1); }
+}
+
+@keyframes headerScan {
+  0%, 100% { opacity: 0.3; transform: translateX(-50%) scaleX(1); }
+  50% { opacity: 0.7; transform: translateX(-50%) scaleX(1.2); }
+}
+
+@keyframes indicatorPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+/* Status Nodes */
+.dock-background .status-node {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+  animation: nodeActivity 5s ease-in-out infinite;
+}
+
+.dock-background .node-1 {
+  top: 20%;
+  left: 30%;
+  animation-delay: 0s;
+}
+
+.dock-background .node-2 {
+  top: 20%;
+  right: 30%;
+  animation-delay: 1.5s;
+}
+
+.dock-background .node-3 {
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-delay: 3s;
+}
+
+@keyframes nodeActivity {
+  0%, 90%, 100% { opacity: 0.2; transform: scale(1); }
+  10% { opacity: 0.8; transform: scale(1.2); }
+}
+
+/* Connection Lines */
+.dock-background .connection-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.15);
+  animation: connectionFlow 6s ease-in-out infinite;
+}
+
+.dock-background .line-main {
+  top: 50%;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  transform: translateY(-50%);
+  animation-delay: 0.5s;
+}
+
+.dock-background .line-aux {
+  left: 50%;
+  top: 25%;
+  bottom: 25%;
+  width: 1px;
+  transform: translateX(-50%);
+  animation-delay: 2s;
+}
+
+@keyframes connectionFlow {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.4; box-shadow: 0 0 2px rgba(255, 255, 255, 0.2); }
+}
+
+/* Geometric Accents */
+.dock-background .geo-accent {
+  position: absolute;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: accentFloat 8s ease-in-out infinite;
+}
+
+.dock-background .hexagon-accent {
+  top: 15%;
+  right: 25%;
+  width: 16px;
+  height: 16px;
+  clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+  animation-delay: 1s;
+}
+
+.dock-background .diamond-accent {
+  bottom: 15%;
+  left: 25%;
+  width: 12px;
+  height: 12px;
+  transform: rotate(45deg);
+  animation-delay: 4s;
+}
+
+@keyframes accentFloat {
+  0%, 100% { opacity: 0.2; transform: rotate(0deg) scale(1); }
+  25% { opacity: 0.5; transform: rotate(90deg) scale(1.1); }
+  50% { opacity: 0.3; transform: rotate(180deg) scale(1); }
+  75% { opacity: 0.5; transform: rotate(270deg) scale(1.1); }
+}
+
 /* Responsive adjustments for mobile */
 @media (max-width: 768px) {
   .dock-item-icon {
@@ -769,5 +955,64 @@
   .playlist-bars .bar-2 { height: 9px; }
   .playlist-bars .bar-3 { height: 12px; }
   .playlist-bars .bar-4 { height: 7px; }
+  
+  .dock-background {
+    opacity: 0.4;
+  }
+  
+  .dock-background .circuit-hexagon {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .dock-background .circuit-ic {
+    transform: scale(0.8);
+  }
+  
+  .dock-background .circuit-resistor {
+    width: 8px;
+    height: 3px;
+  }
+  
+  .dock-background .circuit-capacitor {
+    width: 4px;
+    height: 4px;
+  }
+  
+  .dock-background .circuit-via {
+    width: 1.5px;
+    height: 1.5px;
+  }
+  
+  .dock-background .circuit-pad {
+    width: 3px;
+    height: 3px;
+  }
+  
+  .dock-background .circuit-trace-curved {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .dock-background .circuit-junction {
+    width: 4px;
+    height: 4px;
+  }
+  
+  .dock-background .circuit-ground {
+    transform: scale(0.8);
+  }
+  
+  .dock-background .circuit-box {
+    transform: scale(0.8);
+  }
+  
+  .dock-background .env-circle {
+    transform: scale(0.7);
+  }
+  
+  .dock-background .geo-shape {
+    transform: scale(0.7);
+  }
 }
 

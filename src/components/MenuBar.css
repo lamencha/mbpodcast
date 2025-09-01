@@ -176,17 +176,136 @@
   color: var(--text-muted);
 }
 
-/* Clean AI Status Items */
-.status-item {
-  padding: 0 12px;
-  height: calc(100% - 6px);
+/* BR2049 Status Monitors */
+.status-monitor {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 4px 6px;
+  margin: 2px;
+  backdrop-filter: blur(8px);
+  opacity: 0.7;
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.8);
+  transition: opacity 0.3s ease;
+  min-width: 50px;
+}
+
+.status-monitor:hover {
+  opacity: 0.9;
+}
+
+.monitor-header {
   display: flex;
   align-items: center;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
+  gap: 2px;
+  margin-bottom: 2px;
+}
+
+.monitor-icon {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.monitor-label {
+  font-size: 5px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.monitor-data {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* Network Monitor Specific */
+.status-monitor.network .data-primary {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: monospace;
+}
+
+.status-monitor.network .data-value {
+  font-size: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+
+.data-activity {
+  height: 3px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin-top: 1px;
+  overflow: hidden;
+}
+
+.activity-bar {
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.3) 0%, 
+    rgba(255, 255, 255, 0.6) 100%);
+  transition: width 0.5s ease;
+}
+
+/* Battery Monitor Specific */
+.status-monitor.battery {
+  margin-top: -18px;
+}
+
+.status-monitor.battery .data-primary {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
+.status-monitor.battery .data-value {
+  font-size: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.status-monitor.battery .data-status {
+  font-size: 5px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+/* Time Monitor Specific */
+.status-monitor.time {
+  min-width: 60px;
+}
+
+.status-monitor.time .data-time {
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.9);
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+}
+
+.status-monitor.time .data-date {
+  font-size: 5px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.status-monitor.time .data-temp {
+  font-size: 5px;
+  color: rgba(255, 255, 255, 0.5);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* Legacy status items - hide them */
+.status-item {
+  display: none;
   border-radius: 8px;
   margin: 3px 2px;
   min-width: fit-content;
