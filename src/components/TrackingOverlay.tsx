@@ -29,7 +29,11 @@ const TrackingOverlay: React.FC = () => {
   const [systemStatus, setSystemStatus] = useState({
     connection: Math.random() * 100,
     signals: Math.floor(Math.random() * 12),
-    tracking: Math.random() * 100
+    tracking: Math.random() * 100,
+    bandwidth: Math.random() * 1000,
+    latency: Math.random() * 50 + 10,
+    threats: Math.floor(Math.random() * 3),
+    encryption: Math.random() * 100 + 200
   });
   
   // Network topology state
@@ -71,11 +75,15 @@ const TrackingOverlay: React.FC = () => {
 
     // Update system status periodically
     const statusTimer = setInterval(() => {
-      setSystemStatus({
-        connection: Math.max(75, Math.min(100, systemStatus.connection + (Math.random() - 0.5) * 10)),
-        signals: Math.max(8, Math.min(15, systemStatus.signals + Math.floor((Math.random() - 0.5) * 3))),
-        tracking: Math.max(80, Math.min(100, systemStatus.tracking + (Math.random() - 0.5) * 15))
-      });
+      setSystemStatus(prev => ({
+        connection: Math.max(75, Math.min(100, prev.connection + (Math.random() - 0.5) * 10)),
+        signals: Math.max(8, Math.min(15, prev.signals + Math.floor((Math.random() - 0.5) * 3))),
+        tracking: Math.max(80, Math.min(100, prev.tracking + (Math.random() - 0.5) * 15)),
+        bandwidth: Math.max(200, Math.min(1200, prev.bandwidth + (Math.random() - 0.5) * 100)),
+        latency: Math.max(5, Math.min(80, prev.latency + (Math.random() - 0.5) * 8)),
+        threats: Math.max(0, Math.min(5, prev.threats + Math.floor((Math.random() - 0.5) * 2))),
+        encryption: Math.max(128, Math.min(512, prev.encryption + (Math.random() - 0.5) * 20))
+      }));
     }, 3000);
 
     // Fade out old data points
@@ -304,19 +312,63 @@ const TrackingOverlay: React.FC = () => {
         </div>
       ))}
       
-      {/* System status readouts */}
+      {/* Enhanced system status readouts */}
       <div className="system-status">
-        <div className="status-readout">
-          <span className="status-label">CONN</span>
-          <span className="status-value">{systemStatus.connection.toFixed(1)}%</span>
+        <div className="status-header">
+          <div className="status-indicator-ring">
+            <div className="ring-pulse"></div>
+            <div className="ring-inner">SYS</div>
+          </div>
+          <div className="status-title">NETWORK STATUS</div>
         </div>
-        <div className="status-readout">
-          <span className="status-label">SIG</span>
-          <span className="status-value">{systemStatus.signals.toString().padStart(2, '0')}</span>
+        
+        <div className="status-grid">
+          <div className="status-cell primary">
+            <div className="cell-label">CONN</div>
+            <div className="cell-value">{(systemStatus.connection || 0).toFixed(1)}</div>
+            <div className="cell-unit">%</div>
+          </div>
+          
+          <div className="status-cell primary">
+            <div className="cell-label">TRK</div>
+            <div className="cell-value">{(systemStatus.tracking || 0).toFixed(1)}</div>
+            <div className="cell-unit">%</div>
+          </div>
+          
+          <div className="status-cell">
+            <div className="cell-label">SIG</div>
+            <div className="cell-value">{systemStatus.signals.toString().padStart(2, '0')}</div>
+            <div className="cell-unit">DB</div>
+          </div>
+          
+          <div className="status-cell">
+            <div className="cell-label">BW</div>
+            <div className="cell-value">{Math.floor(systemStatus.bandwidth || 0)}</div>
+            <div className="cell-unit">MB</div>
+          </div>
+          
+          <div className="status-cell">
+            <div className="cell-label">LAT</div>
+            <div className="cell-value">{Math.floor(systemStatus.latency || 0)}</div>
+            <div className="cell-unit">MS</div>
+          </div>
+          
+          <div className="status-cell warning">
+            <div className="cell-label">THR</div>
+            <div className="cell-value">{systemStatus.threats || 0}</div>
+            <div className="cell-unit">ACT</div>
+          </div>
         </div>
-        <div className="status-readout">
-          <span className="status-label">TRK</span>
-          <span className="status-value">{systemStatus.tracking.toFixed(1)}%</span>
+        
+        <div className="encryption-bar">
+          <div className="enc-label">ENC</div>
+          <div className="enc-progress">
+            <div 
+              className="enc-fill" 
+              style={{ width: `${(systemStatus.encryption / 512) * 100}%` }}
+            ></div>
+            <div className="enc-value">{Math.floor(systemStatus.encryption || 0)}</div>
+          </div>
         </div>
       </div>
       

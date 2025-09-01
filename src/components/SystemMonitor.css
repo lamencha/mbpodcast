@@ -1,0 +1,341 @@
+/* BR2049 System Monitor - Territory Studio Inspired */
+.system-monitor {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  width: 224px;
+  height: calc(100vh - 200px);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  z-index: 1;
+  opacity: 0.6;
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+  color: var(--void-white);
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+/* Header Section */
+.monitor-header {
+  background: rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 8px;
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.status-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* System Overview */
+.system-overview {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  gap: 6px;
+}
+
+.metric-label {
+  width: 28px;
+  font-size: 7px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.3px;
+}
+
+.metric-bar {
+  flex: 1;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  transition: width 0.8s ease;
+  position: relative;
+}
+
+.metric-fill.cpu {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.2) 0%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    rgba(255, 255, 255, 0.6) 100%);
+}
+
+.metric-fill.memory {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.2) 0%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    rgba(255, 255, 255, 0.6) 100%);
+}
+
+.metric-fill.disk {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.2) 0%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    rgba(255, 255, 255, 0.6) 100%);
+}
+
+.metric-value {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 8px;
+  font-weight: bold;
+  color: var(--void-white);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.2px;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.metric-item {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 6px;
+  text-align: center;
+}
+
+.metric-title {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 2px;
+  font-weight: bold;
+  letter-spacing: 0.3px;
+}
+
+.metric-data {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Process Section */
+.process-section {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-title {
+  font-size: 9px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.3px;
+}
+
+.process-count {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-weight: bold;
+}
+
+.process-list {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.2);
+}
+
+.process-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.process-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.process-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.process-headers {
+  display: grid;
+  grid-template-columns: 2fr 40px 40px 50px;
+  gap: 4px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+  font-size: 8px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.2px;
+}
+
+.process-item {
+  display: grid;
+  grid-template-columns: 2fr 40px 40px 50px;
+  gap: 4px;
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background-color 0.2s ease;
+  font-size: 8px;
+}
+
+.process-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.process-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.process-status-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.process-item.status-active .process-status-dot {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+}
+
+.process-item.status-idle .process-status-dot {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.process-item.status-sleeping .process-status-dot {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.process-item.status-critical .process-status-dot {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+}
+
+.process-pid {
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.3);
+  margin-left: auto;
+}
+
+.process-cpu, .process-memory {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: bold;
+}
+
+.process-status {
+  text-align: right;
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+}
+
+.process-item.status-active .process-status {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.process-item.status-critical .process-status {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Monitor scan lines overlay */
+.monitor-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    rgba(255, 255, 255, 0.02) 1px,
+    rgba(255, 255, 255, 0.02) 2px
+  );
+  animation: scanlineFlicker 8s ease-in-out infinite;
+}
+
+@keyframes scanlineFlicker {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.8; }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .system-monitor {
+    width: 240px;
+    left: 10px;
+    font-size: 10px;
+  }
+  
+  .metric-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  .process-headers,
+  .process-item {
+    grid-template-columns: 1.5fr 35px 35px 40px;
+    gap: 2px;
+    font-size: 7px;
+  }
+}

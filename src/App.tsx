@@ -7,6 +7,8 @@ import MenuBar from './components/MenuBar';
 import ParticleField from './components/ParticleField';
 import FluidEffect from './components/FluidEffect';
 import TrackingOverlay from './components/TrackingOverlay';
+import SystemMonitor from './components/SystemMonitor';
+import EnvironmentalMonitor from './components/EnvironmentalMonitor';
 import { YouTubePlaylistService } from './services/youtubePlaylistService';
 import './App.css';
 
@@ -132,7 +134,6 @@ function App() {
               title="Maidenless Behavior Playlist"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-              allowFullScreen
               loading="lazy"
               referrerPolicy="strict-origin-when-cross-origin"
             />
@@ -376,6 +377,12 @@ function App() {
       
       {/* Blade Runner 2049 inspired tracking overlay */}
       <TrackingOverlay />
+      
+      {/* System process monitor */}
+      <SystemMonitor />
+      
+      {/* Environmental data monitor */}
+      <EnvironmentalMonitor />
       
       <MenuBar 
         activeApp={activeApp}

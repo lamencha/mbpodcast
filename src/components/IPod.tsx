@@ -269,7 +269,6 @@ const IPod: React.FC<IPodProps> = ({ playlist }) => {
                   title={currentTrack.name}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                  allowFullScreen
                   loading="lazy"
                   referrerPolicy="strict-origin-when-cross-origin"
                 />
