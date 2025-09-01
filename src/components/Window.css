@@ -67,6 +67,18 @@
   }
 }
 
+@keyframes nebulaSwirl {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .window-header {
   background: var(--surface-bg);
   border-bottom: 2px solid var(--primary-accent);
@@ -98,28 +110,34 @@
   cursor: pointer;
   transition: all 0.15s ease;
   position: relative;
-  /* Hard geometric shape */
+  /* Hard geometric shape - original Marathon style */
   clip-path: polygon(20% 0%, 100% 0%, 80% 100%, 0% 100%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .window-control.close {
-  border-color: var(--secondary-accent);
+  border-color: var(--nebula-rose);
 }
 
 .window-control.minimize {
-  border-color: var(--warning-accent);
+  border-color: var(--nebula-gold);
 }
 
 .window-control.maximize {
-  border-color: var(--success-accent);
+  border-color: var(--nebula-teal);
 }
 
 .window-control:hover {
   transform: scale(1.1);
-  background: var(--surface-elevated);
+  background: linear-gradient(135deg, 
+    rgba(64, 224, 255, 0.3), 
+    rgba(138, 43, 226, 0.3),
+    rgba(64, 224, 255, 0.3)
+  );
+  background-size: 200% 200%;
+  animation: nebulaSwirl 2s ease-in-out infinite;
   box-shadow: 
-    0 0 8px var(--glow-primary),
+    0 0 8px var(--glow-nebula),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 

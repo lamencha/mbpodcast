@@ -7,6 +7,38 @@
   background: var(--void-black);
 }
 
+.desktop::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, transparent 2px, rgba(255, 255, 255, 0.15) 2px, rgba(255, 255, 255, 0.15) 3px, transparent 3px),
+    radial-gradient(circle at 80% 20%, transparent 1px, rgba(255, 255, 255, 0.1) 1px, rgba(255, 255, 255, 0.1) 2px, transparent 2px),
+    radial-gradient(circle at 40% 40%, transparent 1px, rgba(255, 255, 255, 0.08) 1px, rgba(255, 255, 255, 0.08) 2px, transparent 2px);
+  background-size: 4px 4px, 6px 6px, 3px 3px;
+  opacity: 0.3;
+  z-index: 1;
+  pointer-events: none;
+  animation: filmGrainMove 0.5s steps(8, end) infinite;
+}
+
+@keyframes filmGrainMove {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-1px, -1px); }
+  20% { transform: translate(1px, -2px); }
+  30% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, 2px); }
+  50% { transform: translate(-1px, -2px); }
+  60% { transform: translate(-2px, 1px); }
+  70% { transform: translate(2px, -1px); }
+  80% { transform: translate(-1px, 2px); }
+  90% { transform: translate(1px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
 /* Responsive adjustments for desktop */
 @media (max-width: 900px) {
   .desktop {

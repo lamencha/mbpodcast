@@ -25,8 +25,8 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       id: 1,
       label: 'Playlist',
       icon: 'playlist_play',
-      color: '#FF0000',
-      glowColor: '#FF6B6B',
+      color: 'var(--nebula-rose)',
+      glowColor: 'var(--nebula-rose)',
       action: onYouTubeClick,
       windowTitle: 'Maidenless Behavior Playlist'
     },
@@ -34,8 +34,8 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       id: 2,
       label: 'Music',
       icon: 'library_music',
-      color: '#00FF41',
-      glowColor: '#4ECDC4',
+      color: 'var(--nebula-teal)',
+      glowColor: 'var(--nebula-teal)',
       action: () => onPlaceholderClick(2),
       windowTitle: 'Classic iPod'
     },
@@ -43,8 +43,8 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       id: 3,
       label: 'Game',
       icon: 'sports_esports',
-      color: '#FFD700',
-      glowColor: '#F39C12',
+      color: 'var(--nebula-rose)',
+      glowColor: 'var(--nebula-rose)',
       action: () => onPlaceholderClick(3),
       windowTitle: 'OSRS Noob'
     },
@@ -52,8 +52,8 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       id: 4,
       label: 'Create',
       icon: 'palette',
-      color: '#9B59B6',
-      glowColor: '#E74C3C',
+      color: 'var(--nebula-teal)',
+      glowColor: 'var(--nebula-teal)',
       action: () => onPlaceholderClick(4),
       windowTitle: 'App 4'
     },
@@ -61,8 +61,8 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       id: 5,
       label: 'System',
       icon: 'settings',
-      color: '#3498DB',
-      glowColor: '#2ECC71',
+      color: 'var(--nebula-rose)',
+      glowColor: 'var(--nebula-rose)',
       action: () => onPlaceholderClick(5),
       windowTitle: 'App 5'
     }
@@ -77,7 +77,7 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       element.classList.add('dock-item-clicked');
       setTimeout(() => {
         element.classList.remove('dock-item-clicked');
-      }, 200);
+      }, 120);
     }
   };
 

@@ -17,24 +17,44 @@
   justify-content: center;
   gap: 8px;
   pointer-events: all;
-  animation: commandInterfaceActivate 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: 
+    commandInterfaceActivate 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    dockGradientFlow 8s ease-in-out infinite;
   padding: 8px 16px;
-  background: var(--surface-glass);
+  background: rgba(0, 0, 0, 0.6);
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 255, 0.1) 2px,
+      rgba(0, 255, 255, 0.1) 3px
+    ),
+    linear-gradient(135deg, 
+      rgba(64, 224, 255, 0.3), 
+      rgba(138, 43, 226, 0.3),
+      rgba(64, 224, 255, 0.3)
+    );
+  background-size: 200% 200%;
   border: 2px solid var(--primary-accent);
   border-radius: 4px;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.6),
     0 0 20px var(--glow-primary),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  /* Scan line overlay */
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 1px,
-    var(--scan-line) 1px,
-    var(--scan-line) 2px
-  );
+    0 0 40px rgba(0, 255, 255, 0.3),
+    0 0 60px rgba(0, 255, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 20px rgba(0, 255, 255, 0.05);
+  /* Clean frosted background - no scan lines */
+}
+
+@keyframes dockGradientFlow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes commandInterfaceActivate {
@@ -86,7 +106,7 @@
   transition: all 0.15s ease;
   transform-origin: center;
   /* Hard geometric shape */
-  clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+  clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
 }
 
 @keyframes commandButtonInit {
@@ -112,7 +132,7 @@
   position: absolute;
   inset: 0;
   background: var(--surface-bg);
-  border: 1px solid var(--primary-accent);
+  border: 1px solid var(--item-color, var(--primary-accent));
   /* Hard geometric shape matching parent */
   clip-path: inherit;
   box-shadow: 
@@ -121,11 +141,7 @@
     inset 0 -1px 0 rgba(0, 0, 0, 0.2);
   transition: all 0.15s ease;
   overflow: hidden;
-  /* Hard synthetic material texture */
-  background-image: 
-    linear-gradient(45deg, transparent 25%, rgba(255, 255, 255, 0.02) 25%),
-    linear-gradient(-45deg, transparent 25%, rgba(255, 255, 255, 0.02) 25%);
-  background-size: 4px 4px;
+  /* Clean button background */
 }
 
 /* Status Indicator Bar */
@@ -137,9 +153,9 @@
   right: 0;
   height: 0%;
   background: var(--surface-elevated);
-  border-top: 1px solid var(--primary-accent);
+  border-top: 1px solid var(--item-color, var(--primary-accent));
   box-shadow: 
-    0 0 8px var(--glow-primary),
+    0 0 8px var(--item-glow, var(--glow-primary)),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   /* Vertical scan line texture - bright and visible */
   background-image: repeating-linear-gradient(
@@ -159,10 +175,10 @@
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
-  color: var(--primary-accent);
+  color: var(--void-white);
   z-index: 3;
   transition: all 0.15s ease;
-  filter: drop-shadow(0 0 4px var(--glow-primary));
+  filter: drop-shadow(0 0 4px var(--item-glow, var(--glow-primary)));
   margin: 0;
   display: inline-block;
   line-height: 1;
@@ -181,7 +197,7 @@
 
 /* Command Label - Industrial Warning Style */
 .dock-item-label {
-  color: var(--text-secondary);
+  color: var(--void-white);
   font-size: 8px;
   font-weight: 700;
   text-align: center;
@@ -192,17 +208,18 @@
   text-transform: uppercase;
   letter-spacing: 0.8px;
   font-family: 'Inter', 'Helvetica Neue', 'Arial', monospace;
+  filter: drop-shadow(0 0 4px var(--item-glow, var(--glow-primary)));
 }
 
 /* Command Interface Interactions */
 .dock-item:hover {
   transform: scale(1.05);
-  filter: drop-shadow(0 4px 16px var(--glow-primary));
+  filter: drop-shadow(0 4px 16px var(--item-glow, var(--glow-primary)));
 }
 
 .dock-item:hover .dock-item-background {
   border-color: var(--void-white);
-  background: var(--surface-elevated);
+  background: rgba(0, 0, 0, 0.4);
   box-shadow: 
     0 6px 24px rgba(0, 0, 0, 0.5),
     0 0 12px var(--glow-primary),
@@ -237,24 +254,9 @@
   filter: drop-shadow(0 0 4px var(--glow-primary));
 }
 
-/* Command Button Activation */
+/* Command Button Activation - Disabled for clean interactions */
 .dock-item-clicked {
-  animation: commandExecute 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-@keyframes commandExecute {
-  0% { 
-    transform: scale(1);
-    filter: drop-shadow(0 4px 16px var(--glow-primary));
-  }
-  50% { 
-    transform: scale(0.9);
-    filter: drop-shadow(0 0 20px var(--glow-primary)) brightness(1.2);
-  }
-  100% { 
-    transform: scale(1);
-    filter: drop-shadow(0 4px 16px var(--glow-primary));
-  }
+  /* No animation - clean click */
 }
 
 /* Command Interface Glow Field */
@@ -262,13 +264,13 @@
   position: absolute;
   inset: -6px;
   background: radial-gradient(circle at center, 
-    var(--glow-primary) 0%, 
+    var(--item-glow, var(--glow-primary)) 0%, 
     transparent 60%);
   opacity: 0;
   transition: opacity 0.15s ease;
   z-index: -1;
   /* Match parent geometric shape */
-  clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
+  clip-path: polygon(13% 0%, 100% 0%, 87% 100%, 0% 100%);
 }
 
 .dock-item:hover .dock-item-glow {

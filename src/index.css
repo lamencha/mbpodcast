@@ -1,35 +1,60 @@
 :root {
-  /* Marathon Cyberpunk Color Palette */
-  --neon-cyan: #00ffff;
-  --neon-magenta: #ff0080;
-  --electric-green: #00ff41;
-  --neon-yellow: #ffff00;
-  --void-white: #f8f8f8;
-  --void-black: #000000;
-  --dark-panel: #0a0a0a;
-  --glass-panel: rgba(8, 8, 8, 0.85);
+  /* Nebula OS - Clean AI Future Aesthetic */
+  /* Core nebula colors extracted from domain coloring HSB space */
+  --nebula-azure: #0080ff;        /* Pure azure from HSB(210, 100, 100) */
+  --nebula-violet: #8000ff;       /* Deep violet from HSB(270, 100, 100) */
+  --nebula-rose: #ff0080;         /* Cosmic rose from HSB(330, 100, 100) */
+  --nebula-teal: #00ff80;         /* Bright teal from HSB(150, 100, 100) */
+  --nebula-gold: #ff8000;         /* Solar gold from HSB(30, 100, 100) */
+  --nebula-lime: #80ff00;         /* Electric lime from HSB(90, 100, 100) */
   
-  /* Accent colors */
-  --primary-accent: var(--neon-cyan);
-  --secondary-accent: var(--neon-magenta);
-  --success-accent: var(--electric-green);
-  --warning-accent: var(--neon-yellow);
+  /* Pure foundation colors for clean AI aesthetic */
+  --void-white: #ffffff;          /* Pure white for maximum contrast */
+  --void-black: #000000;          /* Deep space black */
+  --neural-gray: #808080;         /* Neural network gray */
+  --quantum-silver: #c0c0c0;      /* Quantum computing silver */
   
-  /* UI Surface colors */
-  --surface-bg: var(--dark-panel);
-  --surface-elevated: rgba(15, 15, 15, 0.95);
-  --surface-glass: var(--glass-panel);
+  /* Glass and surface materials */
+  --glass-neural: rgba(0, 0, 0, 0.15);     /* Ultra-subtle neural glass */
+  --glass-quantum: rgba(255, 255, 255, 0.05); /* Quantum shimmer glass */
+  --surface-ai: rgba(0, 0, 0, 0.8);        /* AI interface surface */
+  --surface-elevated: rgba(0, 0, 0, 0.9);   /* Elevated UI elements */
   
-  /* Text colors */
+  /* Dynamic nebula gradients */
+  --nebula-gradient-primary: linear-gradient(135deg, var(--nebula-azure), var(--nebula-violet));
+  --nebula-gradient-secondary: linear-gradient(45deg, var(--nebula-rose), var(--nebula-teal));
+  --nebula-gradient-accent: linear-gradient(90deg, var(--nebula-gold), var(--nebula-lime));
+  --nebula-gradient-full: linear-gradient(45deg, 
+    var(--nebula-azure) 0%, 
+    var(--nebula-violet) 20%, 
+    var(--nebula-rose) 40%, 
+    var(--nebula-teal) 60%, 
+    var(--nebula-gold) 80%, 
+    var(--nebula-lime) 100%);
+  
+  /* Accent colors for clean UI */
+  --primary-accent: var(--nebula-azure);
+  --secondary-accent: var(--nebula-violet);
+  --success-accent: var(--nebula-teal);
+  --warning-accent: var(--nebula-gold);
+  --danger-accent: var(--nebula-rose);
+  --info-accent: var(--nebula-lime);
+  
+  /* Text colors for maximum legibility */
   --text-primary: var(--void-white);
-  --text-secondary: rgba(248, 248, 248, 0.7);
+  --text-secondary: var(--quantum-silver);
+  --text-muted: var(--neural-gray);
   --text-accent: var(--primary-accent);
   
-  /* Border and glow effects */
-  --border-primary: var(--primary-accent);
-  --glow-primary: rgba(0, 255, 255, 0.4);
-  --glow-secondary: rgba(255, 0, 128, 0.3);
-  --scan-line: rgba(0, 255, 255, 0.1);
+  /* Subtle glow effects for AI aesthetic */
+  --glow-nebula: 0 0 20px rgba(0, 128, 255, 0.3);
+  --glow-quantum: 0 0 15px rgba(255, 255, 255, 0.1);
+  --glow-neural: 0 0 10px rgba(128, 128, 128, 0.2);
+  
+  /* Border styles */
+  --border-nebula: 1px solid var(--primary-accent);
+  --border-quantum: 1px solid var(--quantum-silver);
+  --border-neural: 1px solid var(--neural-gray);
 }
 
 * {
@@ -39,23 +64,25 @@
 }
 
 body {
-  font-family: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.025em;
+  font-family: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
   background: var(--void-black);
   color: var(--text-primary);
   overflow: hidden;
   width: 100vw;
   height: 100vh;
   margin: 0;
-  /* Subtle scan line effect */
+  /* Clean AI aesthetic with subtle neural network pattern */
   background-image: 
+    radial-gradient(circle at 20% 80%, var(--glass-quantum) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, var(--glass-quantum) 0%, transparent 50%),
     repeating-linear-gradient(
       90deg,
       transparent,
-      transparent 2px,
-      var(--scan-line) 2px,
-      var(--scan-line) 4px
+      transparent 4px,
+      var(--glass-neural) 4px,
+      var(--glass-neural) 5px
     );
 }
 
@@ -65,32 +92,25 @@ button {
   cursor: pointer;
   color: inherit;
   font-family: inherit;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transition: all 0.15s ease;
 }
 
 button:focus {
   outline: 2px solid var(--primary-accent);
   outline-offset: 2px;
-  box-shadow: 0 0 10px var(--glow-primary);
-}
-
-button:hover {
-  color: var(--primary-accent);
-  text-shadow: 0 0 8px var(--glow-primary);
 }
 
 a {
   color: var(--primary-accent);
   text-decoration: none;
-  font-weight: 600;
-  letter-spacing: 0.025em;
-  transition: all 0.15s ease;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 4px;
+  padding: 2px 4px;
 }
 
 a:hover {
   color: var(--void-white);
-  text-shadow: 0 0 12px var(--glow-primary);
+  background: var(--glass-neural);
+  box-shadow: var(--glow-quantum);
 }

@@ -75,8 +75,10 @@ src/
 ### Dock System (Marathon Command Interface)
 - **5 Buttons**: playlist_play, library_music, sports_esports, palette, settings
 - **Status Indicators**: Vertical scan line bars animate when apps are active
-- **Geometric Design**: Hard clip-path shapes with neon cyan accents
-- **Material Icons**: Google Fonts integration for crisp iconography
+- **Geometric Design**: Hard clip-path shapes (15% skew) with alternating --nebula-rose/--nebula-teal colors
+- **Enhanced Visuals**: Animated nebula gradient background with horizontal scan lines overlay
+- **Material Icons**: White icons with individual colored glow effects in inactive state
+- **Interactive States**: Transparent black hover background (40% opacity) with enhanced glow effects
 
 ---
 
@@ -178,6 +180,13 @@ Main Menu → Music → Playlists → "Maidenless Behavior" → Song Selection �
 2. **Phase 9**: Added layered visual effects (particles + fluid dynamics)
 3. **Mobile Support**: Comprehensive touch compatibility implementation
 4. **Performance**: Optimized rendering pipeline for multiple visual layers
+5. **Phase 10**: Enhanced dock and window visual effects (January 2025)
+   - Added film grain background effect to desktop
+   - Enhanced dock with animated nebula gradient background and horizontal scan lines
+   - Improved dock button styling with increased skew (15% clip-path)
+   - White icons/text with individual colored glow effects in inactive state
+   - Added animated nebula gradient to window control button hover states
+   - Alternating color scheme: dock buttons now use --nebula-rose and --nebula-teal pattern
 
 ### Development Server Management
 **IMPORTANT**: Always stop existing dev servers before starting new ones to avoid port conflicts and resource issues.
