@@ -134,17 +134,6 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
     setActiveMenu(null);
   };
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
-  };
-
   const getWifiIcon = (strength: number) => {
     if (strength > 80) return '▲▲▲';
     if (strength > 60) return '▲▲◦';
