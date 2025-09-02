@@ -104,12 +104,6 @@ function App() {
     }
   };
 
-  // Helper function to check if a window is currently active (keeping for debugging)
-  const isWindowActive = (windowTitle: string) => {
-    const isActive = activeApp === windowTitle;
-    console.log(`isWindowActive check: ${windowTitle} === ${activeApp} = ${isActive}`);
-    return isActive;
-  };
 
   // Load playlist data on component mount (only once)
   useEffect(() => {
