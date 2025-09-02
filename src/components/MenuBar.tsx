@@ -182,8 +182,8 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
           {activeMenu === 'apple' && renderDropdown(appleMenuItems)}
         </div>
 
-        {/* App Name */}
-        <div className="menu-item-container">
+        {/* App Name on Desktop only */}
+        <div className="menu-item-container desktop-only">
           <div
             className={`menu-title app-name ${activeMenu === 'app' ? 'active' : ''}`}
             onClick={() => handleMenuClick('app')}
@@ -241,6 +241,13 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
             Help
           </div>
           {activeMenu === 'help' && renderDropdown(helpMenuItems)}
+        </div>
+      </div>
+
+      {/* Center section for mobile podcast title */}
+      <div className="menubar-center">
+        <div className="podcast-title">
+          Maidenless Behavior Podcast
         </div>
       </div>
 

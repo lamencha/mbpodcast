@@ -5,6 +5,9 @@ interface DockProps {
   onYouTubeClick: () => void;
   onPlaceholderClick: (buttonNumber: number) => void;
   openWindows: string[]; // Array of open window titles
+  onBringToFront?: (windowTitle: string) => void; // New prop to bring windows to front
+  activeApp: string; // Current active app
+  onMinimize?: (windowTitle: string) => void; // New prop to minimize windows
 }
 
 interface DockItem {
@@ -17,7 +20,7 @@ interface DockItem {
   windowTitle: string; // To match with open windows
 }
 
-const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWindows }) => {
+const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWindows, onBringToFront, activeApp, onMinimize }) => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
 
   const dockItems: DockItem[] = [
@@ -69,7 +72,39 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
   ];
 
   const handleItemClick = (item: DockItem) => {
-    item.action();
+    const isWindowOpen = openWindows.includes(item.windowTitle);
+    const isActiveWindow = activeApp === item.windowTitle;
+    
+    console.log(`=== DOCK CLICK (Mobile: ${window.innerWidth <= 768}) ===`);
+    console.log(`Item: ${item.windowTitle}`);
+    console.log(`Window open: ${isWindowOpen}`);
+    console.log(`Is active: ${isActiveWindow}`);
+    console.log(`Active app: ${activeApp}`);
+    console.log(`Open windows:`, openWindows);
+    console.log(`Available functions:`, {
+      onMinimize: !!onMinimize,
+      onBringToFront: !!onBringToFront,
+      action: !!item.action
+    });
+    
+    if (isWindowOpen) {
+      if (isActiveWindow && onMinimize) {
+        // If it's the active window, minimize it
+        console.log(`>>> DOCK: Minimizing active window ${item.windowTitle}`);
+        onMinimize(item.windowTitle);
+      } else if (onBringToFront) {
+        // If it's not active, bring it to front
+        console.log(`>>> DOCK: Bringing window to front ${item.windowTitle}`);
+        onBringToFront(item.windowTitle);
+      } else {
+        console.log(`>>> DOCK: No onBringToFront function available, calling action`);
+        item.action();
+      }
+    } else {
+      // If window is not open, open it
+      console.log(`>>> DOCK: Opening new window ${item.windowTitle}`);
+      item.action();
+    }
     
     // Add click animation
     const element = document.getElementById(`dock-item-${item.id}`);
@@ -133,7 +168,18 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
               key={item.id}
               id={`dock-item-${item.id}`}
               className={`dock-item ${hoveredItem === item.id ? 'hovered' : ''} ${isActive ? 'active' : ''}`}
-              onClick={() => handleItemClick(item)}
+              onClick={() => {
+                console.log(`Dock item clicked: ${item.windowTitle}`);
+                handleItemClick(item);
+              }}
+              onTouchStart={() => {
+                console.log(`Dock item touch started: ${item.windowTitle}`);
+              }}
+              onTouchEnd={(e) => {
+                console.log(`Dock item touch ended: ${item.windowTitle}`);
+                e.preventDefault(); // Prevent double-tap zoom
+                handleItemClick(item);
+              }}
               onMouseEnter={() => handleItemHover(item.id)}
               onMouseLeave={() => handleItemHover(null)}
               style={{

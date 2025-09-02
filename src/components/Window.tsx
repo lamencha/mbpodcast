@@ -177,9 +177,21 @@ const Window: React.FC<WindowProps> = ({
     }, 300);
   };
 
-  if (isMinimized && !isMinimizing) return null;
+  // Mobile debugging
+  const isMobile = window.innerWidth <= 768;
+  console.log(`=== WINDOW ${title} RENDER CHECK (Mobile: ${isMobile}) ===`);
+  console.log(`isMinimized: ${isMinimized}, isMinimizing: ${isMinimizing}`);
+  console.log(`position: ${JSON.stringify(position)}`);
+  console.log(`size: ${JSON.stringify(size)}`);
+  console.log(`zIndex: ${zIndex}`);
+
+  if (isMinimized && !isMinimizing) {
+    console.log(`>>> Window ${title} is minimized, not rendering`);
+    return null;
+  }
 
   const handleWindowClick = () => {
+    console.log(`Window ${title} clicked (isDragging: ${isDragging})`);
     // Only bring to front if clicking on window content, not during drag
     if (!isDragging && onBringToFront) {
       onBringToFront();
@@ -189,17 +201,23 @@ const Window: React.FC<WindowProps> = ({
     }
   };
 
+  console.log(`>>> Rendering window ${title} with zIndex: ${zIndex}, isMinimized: ${isMinimized}, mobile: ${isMobile}`);
+  
+  const windowStyle = {
+    '--window-x': `${position.x}px`,
+    '--window-y': `${position.y}px`,
+    width: size.width,
+    height: size.height,
+    zIndex: zIndex,
+  } as React.CSSProperties;
+  
+  console.log(`Window ${title} CSS style:`, windowStyle);
+  
   return (
     <div
       ref={windowRef}
       className={`window ${isMinimizing ? 'minimizing' : ''} ${isDragging ? 'dragging' : ''} ${isFocused ? 'focused' : ''}`}
-      style={{
-        '--window-x': `${position.x}px`,
-        '--window-y': `${position.y}px`,
-        width: size.width,
-        height: size.height,
-        zIndex: zIndex,
-      } as React.CSSProperties}
+      style={windowStyle}
       onClick={handleWindowClick}
     >
       <div 

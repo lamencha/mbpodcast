@@ -19,7 +19,7 @@
   font-weight: normal;
   text-transform: none;
   letter-spacing: 0.5px;
-  z-index: 1000;
+  z-index: 9998; /* Ensure menu bar stays above windows but below dock */
   color: rgba(255, 255, 255, 0.8);
   user-select: none;
   padding: 0 16px;
@@ -50,6 +50,21 @@
   height: 100%;
   flex: 1;
   min-width: 0;
+}
+
+.menubar-center {
+  display: none; /* Hidden on desktop */
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.podcast-title {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .menubar-right {
@@ -108,6 +123,15 @@
   background: transparent;
 }
 
+/* Default desktop behavior: show app name, hide podcast title */
+.desktop-only {
+  display: inline;
+}
+
+.mobile-only {
+  display: none;
+}
+
 /* BR2049 Style Dropdown Menus */
 .menu-dropdown {
   position: absolute;
@@ -121,7 +145,7 @@
   border-radius: 2px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   padding: 8px 0;
-  z-index: 1001;
+  z-index: 9999; /* Dropdown menus should be above everything except the dock */
   font-size: 10px;
   animation: br2049MenuFade 0.2s ease-out;
   opacity: 0.9;
@@ -312,14 +336,9 @@
   text-align: right;
 }
 
-/* Legacy status items - hide them */
+/* Legacy status items - hide them on desktop, keep for mobile fallback */
 .status-item {
   display: none;
-  border-radius: 8px;
-  margin: 3px 2px;
-  min-width: fit-content;
-  color: var(--text-secondary);
-  filter: drop-shadow(var(--glow-quantum));
 }
 
 .status-item:hover {
@@ -361,100 +380,158 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-  .app-name {
-    min-width: 100px;
+/* Enhanced Mobile-First Responsive Design */
+@media (max-width: 768px) {
+  .menubar {
+    height: 44px; /* Standard mobile touch bar height */
+    font-size: 14px;
+    padding: 0 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(20px);
   }
   
-  .status-item.time {
-    min-width: 120px;
-    font-size: 10px;
+  .menubar-left {
+    /* Simplify left side for mobile */
+    flex: 0 0 auto;
+    min-width: 0;
   }
-}
+  
+  .menubar-center {
+    display: flex !important; /* Show center section on mobile */
+  }
+  
+  .podcast-title {
+    font-size: 14px;
+    font-weight: 600;
+  }
 
-@media (max-width: 900px) {
-  .menubar {
-    font-size: 11px;
-    height: 26px;
-    padding: 0 8px;
+  .menubar-right {
+    gap: 8px;
+    padding-left: 8px;
   }
   
   .menu-title {
-    padding: 0 8px;
+    padding: 8px 12px;
+    height: 36px;
+    font-size: 16px;
+    border-radius: 4px;
+    /* Better touch targets */
+  }
+  
+  .menu-title:first-child {
+    font-size: 18px;
+    font-weight: bold;
   }
   
   .app-name {
-    min-width: 80px;
-    font-size: 11px;
+    font-size: 14px;
+    min-width: 0;
+    margin-left: 8px;
+    padding-left: 8px;
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    /* Allow text to wrap on very small screens */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Show podcast title on mobile, hide app name */
+  .mobile-only {
+    display: inline !important;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
   }
   
-  .status-item {
-    padding: 0 4px;
-    font-size: 11px;
+  .desktop-only {
+    display: none !important;
   }
   
-  .status-item.time {
-    min-width: 100px;
-    font-size: 10px;
-  }
-  
-  /* Hide some menu items on medium screens */
-  .menu-item-container:nth-child(n+6) {
+  /* Hide most menu items on mobile, keep only essential ones */
+  .menu-item-container:nth-child(n+3) {
     display: none;
+  }
+  
+  /* Hide network and battery monitors on mobile, keep only time */
+  .status-monitor.network,
+  .status-monitor.battery {
+    display: none !important;
+  }
+  
+  /* Make remaining time monitor mobile-friendly */
+  .status-monitor.time {
+    padding: 8px 10px;
+    margin: 4px 2px;
+    font-size: 10px;
+    min-width: 80px;
+    border-radius: 4px;
+  }
+  
+  .status-monitor.time .data-time {
+    font-size: 12px;
   }
 }
 
 @media (max-width: 600px) {
   .menubar {
-    height: 24px;
-    font-size: 11px;
+    height: 48px; /* Larger for smaller screens */
+    padding: 0 8px;
   }
   
   .menu-title {
-    padding: 0 6px;
+    padding: 10px;
+    font-size: 14px;
   }
   
   .app-name {
-    min-width: 60px;
-    margin-left: 8px;
-    padding-left: 8px;
+    max-width: 120px;
   }
   
-  .status-item.time {
+  /* Show only brand and active app */
+  .menu-item-container:nth-child(n+2):not(.menu-item-container:last-child) {
     display: none;
   }
   
-  .status-item.battery {
-    font-size: 10px;
+  /* Stack status monitors on very small screens */
+  .menubar-right {
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-end;
+    height: 100%;
+    justify-content: center;
   }
   
-  /* Hide more menu items on small screens */
-  .menu-item-container:nth-child(n+5) {
-    display: none;
+  .status-monitor {
+    padding: 4px 6px;
+    font-size: 9px;
+    min-width: 50px;
   }
 }
 
 @media (max-width: 400px) {
   .menubar {
-    padding: 0 4px;
+    height: 52px;
+    padding: 0 6px;
   }
   
   .menu-title {
-    padding: 0 4px;
+    padding: 8px;
+    font-size: 13px;
   }
   
   .app-name {
-    min-width: 50px;
-    font-size: 11px;
+    max-width: 80px;
+    font-size: 13px;
   }
   
-  /* Show only essential menu items */
-  .menu-item-container:nth-child(n+4) {
+  .status-monitor {
+    padding: 3px 4px;
+    font-size: 8px;
+    min-width: 45px;
+  }
+  
+  /* Hide network activity bar on very small screens */
+  .data-activity {
     display: none;
-  }
-  
-  .status-item {
-    padding: 0 3px;
   }
 }

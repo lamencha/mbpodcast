@@ -7,8 +7,9 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding-top: 45px;
   z-index: 2000;
   backdrop-filter: blur(5px);
 }
@@ -16,7 +17,7 @@
 .replicant-database {
   width: 90vw;
   max-width: 1200px;
-  height: 90vh;
+  height: calc(100vh - 140px); /* Leave more space for dock + padding */
   max-height: 800px;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.2);

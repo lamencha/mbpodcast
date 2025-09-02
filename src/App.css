@@ -22,6 +22,21 @@ body {
   user-select: none;
 }
 
+/* Mobile viewport adjustments */
+@media (max-width: 768px) {
+  body {
+    overflow: hidden; /* Prevent any scrolling on mobile */
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height */
+  }
+  
+  #root {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden; /* Prevent scrolling */
+  }
+}
+
 #root {
   width: 100vw;
   height: 100vh;
@@ -102,4 +117,45 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--void-white);
   box-shadow: 0 0 8px var(--glow-primary);
+}
+
+/* Mobile-specific app layout */
+@media (max-width: 768px) {
+  .app {
+    /* Fixed mobile coverage - no scrolling */
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden; /* Prevent all overflow */
+    position: relative;
+    
+    /* Adjust background for mobile */
+    background-image: 
+      radial-gradient(circle at 30% 70%, var(--glow-primary) 0%, transparent 40%),
+      radial-gradient(circle at 70% 30%, var(--glow-secondary) 0%, transparent 40%);
+  }
+  
+  /* Ensure desktop background effects work on mobile */
+  .desktop-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  /* Hide large monitoring overlays on mobile for cleaner interface */
+  .desktop-only-monitor {
+    display: none !important;
+  }
+  
+  /* Mobile-friendly scrollbars */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+  }
 }

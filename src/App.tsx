@@ -65,29 +65,91 @@ function App() {
     updateWindow(windowId, { zIndex: newZIndex });
   };
 
+  // New function to bring a window to front by title
+  const bringWindowToFrontByTitle = (windowTitle: string) => {
+    const existingWindow = windows.find(w => w.title === windowTitle);
+    if (existingWindow) {
+      console.log(`Bringing window to front: ${windowTitle}`);
+      if (existingWindow.isMinimized) {
+        console.log('Unminimizing window');
+        updateWindow(existingWindow.id, { isMinimized: false });
+      }
+      console.log('Updating z-index to bring to front');
+      bringWindowToFront(existingWindow.id);
+      
+      // Manually set active app to ensure it's updated immediately
+      console.log(`Manually setting activeApp to: ${windowTitle}`);
+      setActiveApp(windowTitle);
+    }
+  };
+
+  // New function to minimize a window by title
+  const minimizeWindowByTitle = (windowTitle: string) => {
+    const existingWindow = windows.find(w => w.title === windowTitle);
+    if (existingWindow && !existingWindow.isMinimized) {
+      console.log(`Minimizing window: ${windowTitle}`);
+      updateWindow(existingWindow.id, { isMinimized: true });
+      
+      // Debug: Show what windows remain after minimize
+      setTimeout(() => {
+        const remainingWindows = windows.filter(w => !w.isMinimized && w.id !== existingWindow.id);
+        console.log(`After minimize, remaining windows:`, remainingWindows.map(w => w.title));
+        if (remainingWindows.length > 0) {
+          const topWindow = remainingWindows.reduce((highest, current) => 
+            current.zIndex > highest.zIndex ? current : highest
+          );
+          console.log(`Top remaining window should be: ${topWindow.title}`);
+        }
+      }, 100);
+    }
+  };
+
+  // Helper function to check if a window is currently active (keeping for debugging)
+  const isWindowActive = (windowTitle: string) => {
+    const isActive = activeApp === windowTitle;
+    console.log(`isWindowActive check: ${windowTitle} === ${activeApp} = ${isActive}`);
+    return isActive;
+  };
+
   // Load playlist data on component mount (only once)
   useEffect(() => {
+    let mounted = true;
+    
     const loadPlaylist = async () => {
+      if (!mounted) return;
+      
       setIsLoadingPlaylist(true);
       try {
         const playlistData = await YouTubePlaylistService.fetchPlaylistData(playlistUrl);
-        setYoutubePlaylist(playlistData);
-        console.log('Loaded playlist:', playlistData);
+        if (mounted) {
+          setYoutubePlaylist(playlistData);
+          console.log('Loaded playlist:', playlistData);
+        }
       } catch (error) {
         console.error('Failed to load playlist:', error);
-        // Use fallback data - this should not happen since we're using static data
-        const fallbackData = [
-          { name: "DISTANT - The Undying", artist: "Century Media Records", duration: "5:08", id: "1", videoId: "_8mRmkERONI" },
-          { name: "dying in designer - LimeWire", artist: "dying in designer", duration: "2:21", id: "2", videoId: "biQt4ApSz80" },
-          { name: "Bloom - Withered", artist: "Pure Noise Records", duration: "3:47", id: "3", videoId: "hf2DK1Ic1qA" }
-        ];
-        setYoutubePlaylist(fallbackData);
+        if (mounted) {
+          // Use fallback data - this should not happen since we're using static data
+          const fallbackData = [
+            { name: "DISTANT - The Undying", artist: "Century Media Records", duration: "5:08", id: "1", videoId: "_8mRmkERONI" },
+            { name: "dying in designer - LimeWire", artist: "dying in designer", duration: "2:21", id: "2", videoId: "biQt4ApSz80" },
+            { name: "Bloom - Withered", artist: "Pure Noise Records", duration: "3:47", id: "3", videoId: "hf2DK1Ic1qA" }
+          ];
+          setYoutubePlaylist(fallbackData);
+        }
       } finally {
-        setIsLoadingPlaylist(false);
+        if (mounted) {
+          setIsLoadingPlaylist(false);
+        }
       }
     };
 
-    loadPlaylist();
+    loadPlaylist().catch(error => {
+      console.error('Unhandled promise rejection in loadPlaylist:', error);
+    });
+
+    return () => {
+      mounted = false;
+    };
   }, []); // Empty dependency array - only run once on mount
 
   const openWindow = (window: Omit<WindowData, 'id' | 'zIndex' | 'position'> & { position?: { x: number; y: number } }) => {
@@ -104,6 +166,10 @@ function App() {
       zIndex: newZIndex,
     };
     setWindows(prev => [...prev, newWindow]);
+    
+    // Immediately set this as the active app since it's newly opened
+    console.log('Opening new window, setting active app to:', newWindow.title);
+    setActiveApp(newWindow.title);
   };
 
   const closeWindow = (id: string) => {
@@ -186,6 +252,7 @@ function App() {
       if (existingWindow) {
         if (existingWindow.isMinimized) {
           updateWindow(existingWindow.id, { isMinimized: false });
+          bringWindowToFront(existingWindow.id);
         } else {
           updateWindow(existingWindow.id, { isMinimized: true });
         }
@@ -219,6 +286,7 @@ function App() {
       if (existingWindow) {
         if (existingWindow.isMinimized) {
           updateWindow(existingWindow.id, { isMinimized: false });
+          bringWindowToFront(existingWindow.id);
         } else {
           updateWindow(existingWindow.id, { isMinimized: true });
         }
@@ -252,13 +320,17 @@ function App() {
 
   // Update active app based on focused window (highest z-index)
   useEffect(() => {
-    if (windows.length > 0) {
-      // Find the window with the highest z-index (most recently focused)
-      const focusedWindow = windows.reduce((highest, current) => 
+    const nonMinimizedWindows = windows.filter(w => !w.isMinimized);
+    
+    if (nonMinimizedWindows.length > 0) {
+      // Find the window with the highest z-index among non-minimized windows
+      const focusedWindow = nonMinimizedWindows.reduce((highest, current) => 
         current.zIndex > highest.zIndex ? current : highest
       );
+      console.log('Setting active app to:', focusedWindow.title);
       setActiveApp(focusedWindow.title);
     } else {
+      console.log('No non-minimized windows, setting active app to Finder');
       setActiveApp('Finder');
     }
   }, [windows]);
@@ -327,13 +399,17 @@ function App() {
       <FluidEffect />
       
       {/* Blade Runner 2049 inspired tracking overlay */}
-      <TrackingOverlay />
+      <div className="desktop-only-monitor">
+        <TrackingOverlay />
+      </div>
       
       {/* System process monitor */}
       <SystemMonitor />
       
       {/* Environmental data monitor */}
-      <EnvironmentalMonitor />
+      <div className="desktop-only-monitor">
+        <EnvironmentalMonitor />
+      </div>
       
       <MenuBar 
         activeApp={activeApp}
@@ -354,6 +430,9 @@ function App() {
         onYouTubeClick={toggleYouTubePlaylist}
         onPlaceholderClick={togglePlaceholderWindow}
         openWindows={windows.map(w => w.title)}
+        onBringToFront={bringWindowToFrontByTitle}
+        activeApp={activeApp}
+        onMinimize={minimizeWindowByTitle}
       />
       <ReplicantDatabaseDialog />
     </div>

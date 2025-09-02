@@ -519,48 +519,109 @@
   transform: translateY(-2px);
 }
 
-/* Mobile Touch Optimizations */
+/* Mobile Full-Screen App Layout */
 @media (max-width: 768px) {
   .window {
-    min-width: 280px;
-    min-height: 180px;
-    /* Ensure windows don't get too small on mobile */
+    /* Transform into full-screen mobile app */
+    position: fixed !important;
+    top: 44px !important; /* Account for mobile menu bar */
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 120px !important; /* Leave space for dock (dock height + safe spacing) */
+    width: 100vw !important;
+    height: calc(100vh - 164px) !important; /* Subtract menu bar + dock space */
+    min-width: unset !important;
+    min-height: unset !important;
+    max-width: unset !important;
+    max-height: unset !important;
+    
+    /* Remove desktop styling for mobile */
+    border-radius: 0 !important;
+    clip-path: none !important;
+    transform: none !important;
+    
+    /* Mobile app styling */
+    background: rgba(0, 0, 0, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    box-shadow: none !important;
+    
+    /* Allow dynamic z-index stacking - below dock but allow updates */
+    z-index: 1000;
   }
   
   .window-header {
-    height: 44px; /* Larger touch target */
-    padding: 0 16px;
-    /* Better touch interaction area */
+    height: 56px !important; /* Larger mobile header */
+    padding: 0 16px !important;
+    /* Remove desktop geometric styling */
+    clip-path: none !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(15px) !important;
+    /* Better touch interaction */
     -webkit-tap-highlight-color: transparent;
-    touch-action: none; /* Prevent scrolling while dragging */
+    touch-action: none;
   }
   
   .window-control {
-    width: 20px;
-    height: 20px;
-    /* Larger touch targets for buttons */
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 16px !important;
+    /* Remove desktop geometric styling */
+    clip-path: none !important;
+    border-radius: 6px !important;
+    /* Better mobile touch targets */
   }
   
   .window-title {
-    font-size: 14px;
-    /* Slightly larger text on mobile */
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    /* Remove desktop effects */
+    filter: none !important;
+  }
+  
+  .window-content {
+    height: calc(100% - 56px) !important;
+    background: rgba(0, 0, 0, 0.1) !important;
+    /* Remove desktop styling */
+    box-shadow: none !important;
+    background-image: none !important;
+  }
+  
+  /* Remove desktop pseudo-elements on mobile */
+  .window-content::before,
+  .window-content::after {
+    display: none !important;
+  }
+  
+  /* Disable desktop animations on mobile */
+  .window:hover,
+  .window.focused,
+  .window.dragging {
+    animation: none !important;
+    transform: none !important;
+    background: rgba(0, 0, 0, 0.95) !important;
+    box-shadow: none !important;
   }
 }
 
 @media (max-width: 480px) {
-  .window {
-    min-width: 260px;
-    min-height: 160px;
-  }
-  
   .window-header {
-    height: 48px; /* Even larger touch target on small screens */
+    height: 60px !important; /* Even larger touch target on very small screens */
+    padding: 0 12px !important;
   }
   
   .window-control {
-    width: 24px;
-    height: 24px;
-    /* Even larger touch targets */
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 18px !important;
+  }
+  
+  .window-title {
+    font-size: 16px !important;
+  }
+  
+  .window-content {
+    height: calc(100% - 60px) !important;
   }
 }
 
