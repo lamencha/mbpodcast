@@ -9,6 +9,7 @@ import FluidEffect from './components/FluidEffect';
 import TrackingOverlay from './components/TrackingOverlay';
 import SystemMonitor from './components/SystemMonitor';
 import EnvironmentalMonitor from './components/EnvironmentalMonitor';
+import ReplicantDatabase from './components/ReplicantDatabase';
 import { YouTubePlaylistService } from './services/youtubePlaylistService';
 import './App.css';
 
@@ -312,59 +313,9 @@ function App() {
     }
   };
 
-  // About dialog component
-  const AboutDialog = () => showAbout ? (
-    <div 
-      className="about-overlay"
-      onClick={() => setShowAbout(false)}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 2000
-      }}
-    >
-      <div 
-        className="about-dialog"
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: 'white',
-          padding: '40px',
-          borderRadius: '12px',
-          textAlign: 'center',
-          minWidth: '300px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
-        }}
-      >
-        <div style={{ fontSize: '64px', marginBottom: '16px' }}>🎵</div>
-        <h2 style={{ margin: '0 0 8px 0', color: '#333' }}>Maidenless Behavior</h2>
-        <p style={{ margin: '0 0 16px 0', color: '#666' }}>
-          A dynamic podcast landing page showcasing AI technology through interactive design.
-        </p>
-        <p style={{ margin: '0 0 24px 0', color: '#999', fontSize: '14px' }}>
-          Built with React, TypeScript, and modern web technologies.
-        </p>
-        <button 
-          onClick={() => setShowAbout(false)}
-          style={{
-            background: '#007AFF',
-            color: 'white',
-            border: 'none',
-            padding: '8px 24px',
-            borderRadius: '6px',
-            cursor: 'pointer'
-          }}
-        >
-          OK
-        </button>
-      </div>
-    </div>
+  // Replicant Database component
+  const ReplicantDatabaseDialog = () => showAbout ? (
+    <ReplicantDatabase onClose={() => setShowAbout(false)} />
   ) : null;
 
   return (
@@ -404,7 +355,7 @@ function App() {
         onPlaceholderClick={togglePlaceholderWindow}
         openWindows={windows.map(w => w.title)}
       />
-      <AboutDialog />
+      <ReplicantDatabaseDialog />
     </div>
   );
 }

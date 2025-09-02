@@ -1,0 +1,1148 @@
+/* BR2049 LAPD Replicant Database - Environmental Monitor Style */
+.replicant-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+.replicant-database {
+  width: 90vw;
+  max-width: 1200px;
+  height: 90vh;
+  max-height: 800px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  backdrop-filter: blur(15px);
+  overflow: hidden;
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+  color: var(--void-white);
+  font-size: 10px;
+  line-height: 1.3;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header - Environmental Monitor Style */
+.database-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-circle {
+  width: 48px;
+  height: 48px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.header-circle::before {
+  content: '';
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  animation: hexRotate 20s linear infinite;
+}
+
+.header-circle::after {
+  content: '';
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  animation: dashSpin 8s linear infinite;
+}
+
+.circle-inner {
+  text-align: center;
+  z-index: 1;
+}
+
+.db-title {
+  font-size: 9px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1;
+}
+
+.db-subtitle {
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1;
+}
+
+.header-status {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(128, 0, 255, 0.9);
+  box-shadow: 
+    0 0 6px rgba(128, 0, 255, 0.8),
+    0 0 12px rgba(128, 0, 255, 0.5);
+  animation: envPulse 3s ease-in-out infinite;
+}
+
+.status-dot.scanning {
+  background: rgba(255, 128, 0, 0.9);
+  box-shadow: 
+    0 0 6px rgba(255, 128, 0, 0.8),
+    0 0 12px rgba(255, 128, 0, 0.5);
+  animation: scanPulse 1s ease-in-out infinite;
+}
+
+.scan-status {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: bold;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+/* Navigation with ENV Monitor geometric accents */
+.replicant-nav {
+  display: flex;
+  padding: 8px 16px;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.replicant-nav::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+  transform: translateY(-50%);
+}
+
+.replicant-nav::after {
+  content: '';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  animation: navPulse 3s ease-in-out infinite;
+}
+
+.nav-item {
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  text-align: center;
+  border-radius: 4px;
+  position: relative;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.nav-item.active {
+  background: rgba(128, 0, 255, 0.2);
+  border-color: rgba(128, 0, 255, 0.4);
+  box-shadow: 0 0 8px rgba(128, 0, 255, 0.3);
+}
+
+.nav-id {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 2px;
+}
+
+.nav-name {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: bold;
+}
+
+/* Main Content */
+.database-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Profile Section with geometric accents */
+.replicant-profile {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+.replicant-profile::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.replicant-profile::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+}
+
+.profile-photo {
+  width: 120px;
+  height: 150px;
+  position: relative;
+}
+
+.photo-placeholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.photo-placeholder::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+}
+
+.photo-icon {
+  font-size: 48px;
+  opacity: 0.6;
+}
+
+.photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  animation: photoScan 4s ease-in-out infinite;
+}
+
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(0, 255, 255, 0.8);
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+  animation: scanLineMove 3s ease-in-out infinite;
+}
+
+.profile-data {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-name {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+  position: relative;
+}
+
+.profile-name::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -2px;
+  width: 12px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.name-primary {
+  font-size: 16px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 4px;
+}
+
+.name-alias {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+
+.data-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.data-item {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.data-label {
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 2px;
+}
+
+.data-value {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: bold;
+}
+
+/* Status Section with ENV Monitor styling */
+.status-section {
+  display: flex;
+  gap: 16px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  position: relative;
+}
+
+
+.threat-indicator, .location-indicator {
+  flex: 1 1 0;
+  text-align: center;
+  min-width: 0;
+}
+
+.threat-label, .status-label, .location-label {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 4px;
+}
+
+.status-indicator {
+  list-style: none !important;
+  background: none !important;
+  border-radius: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+.status-indicator::before,
+.status-indicator::after {
+  display: none !important;
+}
+
+.threat-level {
+  font-size: 14px;
+  font-weight: bold;
+  animation: threatPulse 2s ease-in-out infinite;
+}
+
+.threat-level.critical {
+  animation: criticalBlink 1s ease-in-out infinite;
+}
+
+.status-value {
+  font-size: 12px;
+  font-weight: bold;
+  color: rgba(255, 128, 0, 0.9);
+  text-align: center;
+}
+
+.status-value.wanted {
+  color: rgba(255, 0, 0, 0.9);
+}
+
+.location-value {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Background Section with geometric styling */
+.background-section {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+  position: relative;
+}
+
+.background-section::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.background-section::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-title {
+  font-size: 10px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.analysis-indicator {
+  display: flex;
+  align-items: center;
+}
+
+.analysis-dots {
+  display: flex;
+  gap: 3px;
+}
+
+.analysis-dots .dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(0, 255, 255, 0.6);
+  animation: dotPulse 1.5s ease-in-out infinite;
+}
+
+.analysis-dots .dot:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.analysis-dots .dot:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.background-text {
+  font-size: 9px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: justify;
+}
+
+/* DNA Genetic Analysis Section */
+.dna-section {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.dna-section::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  background: rgba(0, 255, 255, 0.3);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.dna-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.dna-indicator {
+  width: 6px;
+  height: 6px;
+  background: rgba(0, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: dnaPulse 2s ease-in-out infinite;
+}
+
+.dna-container {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.dna-helix {
+  width: 120px;
+  height: 40px;
+  position: relative;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.helix-strand {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 255, 255, 0.4) 0%,
+    rgba(128, 0, 255, 0.3) 30%,
+    rgba(255, 0, 128, 0.2) 60%,
+    transparent 100%
+  );
+  filter: blur(1px);
+  border-radius: 4px;
+}
+
+.strand-a {
+  animation: nebulaBreathingA 6s ease-in-out infinite;
+  background: radial-gradient(
+    ellipse at 30% 50%,
+    rgba(0, 255, 255, 0.5) 0%,
+    rgba(0, 128, 255, 0.3) 40%,
+    transparent 80%
+  );
+}
+
+.strand-b {
+  animation: nebulaBreathingB 6s ease-in-out infinite 3s;
+  background: radial-gradient(
+    ellipse at 70% 50%,
+    rgba(255, 0, 128, 0.4) 0%,
+    rgba(128, 0, 255, 0.3) 40%,
+    transparent 80%
+  );
+}
+
+.helix-connections {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.helix-bond {
+  position: absolute;
+  width: 2px;
+  height: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: bondPulse 2s ease-in-out infinite;
+}
+
+.bond-0 { background: rgba(255, 0, 0, 0.15); }
+.bond-1 { background: rgba(0, 255, 0, 0.15); }
+.bond-2 { background: rgba(0, 0, 255, 0.15); }
+.bond-3 { background: rgba(255, 255, 0, 0.15); }
+
+.genetic-readout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gene-sequence {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 6px;
+  border-radius: 3px;
+}
+
+.sequence-label {
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 2px;
+}
+
+.sequence-data {
+  font-size: 8px;
+  font-family: 'Courier New', monospace;
+  color: rgba(0, 255, 255, 0.8);
+  letter-spacing: 1px;
+}
+
+.genetic-markers {
+  display: flex;
+  gap: 8px;
+}
+
+.marker-group {
+  flex: 1;
+  text-align: center;
+}
+
+.marker-label {
+  font-size: 6px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 2px;
+}
+
+.marker-value {
+  font-size: 7px;
+  font-weight: bold;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.marker-value.modified {
+  background: rgba(255, 128, 0, 0.2);
+  color: rgba(255, 128, 0, 0.9);
+}
+
+.marker-value.enhanced {
+  background: rgba(0, 255, 128, 0.2);
+  color: rgba(0, 255, 128, 0.9);
+}
+
+.marker-value.disabled {
+  background: rgba(255, 0, 0, 0.2);
+  color: rgba(255, 0, 0, 0.9);
+}
+
+/* Biometric Analysis Section */
+.biometric-section {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.biometric-section::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.bio-scanner {
+  display: flex;
+  align-items: center;
+}
+
+.scanner-grid {
+  width: 16px;
+  height: 16px;
+  background: 
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 4px 4px;
+  animation: scannerGrid 3s ease-in-out infinite;
+}
+
+.bio-readings {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.bio-chart {
+  flex: 1;
+}
+
+.chart-title {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.vital-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vital-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 7px;
+}
+
+.bar-label {
+  width: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: bold;
+}
+
+.bar-container {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  background: rgba(0, 255, 255, 0.6);
+  border-radius: 2px;
+  animation: barPulse 2s ease-in-out infinite;
+}
+
+.bar-value {
+  width: 40px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: right;
+}
+
+.neural-activity {
+  flex: 1;
+}
+
+.neural-title {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.neural-waves {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 40px;
+  justify-content: center;
+}
+
+.neural-wave {
+  width: 4px;
+  background: rgba(255, 128, 0, 0.6);
+  border-radius: 2px 2px 0 0;
+  animation: neuralWave 3s ease-in-out infinite;
+}
+
+/* Additional Info Enhanced */
+.additional-info {
+  display: flex;
+  gap: 16px;
+}
+
+.system-logs {
+  margin-top: 6px;
+}
+
+.log-entry {
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 2px;
+  font-family: 'Courier New', monospace;
+}
+
+.threat-bars {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.threat-metric {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.metric-name {
+  font-size: 7px;
+  width: 60px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.metric-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  background: rgba(255, 0, 0, 0.6);
+  border-radius: 2px;
+  animation: threatPulse 2s ease-in-out infinite;
+}
+
+.info-column {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 10px;
+  position: relative;
+}
+
+.info-column::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.15);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+}
+
+.info-header {
+  font-size: 9px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+}
+
+.info-item {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 3px;
+  padding: 2px 0;
+}
+
+/* Close Section */
+.close-section {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+.close-button {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  color: rgba(255, 0, 0, 0.8);
+  padding: 8px 24px;
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.close-button:hover {
+  background: rgba(255, 0, 0, 0.2);
+  border-color: rgba(255, 0, 0, 0.5);
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+}
+
+/* Scan Lines Overlay */
+.database-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(255, 255, 255, 0.01) 3px,
+    rgba(255, 255, 255, 0.01) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+  animation: envScanMove 12s linear infinite;
+}
+
+/* Animations */
+@keyframes hexRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes dashSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+@keyframes envPulse {
+  0%, 100% { 
+    opacity: 0.8; 
+    transform: scale(1);
+    box-shadow: 
+      0 0 6px rgba(128, 0, 255, 0.8),
+      0 0 12px rgba(128, 0, 255, 0.5);
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.1);
+    box-shadow: 
+      0 0 10px rgba(128, 0, 255, 1.0),
+      0 0 20px rgba(128, 0, 255, 0.8),
+      0 0 30px rgba(128, 0, 255, 0.6);
+  }
+}
+
+@keyframes scanPulse {
+  0%, 100% { 
+    opacity: 0.6; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.2);
+  }
+}
+
+@keyframes photoScan {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes scanLineMove {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+@keyframes threatPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+
+@keyframes criticalBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes envScanMove {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(8px); }
+}
+
+@keyframes navPulse {
+  0%, 100% { 
+    opacity: 0.4; 
+    transform: translateY(-50%) scale(1); 
+  }
+  50% { 
+    opacity: 0.8; 
+    transform: translateY(-50%) scale(1.2); 
+  }
+}
+
+@keyframes dnaPulse {
+  0%, 100% { 
+    opacity: 0.6; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.3); 
+  }
+}
+
+@keyframes nebulaBreathingA {
+  0%, 100% { 
+    opacity: 0.3;
+    transform: scale(0.8);
+    filter: blur(2px) brightness(0.8);
+  }
+  50% { 
+    opacity: 0.8;
+    transform: scale(1.3);
+    filter: blur(0.5px) brightness(1.2);
+  }
+}
+
+@keyframes nebulaBreathingB {
+  0%, 100% { 
+    opacity: 0.4;
+    transform: scale(1.2) rotateZ(1deg);
+    filter: blur(1.5px) brightness(1.1);
+  }
+  50% { 
+    opacity: 0.7;
+    transform: scale(0.9) rotateZ(-1deg);
+    filter: blur(0.8px) brightness(0.9);
+  }
+}
+
+@keyframes bondPulse {
+  0%, 100% { opacity: 0.4; height: 20px; }
+  50% { opacity: 0.8; height: 30px; }
+}
+
+@keyframes scannerGrid {
+  0%, 100% { 
+    opacity: 0.3; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.8; 
+    transform: scale(1.1); 
+  }
+}
+
+@keyframes barPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes neuralWave {
+  0%, 100% { 
+    opacity: 0.4; 
+    transform: scaleY(0.5); 
+  }
+  50% { 
+    opacity: 0.9; 
+    transform: scaleY(1.2); 
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .replicant-database {
+    width: 95vw;
+    height: 95vh;
+    font-size: 9px;
+  }
+  
+  .replicant-profile {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profile-photo {
+    width: 100px;
+    height: 120px;
+  }
+  
+  .data-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .status-section {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .additional-info {
+    flex-direction: column;
+  }
+}
+
+/* Custom Scrollbar Styling */
+.replicant-database ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.replicant-database ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.replicant-database ::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.3);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.replicant-database ::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.5);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.replicant-database ::-webkit-scrollbar-corner {
+  background: transparent;
+}

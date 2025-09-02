@@ -1,51 +1,88 @@
 .window {
   position: absolute;
-  background: var(--surface-glass);
-  border: 2px solid var(--primary-accent);
-  border-radius: 2px;
+  background: 
+    radial-gradient(ellipse at top left, rgba(128, 0, 255, 0.15), transparent 60%),
+    radial-gradient(ellipse at bottom right, rgba(0, 128, 255, 0.12), transparent 60%),
+    radial-gradient(ellipse at center, rgba(0, 255, 255, 0.08), transparent 50%),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(20, 20, 40, 0.9));
+  border: none;
+  border-radius: 0;
+  /* BR2049 panel geometric border system */
+  clip-path: polygon(
+    0% 8px, 8px 0%, calc(100% - 8px) 0%, 100% 8px,
+    100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px)
+  );
   box-shadow: 
-    0 16px 48px rgba(0, 0, 0, 0.6),
-    0 0 20px var(--glow-primary),
+    0 0 0 1px rgba(255, 255, 255, 0.3),
+    0 0 0 2px rgba(128, 0, 255, 0.4),
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(128, 0, 255, 0.6),
+    0 0 60px rgba(0, 128, 255, 0.4),
+    0 0 80px rgba(0, 255, 255, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(16px);
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px) saturate(150%);
   overflow: hidden;
   z-index: 1000;
   min-width: 300px;
   min-height: 200px;
   user-select: none;
   transform-origin: center bottom;
-  /* Hard synthetic material texture */
+  /* BR2049 panel texture system */
   background-image: 
-    repeating-linear-gradient(0deg, transparent, transparent 1px, var(--scan-line) 1px, var(--scan-line) 2px),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%);
-  background-size: 100% 100%, 8px 8px;
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 3px),
+    repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(128, 0, 255, 0.03) 4px, rgba(128, 0, 255, 0.03) 5px),
+    radial-gradient(circle at 30% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(128, 0, 255, 0.08) 0%, transparent 40%);
+  background-size: 100% 100%, 100% 100%, 200px 200px, 150px 150px;
   /* Use CSS variables for positioning */
   transform: translate(var(--window-x, 0), var(--window-y, 0));
 }
 
-/* HUD Panel Active State */
+/* BR2049 Panel Active State - Intense Nebula Glow */
 .window:hover,
 .window.focused {
-  border-color: var(--void-white);
+  background: 
+    radial-gradient(ellipse at top left, rgba(128, 0, 255, 0.25), transparent 60%),
+    radial-gradient(ellipse at bottom right, rgba(0, 128, 255, 0.2), transparent 60%),
+    radial-gradient(ellipse at center, rgba(0, 255, 255, 0.15), transparent 50%),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(30, 20, 60, 0.85));
   box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.7),
-    0 0 30px var(--glow-primary),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    0 0 0 1px rgba(255, 255, 255, 0.6),
+    0 0 0 2px rgba(128, 0, 255, 0.7),
+    0 0 0 3px rgba(0, 128, 255, 0.5),
+    0 25px 80px rgba(0, 0, 0, 0.9),
+    0 0 60px rgba(128, 0, 255, 1.0),
+    0 0 80px rgba(0, 128, 255, 0.8),
+    0 0 100px rgba(0, 255, 255, 0.6),
+    0 0 120px rgba(255, 255, 255, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.6);
+  animation: nebulaPanel 4s ease-in-out infinite;
 }
 
-/* Dragging State - Performance Optimized */
+/* BR2049 Panel Dragging State - Intense Nebula Trail */
 .window.dragging {
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px) saturate(200%);
+  background: 
+    radial-gradient(ellipse at center, rgba(128, 0, 255, 0.3), transparent 40%),
+    radial-gradient(ellipse at center, rgba(0, 128, 255, 0.2), transparent 50%),
+    rgba(0, 0, 0, 0.8);
   background-image: none;
   box-shadow: 
-    0 12px 36px rgba(0, 0, 0, 0.4),
-    0 0 15px var(--glow-primary);
+    0 0 0 1px rgba(255, 255, 255, 0.8),
+    0 0 0 2px rgba(128, 0, 255, 1.0),
+    0 0 0 3px rgba(0, 128, 255, 0.8),
+    0 15px 50px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(128, 0, 255, 1.2),
+    0 0 60px rgba(0, 128, 255, 1.0),
+    0 0 80px rgba(0, 255, 255, 0.8),
+    0 0 100px rgba(255, 255, 255, 0.4);
   will-change: transform;
   transform: translate(var(--window-x, 0), var(--window-y, 0)) translateZ(0);
   pointer-events: auto;
   transition: none !important;
+  animation: dragGlow 0.5s ease-in-out infinite alternate;
 }
 
 .window.minimizing {
@@ -67,6 +104,78 @@
   }
 }
 
+@keyframes nebulaPanel {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.6),
+      0 0 0 2px rgba(128, 0, 255, 0.7),
+      0 0 0 3px rgba(0, 128, 255, 0.5),
+      0 25px 80px rgba(0, 0, 0, 0.9),
+      0 0 60px rgba(128, 0, 255, 1.0),
+      0 0 80px rgba(0, 128, 255, 0.8),
+      0 0 100px rgba(0, 255, 255, 0.6),
+      0 0 120px rgba(255, 255, 255, 0.3),
+      inset 0 2px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.8),
+      0 0 0 2px rgba(128, 0, 255, 1.0),
+      0 0 0 3px rgba(0, 128, 255, 0.8),
+      0 25px 80px rgba(0, 0, 0, 0.9),
+      0 0 80px rgba(128, 0, 255, 1.2),
+      0 0 100px rgba(0, 128, 255, 1.0),
+      0 0 120px rgba(0, 255, 255, 0.8),
+      0 0 140px rgba(255, 255, 255, 0.5),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.7);
+  }
+}
+
+@keyframes dragGlow {
+  0% {
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.8),
+      0 0 0 2px rgba(128, 0, 255, 1.0),
+      0 0 0 3px rgba(0, 128, 255, 0.8),
+      0 15px 50px rgba(0, 0, 0, 0.6),
+      0 0 40px rgba(128, 0, 255, 1.2),
+      0 0 60px rgba(0, 128, 255, 1.0),
+      0 0 80px rgba(0, 255, 255, 0.8),
+      0 0 100px rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 1.0),
+      0 0 0 2px rgba(128, 0, 255, 1.2),
+      0 0 0 3px rgba(0, 128, 255, 1.0),
+      0 15px 50px rgba(0, 0, 0, 0.6),
+      0 0 60px rgba(128, 0, 255, 1.5),
+      0 0 80px rgba(0, 128, 255, 1.2),
+      0 0 100px rgba(0, 255, 255, 1.0),
+      0 0 120px rgba(255, 255, 255, 0.6);
+  }
+}
+
+@keyframes headerGlow {
+  0% {
+    box-shadow: 
+      0 0 20px rgba(128, 0, 255, 0.5),
+      0 0 15px rgba(0, 128, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  }
+  100% {
+    box-shadow: 
+      0 0 30px rgba(128, 0, 255, 0.7),
+      0 0 25px rgba(0, 128, 255, 0.5),
+      0 0 15px rgba(0, 255, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.6);
+  }
+}
+
 @keyframes nebulaSwirl {
   0% {
     background-position: 0% 50%;
@@ -80,21 +189,36 @@
 }
 
 .window-header {
-  background: var(--surface-bg);
-  border-bottom: 2px solid var(--primary-accent);
+  background: 
+    linear-gradient(135deg, 
+      rgba(128, 0, 255, 0.4), 
+      rgba(0, 128, 255, 0.3), 
+      rgba(0, 255, 255, 0.2)
+    ),
+    rgba(0, 0, 0, 0.9);
+  border-bottom: none;
   height: 36px;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 16px;
   cursor: move;
   position: relative;
-  /* Command header texture */
+  /* BR2049 panel header geometric clip */
+  clip-path: polygon(
+    0% 0%, calc(100% - 12px) 0%, 100% 12px, 100% 100%, 0% 100%
+  );
+  /* Enhanced nebula header texture with data streams */
   background-image: 
-    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%, rgba(0, 0, 0, 0.05) 100%);
+    repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255, 255, 255, 0.08) 3px, rgba(255, 255, 255, 0.08) 4px),
+    repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0, 255, 255, 0.1) 1px, rgba(0, 255, 255, 0.1) 2px),
+    linear-gradient(135deg, rgba(128, 0, 255, 0.1) 0%, transparent 50%, rgba(0, 128, 255, 0.1) 100%);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    0 0 20px rgba(128, 0, 255, 0.5),
+    0 0 15px rgba(0, 128, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  /* Add subtle animated glow */
+  animation: headerGlow 3s ease-in-out infinite alternate;
 }
 
 .window-controls {
@@ -148,28 +272,40 @@
 .window-title {
   flex: 1;
   text-align: center;
-  color: var(--primary-accent);
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 700;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-family: 'Inter', 'Helvetica Neue', 'Arial', monospace;
-  filter: drop-shadow(0 0 6px var(--glow-primary));
+  filter: 
+    drop-shadow(0 0 8px rgba(128, 0, 255, 0.8))
+    drop-shadow(0 0 12px rgba(0, 128, 255, 0.6))
+    drop-shadow(0 0 16px rgba(0, 255, 255, 0.4));
 }
 
 .window-content {
   height: calc(100% - 36px);
   overflow: hidden;
-  background: var(--surface-bg);
+  background: 
+    radial-gradient(ellipse at top right, rgba(128, 0, 255, 0.08), transparent 70%),
+    radial-gradient(ellipse at bottom left, rgba(0, 128, 255, 0.06), transparent 60%),
+    linear-gradient(180deg, 
+      rgba(0, 0, 0, 0.95), 
+      rgba(10, 5, 20, 0.9), 
+      rgba(0, 0, 0, 0.95)
+    );
   position: relative;
-  /* Content area scan lines */
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    var(--scan-line) 3px,
-    var(--scan-line) 4px
-  );
+  /* BR2049 panel content texture system */
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(255, 255, 255, 0.02) 4px, rgba(255, 255, 255, 0.02) 5px),
+    repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(128, 0, 255, 0.03) 8px, rgba(128, 0, 255, 0.03) 9px),
+    radial-gradient(circle at 25% 25%, rgba(0, 255, 255, 0.05) 0%, transparent 30%);
+  background-size: 100% 100%, 100% 100%, 300px 300px;
+  /* Add subtle inner glow */
+  box-shadow: 
+    inset 0 0 30px rgba(128, 0, 255, 0.1),
+    inset 0 0 15px rgba(0, 128, 255, 0.05);
 }
 
 /* BR2049 Data Stream Elements */
@@ -204,9 +340,11 @@
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(255, 255, 255, 0.2) 20%,
-    rgba(0, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0.2) 80%,
+    rgba(128, 0, 255, 0.3) 15%,
+    rgba(0, 128, 255, 0.5) 35%,
+    rgba(0, 255, 255, 0.7) 50%,
+    rgba(0, 128, 255, 0.5) 65%,
+    rgba(128, 0, 255, 0.3) 85%,
     transparent 100%
   );
   animation: dataStreamHorizontal 6s ease-in-out infinite reverse;
