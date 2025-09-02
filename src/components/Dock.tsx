@@ -25,8 +25,8 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       id: 1,
       label: 'Playlist',
       icon: 'playlist_play',
-      color: 'var(--nebula-rose)',
-      glowColor: 'var(--nebula-rose)',
+      color: 'rgba(255, 255, 255, 0.8)',
+      glowColor: 'rgba(255, 255, 255, 0.8)',
       action: onYouTubeClick,
       windowTitle: 'Maidenless Behavior Playlist'
     },
@@ -34,8 +34,8 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       id: 2,
       label: 'Music',
       icon: 'library_music',
-      color: 'var(--nebula-teal)',
-      glowColor: 'var(--nebula-teal)',
+      color: 'rgba(255, 255, 255, 0.8)',
+      glowColor: 'rgba(255, 255, 255, 0.8)',
       action: () => onPlaceholderClick(2),
       windowTitle: 'Classic iPod'
     },
@@ -43,8 +43,8 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       id: 3,
       label: 'Game',
       icon: 'sports_esports',
-      color: 'var(--nebula-rose)',
-      glowColor: 'var(--nebula-rose)',
+      color: 'rgba(255, 255, 255, 0.9)',
+      glowColor: 'rgba(255, 255, 255, 0.9)',
       action: () => onPlaceholderClick(3),
       windowTitle: 'OSRS Noob'
     },
@@ -52,8 +52,8 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       id: 4,
       label: 'Create',
       icon: 'palette',
-      color: 'var(--nebula-teal)',
-      glowColor: 'var(--nebula-teal)',
+      color: 'rgba(255, 255, 255, 0.8)',
+      glowColor: 'rgba(255, 255, 255, 0.8)',
       action: () => onPlaceholderClick(4),
       windowTitle: 'App 4'
     },
@@ -61,8 +61,8 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       id: 5,
       label: 'System',
       icon: 'settings',
-      color: 'var(--nebula-rose)',
-      glowColor: 'var(--nebula-rose)',
+      color: 'rgba(255, 255, 255, 0.8)',
+      glowColor: 'rgba(255, 255, 255, 0.8)',
       action: () => onPlaceholderClick(5),
       windowTitle: 'App 5'
     }
