@@ -63,7 +63,7 @@ function App() {
     
     // Vertical variation (narrow band just below nav)
     const minY = topNavHeight + windowBuffer;
-    const maxY = Math.min(minY + 100, screenHeight - dockHeight - 300); // Assume max window height of 300px
+    const maxY = Math.min(minY + 100, minY + availableHeight - 300); // Use availableHeight to ensure windows fit
     
     // Generate position with more horizontal, less vertical variation
     const x = Math.floor(Math.random() * (maxX - minX)) + minX;
