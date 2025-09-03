@@ -1,31 +1,24 @@
 import React, { useEffect, useRef } from 'react';
 
-// Simplified Delaunay triangulation for the particle field
-const Delaunay = {
-  triangulate: function(vertices: number[][]): number[] {
+// Optimized connection system - O(n²) instead of O(n³)
+const ConnectionSystem = {
+  getConnections: function(vertices: number[][], maxDistance: number = 200): number[][] {
     const n = vertices.length;
-    if (n < 3) return [];
+    const connections: number[][] = [];
     
-    // Simple triangulation - connect each point to nearby points
-    const indices: number[] = [];
+    // Only connect nearby points - much more efficient than full triangulation
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
-        for (let k = j + 1; k < n; k++) {
-          const dx1 = vertices[j][0] - vertices[i][0];
-          const dy1 = vertices[j][1] - vertices[i][1];
-          const dx2 = vertices[k][0] - vertices[i][0];
-          const dy2 = vertices[k][1] - vertices[i][1];
-          const dist1 = Math.sqrt(dx1*dx1 + dy1*dy1);
-          const dist2 = Math.sqrt(dx2*dx2 + dy2*dy2);
-          
-          // Only create triangles between nearby points
-          if (dist1 < 200000 && dist2 < 200000) {
-            indices.push(i, j, k);
-          }
+        const dx = vertices[j][0] - vertices[i][0];
+        const dy = vertices[j][1] - vertices[i][1];
+        const distSquared = dx * dx + dy * dy; // Avoid sqrt for performance
+        
+        if (distSquared < maxDistance * maxDistance) {
+          connections.push([i, j]);
         }
       }
     }
-    return indices;
+    return connections;
   }
 };
 
@@ -71,6 +64,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     const randomMotion = true;
     const noiseLength = 800;
     const noiseStrength = 0.8;
+    const connectionDistance = 200; // Distance threshold for connecting particles
 
     // Mouse tracking removed for better performance - only nebula responds to mouse
     let c = 1000;
@@ -364,17 +358,14 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
         points.push([p.x * c, p.y * c]);
       }
 
-      // Delaunay triangulation
-      vertices = Delaunay.triangulate(points);
+      // Efficient connection system - much faster than triangulation
+      const connections = ConnectionSystem.getConnections(points, connectionDistance);
       
-      // Create triangles array
-      const tri: number[] = [];
-      for (let i = 0; i < vertices.length; i++) {
-        if (tri.length == 3) {
-          triangles.push(tri.slice());
-          tri.length = 0;
-        }
-        tri.push(vertices[i]);
+      // Convert connections to triangles for visual consistency (optional - can be simplified further)
+      triangles.length = 0; // Clear existing triangles
+      for (const [i, j] of connections) {
+        // Create simple line connections instead of full triangles
+        triangles.push([i, j, j]); // Degenerate triangle that renders as a line
       }
 
       // Set up particle neighbors

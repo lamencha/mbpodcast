@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Desktop from './components/Desktop';
 import Dock from './components/Dock';
 import Window from './components/Window';
@@ -42,20 +42,22 @@ function App() {
   // Your YouTube playlist URL
   const playlistUrl = 'https://www.youtube.com/playlist?list=PLxbvPE06_NH8YemvEqC9_5IXnydp9s2v7';
 
-  // Generate varied window positions
-  const generateWindowPosition = (index: number) => {
-    // Screen bounds calculation
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    
+  // Memoize screen dimensions to avoid recalculation
+  const screenDimensions = useMemo(() => ({
+    width: window.innerWidth,
+    height: window.innerHeight
+  }), []);
+
+  // Generate varied window positions - optimized with useCallback
+  const generateWindowPosition = useCallback((index: number) => {
     // UI element heights
     const topNavHeight = 40;     // MenuBar height
     const dockHeight = 120;      // Dock height (approximate)
     const windowBuffer = 20;     // Buffer from screen edges
     
     // Calculate available space
-    const availableWidth = screenWidth - (windowBuffer * 2);
-    const availableHeight = screenHeight - topNavHeight - dockHeight - (windowBuffer * 2);
+    const availableWidth = screenDimensions.width - (windowBuffer * 2);
+    const availableHeight = screenDimensions.height - topNavHeight - dockHeight - (windowBuffer * 2);
     
     // Horizontal variation (wide spread)
     const minX = windowBuffer;
@@ -69,20 +71,15 @@ function App() {
     const x = Math.floor(Math.random() * (maxX - minX)) + minX;
     const y = Math.floor(Math.random() * (maxY - minY)) + minY;
     
-    console.log(`Generating window position ${index}:`, { 
-      x, y, 
-      screenDimensions: { screenWidth, screenHeight },
-      bounds: { minX, maxX, minY, maxY }
-    });
     return { x, y };
-  };
+  }, [screenDimensions]);
 
-  // Bring window to front
-  const bringWindowToFront = (windowId: string) => {
+  // Bring window to front - optimized with useCallback
+  const bringWindowToFront = useCallback((windowId: string) => {
     const newZIndex = highestZIndex + 1;
     setHighestZIndex(newZIndex);
     updateWindow(windowId, { zIndex: newZIndex });
-  };
+  }, [highestZIndex]);
 
   // New function to bring a window to front by title
   const bringWindowToFrontByTitle = (windowTitle: string) => {
@@ -185,13 +182,13 @@ function App() {
     setActiveApp(newWindow.title);
   };
 
-  const closeWindow = (id: string) => {
+  const closeWindow = useCallback((id: string) => {
     setWindows(prev => prev.filter(w => w.id !== id));
-  };
+  }, []);
 
-  const updateWindow = (id: string, updates: Partial<WindowData>) => {
+  const updateWindow = useCallback((id: string, updates: Partial<WindowData>) => {
     setWindows(prev => prev.map(w => w.id === id ? { ...w, ...updates } : w));
-  };
+  }, []);
 
   const toggleYouTubePlaylist = () => {
     const existingWindow = windows.find(w => w.title === 'Maidenless Behavior Podcast');
@@ -319,14 +316,14 @@ function App() {
           updateWindow(existingWindow.id, { isMinimized: true });
         }
       } else {
+        const handleReplicantClose = () => {
+          const window = windows.find(w => w.title === windowTitle);
+          if (window) closeWindow(window.id);
+        };
+
         openWindow({
           title: windowTitle,
-          content: (
-            <ReplicantDatabase onClose={() => {
-              const window = windows.find(w => w.title === windowTitle);
-              if (window) closeWindow(window.id);
-            }} />
-          ),
+          content: <ReplicantDatabase onClose={handleReplicantClose} />,
           size: { width: 600, height: 500 },
           isMinimized: false,
         });

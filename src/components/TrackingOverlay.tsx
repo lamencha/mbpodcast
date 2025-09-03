@@ -24,7 +24,6 @@ interface NetworkNode {
 
 const TrackingOverlay: React.FC = () => {
   const [scanActive, setScanActive] = useState(false);
-  const [scanProgress, setScanProgress] = useState(0);
   const [dataPoints, setDataPoints] = useState<ScanData[]>([]);
   const [systemStatus, setSystemStatus] = useState({
     connection: Math.random() * 100,
@@ -39,15 +38,14 @@ const TrackingOverlay: React.FC = () => {
   // Network topology state
   const [networkNodes, setNetworkNodes] = useState<NetworkNode[]>([]);
 
-  // Periodic scanning cycle
+  // Optimized scanning cycle - reduced frequency and combined state updates
   useEffect(() => {
     const scanCycle = setInterval(() => {
-      setScanActive(true);
-      setScanProgress(0);
-      
       // Generate new data points during scan
       const newPoints: ScanData[] = [];
-      for (let i = 0; i < Math.floor(Math.random() * 5) + 2; i++) {
+      const pointCount = Math.floor(Math.random() * 3) + 1; // Reduced from 5+2 to 3+1
+      
+      for (let i = 0; i < pointCount; i++) {
         newPoints.push({
           id: `scan-${Date.now()}-${i}`,
           x: Math.random() * 100,
@@ -57,46 +55,42 @@ const TrackingOverlay: React.FC = () => {
           timestamp: Date.now()
         });
       }
+      
+      // Combined state updates to minimize re-renders
+      setScanActive(true);
       setDataPoints(newPoints);
       
-      // Scan animation
-      const progressTimer = setInterval(() => {
-        setScanProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(progressTimer);
-            setScanActive(false);
-            return 0;
-          }
-          return prev + 2;
-        });
-      }, 50);
+      // Simple scan duration without progress animation
+      setTimeout(() => {
+        setScanActive(false);
+      }, 2000); // 2 second scan duration
       
     }, 15000 + Math.random() * 10000); // Random interval 15-25 seconds
 
-    // Update system status periodically
+    // Update system status less frequently
     const statusTimer = setInterval(() => {
       setSystemStatus(prev => ({
-        connection: Math.max(75, Math.min(100, prev.connection + (Math.random() - 0.5) * 10)),
-        signals: Math.max(8, Math.min(15, prev.signals + Math.floor((Math.random() - 0.5) * 3))),
-        tracking: Math.max(80, Math.min(100, prev.tracking + (Math.random() - 0.5) * 15)),
-        bandwidth: Math.max(200, Math.min(1200, prev.bandwidth + (Math.random() - 0.5) * 100)),
-        latency: Math.max(5, Math.min(80, prev.latency + (Math.random() - 0.5) * 8)),
-        threats: Math.max(0, Math.min(5, prev.threats + Math.floor((Math.random() - 0.5) * 2))),
-        encryption: Math.max(128, Math.min(512, prev.encryption + (Math.random() - 0.5) * 20))
+        connection: Math.max(75, Math.min(100, prev.connection + (Math.random() - 0.5) * 5)), // Reduced variation
+        signals: Math.max(8, Math.min(15, prev.signals + Math.floor((Math.random() - 0.5) * 2))),
+        tracking: Math.max(80, Math.min(100, prev.tracking + (Math.random() - 0.5) * 8)),
+        bandwidth: Math.max(200, Math.min(1200, prev.bandwidth + (Math.random() - 0.5) * 50)),
+        latency: Math.max(5, Math.min(80, prev.latency + (Math.random() - 0.5) * 4)),
+        threats: Math.max(0, Math.min(5, prev.threats + Math.floor((Math.random() - 0.5) * 1))),
+        encryption: Math.max(128, Math.min(512, prev.encryption + (Math.random() - 0.5) * 10))
       }));
-    }, 3000);
+    }, 5000); // Increased from 3s to 5s
 
-    // Fade out old data points
+    // Fade out old data points less frequently
     const cleanupTimer = setInterval(() => {
-      setDataPoints(prev => prev.filter(point => Date.now() - point.timestamp < 8000));
-    }, 1000);
+      setDataPoints(prev => prev.filter(point => Date.now() - point.timestamp < 12000)); // Keep longer
+    }, 2000); // Reduced frequency
 
     return () => {
       clearInterval(scanCycle);
       clearInterval(statusTimer);
       clearInterval(cleanupTimer);
     };
-  }, [systemStatus.connection, systemStatus.signals, systemStatus.tracking]);
+  }, []); // Removed problematic dependency array
 
   // Network topology generation - Solar system inspired
   useEffect(() => {
@@ -287,14 +281,6 @@ const TrackingOverlay: React.FC = () => {
 
   return (
     <div className="tracking-overlay">
-      {/* Scanning line */}
-      {scanActive && (
-        <div 
-          className="scan-line" 
-          style={{ top: `${scanProgress}%` }}
-        />
-      )}
-      
       {/* Data points */}
       {dataPoints.map((point) => (
         <div
