@@ -72,7 +72,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     const noiseLength = 800;
     const noiseStrength = 0.8;
 
-    let mouse = { x: 0, y: 0 };
+    // Mouse tracking removed for better performance - only nebula responds to mouse
     let c = 1000;
     let n = 0;
     let nAngle = (Math.PI * 2) / noiseLength;
@@ -325,8 +325,8 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
       const canvasHeight = canvas?.height || 1000;
       
       return {
-        x: (x * canvasWidth) + ((((canvasWidth / 2) - mouse.x + ((nPos.x - 0.5) * noiseStrength)) * z) * motion),
-        y: (y * canvasHeight) + ((((canvasHeight / 2) - mouse.y + ((nPos.y - 0.5) * noiseStrength)) * z) * motion)
+        x: (x * canvasWidth) + (((nPos.x - 0.5) * noiseStrength * z) * motion),
+        y: (y * canvasHeight) + (((nPos.y - 0.5) * noiseStrength * z) * motion)
       };
     }
 
@@ -355,8 +355,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     function init() {
       resize();
       
-      mouse.x = (canvas?.clientWidth ?? 0) / 2;
-      mouse.y = (canvas?.clientHeight ?? 0) / 2;
+      // Mouse tracking removed - particles now use only noise-based movement
 
       // Create particle positions
       for (let i = 0; i < particleCount; i++) {
@@ -399,13 +398,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
         }
       }
 
-      // Mouse movement handler  
-      mouseHandler = (e: MouseEvent) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-      };
-      
-      document.body.addEventListener('mousemove', mouseHandler, { passive: true });
+      // Mouse tracking removed for better performance
     }
 
     function render() {
@@ -456,7 +449,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
       render();
     }
 
-    let mouseHandler: ((e: MouseEvent) => void) | null = null;
+    // Mouse handler removed for better performance
 
     init();
     animate();
@@ -468,15 +461,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
         animationRef.current = 0;
       }
       
-      // Clean up mouse event listener with error catching
-      try {
-        if (mouseHandler) {
-          document.body.removeEventListener('mousemove', mouseHandler);
-          mouseHandler = null;
-        }
-      } catch (e) {
-        // Silently catch any event listener removal errors
-      }
+      // Mouse tracking removed - no cleanup needed
     };
 
     // Use setTimeout to ensure cleanup happens after any pending browser operations
