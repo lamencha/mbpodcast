@@ -44,7 +44,7 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
     },
     {
       id: 3,
-      label: 'Game',
+      label: 'NOOB',
       icon: 'sports_esports',
       color: 'rgba(255, 255, 255, 0.9)',
       glowColor: 'rgba(255, 255, 255, 0.9)',
@@ -53,12 +53,12 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
     },
     {
       id: 4,
-      label: 'Create',
+      label: 'LAPD-DB',
       icon: 'palette',
       color: 'rgba(255, 255, 255, 0.8)',
       glowColor: 'rgba(255, 255, 255, 0.8)',
       action: () => onPlaceholderClick(4),
-      windowTitle: 'App 4'
+      windowTitle: 'Replicant Database'
     },
     {
       id: 5,

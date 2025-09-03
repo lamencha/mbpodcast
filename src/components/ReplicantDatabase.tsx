@@ -106,8 +106,7 @@ const ReplicantDatabase: React.FC<ReplicantDatabaseProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="replicant-overlay" onClick={onClose}>
-      <div className="replicant-database" onClick={(e) => e.stopPropagation()}>
+    <div className="replicant-database">
         
         {/* Header */}
         <div className="database-header">
@@ -385,7 +384,6 @@ const ReplicantDatabase: React.FC<ReplicantDatabaseProps> = ({ onClose }) => {
 
         {/* Scan Lines Overlay */}
         <div className="database-scanlines"></div>
-      </div>
     </div>
   );
 };

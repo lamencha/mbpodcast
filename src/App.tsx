@@ -44,17 +44,36 @@ function App() {
 
   // Generate varied window positions
   const generateWindowPosition = (index: number) => {
-    // Generate positions closer to top with variation
-    const maxX = 600;
-    const maxY = 180;  // Much closer to top
-    const minX = 80;
-    const minY = 50;   // Start closer to top, below menu bar
+    // Screen bounds calculation
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
     
-    // Create varied positions near the top
+    // UI element heights
+    const topNavHeight = 40;     // MenuBar height
+    const dockHeight = 120;      // Dock height (approximate)
+    const windowBuffer = 20;     // Buffer from screen edges
+    
+    // Calculate available space
+    const availableWidth = screenWidth - (windowBuffer * 2);
+    const availableHeight = screenHeight - topNavHeight - dockHeight - (windowBuffer * 2);
+    
+    // Horizontal variation (wide spread)
+    const minX = windowBuffer;
+    const maxX = Math.max(minX, availableWidth - 400); // Assume max window width of 400px
+    
+    // Vertical variation (narrow band just below nav)
+    const minY = topNavHeight + windowBuffer;
+    const maxY = Math.min(minY + 100, screenHeight - dockHeight - 300); // Assume max window height of 300px
+    
+    // Generate position with more horizontal, less vertical variation
     const x = Math.floor(Math.random() * (maxX - minX)) + minX;
     const y = Math.floor(Math.random() * (maxY - minY)) + minY;
     
-    console.log(`Generating window position ${index}:`, { x, y });
+    console.log(`Generating window position ${index}:`, { 
+      x, y, 
+      screenDimensions: { screenWidth, screenHeight },
+      bounds: { minX, maxX, minY, maxY }
+    });
     return { x, y };
   };
 
@@ -269,6 +288,31 @@ function App() {
             </div>
           ),
           size: { width: 400, height: 300 },
+          isMinimized: false,
+        });
+      }
+    } else if (buttonNumber === 4) {
+      // Replicant Database for button 4
+      const windowTitle = "Replicant Database";
+      const existingWindow = windows.find(w => w.title === windowTitle);
+      
+      if (existingWindow) {
+        if (existingWindow.isMinimized) {
+          updateWindow(existingWindow.id, { isMinimized: false });
+          bringWindowToFront(existingWindow.id);
+        } else {
+          updateWindow(existingWindow.id, { isMinimized: true });
+        }
+      } else {
+        openWindow({
+          title: windowTitle,
+          content: (
+            <ReplicantDatabase onClose={() => {
+              const window = windows.find(w => w.title === windowTitle);
+              if (window) closeWindow(window.id);
+            }} />
+          ),
+          size: { width: 600, height: 500 },
           isMinimized: false,
         });
       }
