@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import './Window.css';
 
 interface WindowProps {
@@ -32,6 +32,9 @@ const Window: React.FC<WindowProps> = ({
   const [isFocused, setIsFocused] = useState(false);
   const windowRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
+  const throttleRef = useRef<number>(0);
+  const minimizeTimeoutRef = useRef<number | null>(null);
+  const focusTimeoutRef = useRef<number | null>(null);
 
   // Unified pointer event handler for both mouse and touch
   const handlePointerDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
@@ -40,7 +43,8 @@ const Window: React.FC<WindowProps> = ({
       onBringToFront();
       // Add focus animation
       setIsFocused(true);
-      setTimeout(() => setIsFocused(false), 300);
+      if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
+      focusTimeoutRef.current = setTimeout(() => setIsFocused(false), 300);
     }
     
     if (e.target === e.currentTarget || (e.target as HTMLElement).className === 'window-title') {
@@ -69,9 +73,15 @@ const Window: React.FC<WindowProps> = ({
     handlePointerDown(e);
   }, [handlePointerDown]);
 
-  // Unified move handler for mouse and touch
+  // Optimized move handler with throttling for better performance
   const handlePointerMove = useCallback((e: MouseEvent | TouchEvent) => {
     if (isDragging && windowRef.current) {
+      // Throttle move events for touch devices (every 2nd event)
+      if ('touches' in e) {
+        throttleRef.current++;
+        if (throttleRef.current % 2 !== 0) return;
+      }
+      
       // Get coordinates from mouse or touch event
       const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
@@ -113,6 +123,9 @@ const Window: React.FC<WindowProps> = ({
     if (isDragging) {
       setIsDragging(false);
       
+      // Reset throttle counter for next drag operation
+      throttleRef.current = 0;
+      
       // Cancel any pending animation frame immediately
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
@@ -141,12 +154,15 @@ const Window: React.FC<WindowProps> = ({
     handlePointerEnd();
   }, [handlePointerEnd]);
 
+  // Memoized event listener options for better performance
+  const touchOptions = useMemo(() => ({ passive: false }), []);
+
   React.useEffect(() => {
     if (isDragging || isResizing) {
       // Add both mouse and touch event listeners
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchmove', handleTouchMove, touchOptions);
       document.addEventListener('touchend', handleTouchEnd);
       document.addEventListener('touchcancel', handleTouchEnd);
       
@@ -158,24 +174,31 @@ const Window: React.FC<WindowProps> = ({
         document.removeEventListener('touchcancel', handleTouchEnd);
       };
     }
-  }, [isDragging, isResizing, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
+  }, [isDragging, isResizing, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd, touchOptions]);
 
-  // Cleanup animation frame on unmount
+  // Cleanup animation frame and timeouts on unmount
   React.useEffect(() => {
     return () => {
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }
+      if (minimizeTimeoutRef.current) {
+        clearTimeout(minimizeTimeoutRef.current);
+      }
+      if (focusTimeoutRef.current) {
+        clearTimeout(focusTimeoutRef.current);
+      }
     };
   }, []);
 
-  const handleMinimize = () => {
+  const handleMinimize = useCallback(() => {
     setIsMinimizing(true);
-    setTimeout(() => {
+    if (minimizeTimeoutRef.current) clearTimeout(minimizeTimeoutRef.current);
+    minimizeTimeoutRef.current = setTimeout(() => {
       onUpdate({ isMinimized: true });
       setIsMinimizing(false);
     }, 300);
-  };
+  }, [onUpdate]);
 
   // Mobile debugging
   const isMobile = window.innerWidth <= 768;
@@ -197,7 +220,8 @@ const Window: React.FC<WindowProps> = ({
       onBringToFront();
       // Add focus animation
       setIsFocused(true);
-      setTimeout(() => setIsFocused(false), 300);
+      if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
+      focusTimeoutRef.current = setTimeout(() => setIsFocused(false), 300);
     }
   };
 

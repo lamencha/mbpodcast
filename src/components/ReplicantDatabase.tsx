@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import './ReplicantDatabase.css';
 
 interface ReplicantData {
@@ -28,7 +28,8 @@ const ReplicantDatabase: React.FC<ReplicantDatabaseProps> = ({ onClose }) => {
   const [selectedReplicant, setSelectedReplicant] = useState(0);
   const [scanningActive, setScanningActive] = useState(true);
 
-  const replicants: ReplicantData[] = [
+  // Memoize replicant data to prevent recreation on every render
+  const replicants: ReplicantData[] = useMemo(() => [
     {
       id: 'RPLCT-001',
       name: 'Monstr Penguwu',
@@ -83,7 +84,7 @@ const ReplicantDatabase: React.FC<ReplicantDatabaseProps> = ({ onClose }) => {
       charges: ['Memory Trafficking', 'Identity Manipulation', 'Psychological Terrorism'],
       photoPlaceholder: '🧠'
     }
-  ];
+  ], []); // Empty dependency array since data is static
 
   useEffect(() => {
     const scanTimer = setInterval(() => {
@@ -95,7 +96,8 @@ const ReplicantDatabase: React.FC<ReplicantDatabaseProps> = ({ onClose }) => {
 
   const currentReplicant = replicants[selectedReplicant];
 
-  const getThreatColor = (level: string) => {
+  // Memoize threat color mapping to prevent recreation
+  const getThreatColor = useCallback((level: string) => {
     switch (level) {
       case 'LOW': return 'rgba(0, 255, 128, 0.8)';
       case 'MEDIUM': return 'rgba(255, 255, 0, 0.8)';
@@ -103,7 +105,7 @@ const ReplicantDatabase: React.FC<ReplicantDatabaseProps> = ({ onClose }) => {
       case 'CRITICAL': return 'rgba(255, 0, 0, 0.8)';
       default: return 'rgba(255, 255, 255, 0.8)';
     }
-  };
+  }, []);
 
   return (
     <div className="replicant-database">

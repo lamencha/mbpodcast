@@ -154,8 +154,8 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
       `;
 
       function createNoiseTexture() {
-        // Create a simple noise texture programmatically
-        const size = 256;
+        // Create a simple noise texture programmatically - reduced size for performance
+        const size = 128; // Reduced from 256 to 128
         const data = new Uint8Array(size * size * 4);
         
         for (let i = 0; i < size * size; i++) {
@@ -184,8 +184,10 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
 
         const geometry = new THREE.PlaneBufferGeometry(2, 2);
         
-        rtTexture = new THREE.WebGLRenderTarget(window.innerWidth * 0.2, window.innerHeight * 0.2);
-        rtTexture2 = new THREE.WebGLRenderTarget(window.innerWidth * 0.2, window.innerHeight * 0.2);
+        // Further reduce resolution for better performance
+        const resolutionScale = Math.min(window.devicePixelRatio, 1) * 0.15; // Reduced from 0.2 to 0.15
+        rtTexture = new THREE.WebGLRenderTarget(window.innerWidth * resolutionScale, window.innerHeight * resolutionScale);
+        rtTexture2 = new THREE.WebGLRenderTarget(window.innerWidth * resolutionScale, window.innerHeight * resolutionScale);
 
         const noiseTexture = createNoiseTexture();
 
@@ -220,8 +222,14 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
         
         // Create event handlers that we can properly remove later
         resizeHandler = onWindowResize;
+        
+        // Throttled mouse handler for better performance
+        let mouseThrottle = 0;
         mouseHandler = (e: PointerEvent) => {
           if (!container) return;
+          // Throttle mouse updates to every 3rd frame (~20fps instead of 60fps)
+          if (++mouseThrottle % 3 !== 0) return;
+          
           const rect = container.getBoundingClientRect();
           const ratio = window.innerHeight / window.innerWidth;
           newmouse.x = ((e.clientX - rect.left) - window.innerWidth / 2) / window.innerWidth / ratio * 0.5;

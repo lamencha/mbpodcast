@@ -1,17 +1,46 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, Suspense, lazy } from 'react';
 import Desktop from './components/Desktop';
 import Dock from './components/Dock';
 import Window from './components/Window';
-import IPod from './components/IPod';
 import MenuBar from './components/MenuBar';
-import ParticleField from './components/ParticleField';
-import FluidEffect from './components/FluidEffect';
-import TrackingOverlay from './components/TrackingOverlay';
-import SystemMonitor from './components/SystemMonitor';
-import EnvironmentalMonitor from './components/EnvironmentalMonitor';
-import ReplicantDatabase from './components/ReplicantDatabase';
 import { YouTubePlaylistService } from './services/youtubePlaylistService';
+import { performanceMonitor } from './services/performanceMonitor';
+import { SWMessenger } from './services/serviceWorkerRegistration';
 import './App.css';
+
+// Lazy load core visual effects - loaded after initial render for better startup performance
+const ParticleField = lazy(() => import('./components/ParticleField'));
+const FluidEffect = lazy(() => import('./components/FluidEffect'));
+
+// Lazy load monitoring components - desktop only features
+const TrackingOverlay = lazy(() => import('./components/TrackingOverlay'));
+const SystemMonitor = lazy(() => import('./components/SystemMonitor'));
+const EnvironmentalMonitor = lazy(() => import('./components/EnvironmentalMonitor'));
+
+// Lazy load window content components
+const IPod = lazy(() => import('./components/IPod'));
+const ReplicantDatabase = lazy(() => import('./components/ReplicantDatabase'));
+
+// Loading fallback component with BR2049 styling
+const LoadingFallback: React.FC = () => (
+  <div style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    color: '#ffffff',
+    fontFamily: 'Courier New, monospace',
+    fontSize: '12px'
+  }}>
+    <div style={{
+      textAlign: 'center',
+      opacity: 0.8
+    }}>
+      <div style={{ marginBottom: '8px' }}>◐</div>
+      <div>LOADING...</div>
+    </div>
+  </div>
+);
 
 interface WindowData {
   id: string;
@@ -39,8 +68,70 @@ function App() {
   const [showAbout, setShowAbout] = useState(false);
   const [highestZIndex, setHighestZIndex] = useState(1000);
   
+  // Performance monitoring
+  useEffect(() => {
+    performanceMonitor.trackRenderStart();
+    performanceMonitor.trackComponentMount();
+    
+    const cleanup = () => {
+      performanceMonitor.trackRenderEnd();
+    };
+    
+    return cleanup;
+  }, []);
+
+  // Performance report in development
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      const interval = setInterval(() => {
+        console.log(performanceMonitor.getPerformanceReport());
+      }, 15000); // Every 15 seconds in dev
+      
+      return () => clearInterval(interval);
+    }
+  }, []);
+
+  // Cache warmup for critical resources
+  useEffect(() => {
+    const swMessenger = SWMessenger.getInstance();
+    
+    // Warm up cache with critical resources after initial render
+    const criticalResources = [
+      '/assets/ui-components-*.js',
+      '/assets/lazy-components-*.js', 
+      '/assets/index-*.css',
+      'https://fonts.googleapis.com/icon?family=Material+Icons',
+      'https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js'
+    ];
+    
+    // Cache resources after a short delay to not impact initial load
+    setTimeout(() => {
+      swMessenger.cacheUrls(criticalResources);
+    }, 2000);
+    
+    // Log cache size for performance monitoring in development
+    if (import.meta.env.DEV) {
+      setTimeout(async () => {
+        const size = await swMessenger.getCacheSize();
+        console.log(`📦 Service Worker cache size: ${size} entries`);
+      }, 5000);
+    }
+  }, []);
+  
   // Your YouTube playlist URL
   const playlistUrl = 'https://www.youtube.com/playlist?list=PLxbvPE06_NH8YemvEqC9_5IXnydp9s2v7';
+
+  // Memoized constants to prevent recreation on every render
+  const placeholderColors = useMemo(() => ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4'], []);
+  const placeholderStyle = useMemo(() => ({
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+    fontSize: '18px',
+    fontWeight: 'bold',
+  }), []);
 
   // Memoize screen dimensions to avoid recalculation
   const screenDimensions = useMemo(() => ({
@@ -49,7 +140,7 @@ function App() {
   }), []);
 
   // Generate varied window positions - optimized with useCallback
-  const generateWindowPosition = useCallback((index: number) => {
+  const generateWindowPosition = useCallback((_index: number) => {
     // UI element heights
     const topNavHeight = 40;     // MenuBar height
     const dockHeight = 120;      // Dock height (approximate)
@@ -263,7 +354,9 @@ function App() {
               Loading playlist...
             </div>
           ) : (
-            <IPod playlist={youtubePlaylist} />
+            <Suspense fallback={<LoadingFallback />}>
+              <IPod playlist={youtubePlaylist} />
+            </Suspense>
           ),
           size: { width: 260, height: 380 },
           isMinimized: false,
@@ -323,7 +416,11 @@ function App() {
 
         openWindow({
           title: windowTitle,
-          content: <ReplicantDatabase onClose={handleReplicantClose} />,
+          content: (
+            <Suspense fallback={<LoadingFallback />}>
+              <ReplicantDatabase onClose={handleReplicantClose} />
+            </Suspense>
+          ),
           size: { width: 600, height: 500 },
           isMinimized: false,
         });
@@ -341,21 +438,14 @@ function App() {
           updateWindow(existingWindow.id, { isMinimized: true });
         }
       } else {
-        const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4'];
         openWindow({
           title: windowTitle,
           content: (
             <div 
               className="placeholder-content"
               style={{ 
-                backgroundColor: colors[buttonNumber - 2],
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                fontSize: '18px',
-                fontWeight: 'bold',
+                backgroundColor: placeholderColors[buttonNumber - 2],
+                ...placeholderStyle
               }}
             >
               Add button {buttonNumber} functionality later
@@ -437,28 +527,40 @@ function App() {
 
   // Replicant Database component
   const ReplicantDatabaseDialog = () => showAbout ? (
-    <ReplicantDatabase onClose={() => setShowAbout(false)} />
+    <Suspense fallback={<LoadingFallback />}>
+      <ReplicantDatabase onClose={() => setShowAbout(false)} />
+    </Suspense>
   ) : null;
 
   return (
     <div className="app">
       {/* Animated particle field background */}
-      <ParticleField className="desktop-background" />
+      <Suspense fallback={<div className="desktop-background" />}>
+        <ParticleField className="desktop-background" />
+      </Suspense>
       
       {/* Fluid shader effect overlay */}
-      <FluidEffect />
+      <Suspense fallback={<div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 2 }} />}>
+        <FluidEffect />
+      </Suspense>
       
       {/* Blade Runner 2049 inspired tracking overlay */}
       <div className="desktop-only-monitor">
-        <TrackingOverlay />
+        <Suspense fallback={<div />}>
+          <TrackingOverlay />
+        </Suspense>
       </div>
       
       {/* System process monitor */}
-      <SystemMonitor />
+      <Suspense fallback={<div />}>
+        <SystemMonitor />
+      </Suspense>
       
       {/* Environmental data monitor */}
       <div className="desktop-only-monitor">
-        <EnvironmentalMonitor />
+        <Suspense fallback={<div />}>
+          <EnvironmentalMonitor />
+        </Suspense>
       </div>
       
       <MenuBar 

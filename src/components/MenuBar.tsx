@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import './MenuBar.css';
 
 interface MenuBarProps {
@@ -24,25 +24,25 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
   });
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Update time every second
+  // Optimized time updates - reduced frequency for better performance
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-    }, 1000);
+    }, 2000); // Reduced from 1s to 2s (50% less frequent)
 
     return () => clearInterval(timer);
   }, []);
 
-  // Update system status periodically
+  // Optimized system status updates - reduced frequency and variation
   useEffect(() => {
     const statusTimer = setInterval(() => {
       setSystemStatus(prev => ({
-        wifiStrength: Math.max(70, Math.min(100, prev.wifiStrength + (Math.random() - 0.5) * 5)),
-        batteryLevel: Math.max(60, Math.min(100, prev.batteryLevel + (Math.random() - 0.5) * 2)),
-        networkActivity: Math.max(0, Math.min(100, prev.networkActivity + (Math.random() - 0.5) * 20)),
-        cpuTemp: Math.max(35, Math.min(75, prev.cpuTemp + (Math.random() - 0.5) * 3))
+        wifiStrength: Math.max(70, Math.min(100, prev.wifiStrength + (Math.random() - 0.5) * 3)), // Reduced variation
+        batteryLevel: Math.max(60, Math.min(100, prev.batteryLevel + (Math.random() - 0.5) * 1)), // Reduced variation
+        networkActivity: Math.max(0, Math.min(100, prev.networkActivity + (Math.random() - 0.5) * 15)), // Reduced variation
+        cpuTemp: Math.max(35, Math.min(75, prev.cpuTemp + (Math.random() - 0.5) * 2)) // Reduced variation
       }));
-    }, 2000);
+    }, 4000); // Increased from 2s to 4s (50% less frequent)
 
     return () => clearInterval(statusTimer);
   }, []);
@@ -59,7 +59,8 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const appleMenuItems: MenuItem[] = [
+  // Memoized menu items to prevent recreation on every render
+  const appleMenuItems: MenuItem[] = useMemo(() => [
     { label: 'About Maidenless Behavior', action: 'about' },
     { separator: true },
     { label: 'System Preferences...', action: 'preferences' },
@@ -75,7 +76,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
     { label: 'Sleep', action: 'sleep' },
     { label: 'Restart...', action: 'restart' },
     { label: 'Shut Down...', action: 'shutdown' }
-  ];
+  ], []);
 
   const fileMenuItems: MenuItem[] = [
     { label: 'New Window', action: 'new-window' },
@@ -123,27 +124,29 @@ const MenuBar: React.FC<MenuBarProps> = ({ activeApp, onMenuAction }) => {
     { label: 'What\'s New', action: 'whats-new' }
   ];
 
-  const handleMenuClick = (menuName: string) => {
-    setActiveMenu(activeMenu === menuName ? null : menuName);
-  };
+  // Optimized event handlers with useCallback
+  const handleMenuClick = useCallback((menuName: string) => {
+    setActiveMenu(prev => prev === menuName ? null : menuName);
+  }, []);
 
-  const handleMenuItemClick = (action?: string) => {
+  const handleMenuItemClick = useCallback((action?: string) => {
     if (action) {
       onMenuAction(action);
     }
     setActiveMenu(null);
-  };
+  }, [onMenuAction]);
 
-  const getWifiIcon = (strength: number) => {
+  // Memoized utility functions for better performance
+  const getWifiIcon = useCallback((strength: number) => {
     if (strength > 80) return '▲▲▲';
     if (strength > 60) return '▲▲◦';
     if (strength > 40) return '▲◦◦';
     return '◦◦◦';
-  };
+  }, []);
 
-  const getBatteryStatus = (level: number) => {
+  const getBatteryStatus = useCallback((level: number) => {
     return level > 80 ? 'HIGH' : level > 40 ? 'MID' : 'LOW';
-  };
+  }, []);
 
   const renderMenuItem = (item: MenuItem, index: number) => {
     if (item.separator) {

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
+import { performanceMonitor } from '../services/performanceMonitor';
 import './Dock.css';
 
 interface DockProps {
@@ -22,6 +23,8 @@ interface DockItem {
 
 const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWindows, onBringToFront, activeApp, onMinimize }) => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const dockItemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const animationCleanupRefs = useRef<(() => void)[]>([]);
 
   const dockItems: DockItem[] = [
     {
@@ -72,6 +75,9 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
   ];
 
   const handleItemClick = (item: DockItem) => {
+    // Track interaction for performance monitoring
+    performanceMonitor.trackInteractionStart();
+    
     const isWindowOpen = openWindows.includes(item.windowTitle);
     const isActiveWindow = activeApp === item.windowTitle;
     
@@ -106,19 +112,41 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
       item.action();
     }
     
-    // Add click animation
-    const element = document.getElementById(`dock-item-${item.id}`);
+    // Optimized click animation using ref instead of DOM query
+    const element = dockItemRefs.current[item.id - 1];
     if (element) {
       element.classList.add('dock-item-clicked');
-      setTimeout(() => {
+      // Use animationend event instead of setTimeout for better performance
+      const handleAnimationEnd = () => {
         element.classList.remove('dock-item-clicked');
-      }, 120);
+        element.removeEventListener('animationend', handleAnimationEnd);
+        // Remove cleanup function from array
+        animationCleanupRefs.current = animationCleanupRefs.current.filter(fn => fn !== cleanup);
+      };
+      const cleanup = () => {
+        element.removeEventListener('animationend', handleAnimationEnd);
+      };
+      // Store cleanup function for potential component unmount
+      animationCleanupRefs.current.push(cleanup);
+      element.addEventListener('animationend', handleAnimationEnd);
     }
+    
+    // Track interaction end for performance monitoring
+    setTimeout(() => performanceMonitor.trackInteractionEnd(), 0);
   };
 
-  const handleItemHover = (itemId: number | null) => {
+  const handleItemHover = useCallback((itemId: number | null) => {
     setHoveredItem(itemId);
-  };
+  }, []);
+
+  // Cleanup event listeners on unmount
+  React.useEffect(() => {
+    return () => {
+      // Clean up any pending animation event listeners
+      animationCleanupRefs.current.forEach(cleanup => cleanup());
+      animationCleanupRefs.current = [];
+    };
+  }, []);
 
   return (
     <div className="dock-container">
@@ -166,7 +194,7 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
             return (
             <div
               key={item.id}
-              id={`dock-item-${item.id}`}
+              ref={(el) => { dockItemRefs.current[item.id - 1] = el; }}
               className={`dock-item ${hoveredItem === item.id ? 'hovered' : ''} ${isActive ? 'active' : ''}`}
               onClick={() => {
                 console.log(`Dock item clicked: ${item.windowTitle}`);

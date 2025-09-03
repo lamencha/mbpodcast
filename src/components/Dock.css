@@ -255,9 +255,15 @@
   filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
 }
 
-/* Command Button Activation - Disabled for clean interactions */
+/* Optimized click animation using CSS instead of JS timeout */
 .dock-item-clicked {
-  /* No animation - clean click */
+  animation: dockItemClick 0.12s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes dockItemClick {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
 }
 
 /* Command Interface Glow Field */

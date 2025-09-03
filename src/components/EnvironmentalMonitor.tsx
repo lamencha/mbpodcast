@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import './EnvironmentalMonitor.css';
 
 interface EnvironmentalData {
@@ -95,55 +95,60 @@ const EnvironmentalMonitor: React.FC = () => {
     initializeSensors();
   }, [envData]);
 
-  // Update environmental data periodically
+  // Optimized environmental data updates - reduced frequency and batch updates
   useEffect(() => {
     const updateTimer = setInterval(() => {
-      setEnvData(prev => ({
-        temperature: Math.max(15, Math.min(35, prev.temperature + (Math.random() - 0.5) * 0.8)),
-        humidity: Math.max(20, Math.min(80, prev.humidity + (Math.random() - 0.5) * 2)),
-        pressure: Math.max(980, Math.min(1040, prev.pressure + (Math.random() - 0.5) * 1.5)),
-        airQuality: Math.max(50, Math.min(100, prev.airQuality + (Math.random() - 0.5) * 3)),
-        co2: Math.max(350, Math.min(600, prev.co2 + (Math.random() - 0.5) * 8)),
-        radiation: Math.max(0.05, Math.min(0.25, prev.radiation + (Math.random() - 0.5) * 0.02)),
-        windSpeed: Math.max(0, Math.min(15, prev.windSpeed + (Math.random() - 0.5) * 0.6)),
-        windDirection: (prev.windDirection + (Math.random() - 0.5) * 10 + 360) % 360
-      }));
+      // Single batch update to minimize re-renders
+      const newEnvData = {
+        temperature: Math.max(15, Math.min(35, envData.temperature + (Math.random() - 0.5) * 0.6)), // Reduced variation
+        humidity: Math.max(20, Math.min(80, envData.humidity + (Math.random() - 0.5) * 1.5)),
+        pressure: Math.max(980, Math.min(1040, envData.pressure + (Math.random() - 0.5) * 1)),
+        airQuality: Math.max(50, Math.min(100, envData.airQuality + (Math.random() - 0.5) * 2)),
+        co2: Math.max(350, Math.min(600, envData.co2 + (Math.random() - 0.5) * 6)),
+        radiation: Math.max(0.05, Math.min(0.25, envData.radiation + (Math.random() - 0.5) * 0.015)),
+        windSpeed: Math.max(0, Math.min(15, envData.windSpeed + (Math.random() - 0.5) * 0.4)),
+        windDirection: (envData.windDirection + (Math.random() - 0.5) * 8 + 360) % 360
+      };
+      
+      setEnvData(newEnvData);
 
       setSensorReadings(prev => prev.map(sensor => ({
         ...sensor,
-        value: sensor.id === 'temp_01' ? envData.temperature :
-               sensor.id === 'humid_01' ? envData.humidity :
-               sensor.id === 'press_01' ? envData.pressure :
-               sensor.id === 'aqi_01' ? envData.airQuality :
-               sensor.id === 'co2_01' ? envData.co2 :
-               sensor.id === 'rad_01' ? envData.radiation : sensor.value,
-        status: Math.random() > 0.95 ? 
+        value: sensor.id === 'temp_01' ? newEnvData.temperature :
+               sensor.id === 'humid_01' ? newEnvData.humidity :
+               sensor.id === 'press_01' ? newEnvData.pressure :
+               sensor.id === 'aqi_01' ? newEnvData.airQuality :
+               sensor.id === 'co2_01' ? newEnvData.co2 :
+               sensor.id === 'rad_01' ? newEnvData.radiation : sensor.value,
+        status: Math.random() > 0.97 ? // Reduced status change frequency
           (['normal', 'warning', 'critical'][Math.floor(Math.random() * 3)] as any) : 
           sensor.status,
-        trend: Math.random() > 0.85 ? 
+        trend: Math.random() > 0.88 ? // Reduced trend change frequency
           (['up', 'down', 'stable'][Math.floor(Math.random() * 3)] as any) : 
           sensor.trend
       })));
 
       setLastUpdate(new Date());
-    }, 4000);
+    }, 6500); // Increased from 4s to 6.5s (38% less frequent)
 
     return () => clearInterval(updateTimer);
   }, [envData]);
 
-  const getWindDirection = (degrees: number) => {
-    const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
-    return directions[Math.round(degrees / 22.5) % 16];
-  };
+  // Memoized wind direction mapping
+  const windDirections = useMemo(() => ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'], []);
+  
+  const getWindDirection = useCallback((degrees: number) => {
+    return windDirections[Math.round(degrees / 22.5) % 16];
+  }, [windDirections]);
 
-  const formatTime = (date: Date) => {
+  const formatTime = useCallback((date: Date) => {
     return date.toLocaleTimeString('en-US', { 
       hour12: false, 
       hour: '2-digit', 
       minute: '2-digit', 
       second: '2-digit' 
     });
-  };
+  }, []);
 
   return (
     <div className="environmental-monitor">

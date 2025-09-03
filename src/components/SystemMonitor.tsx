@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './SystemMonitor.css';
 
 interface ProcessData {
@@ -70,39 +70,40 @@ const SystemMonitor: React.FC = () => {
     });
   }, []);
 
-  // Update process data periodically
+  // Optimized periodic updates - reduced frequency and combined state updates
   useEffect(() => {
     const updateTimer = setInterval(() => {
+      // Combined batch update to minimize re-renders
       setProcesses(prev => prev.map(process => ({
         ...process,
-        cpu: Math.max(0, process.cpu + (Math.random() - 0.5) * 2),
-        memory: Math.max(5, process.memory + (Math.random() - 0.5) * 10),
-        status: Math.random() > 0.95 ? 
+        cpu: Math.max(0, process.cpu + (Math.random() - 0.5) * 1.5), // Reduced variation
+        memory: Math.max(5, process.memory + (Math.random() - 0.5) * 8),
+        status: Math.random() > 0.97 ? // Reduced status change frequency
           (['active', 'idle', 'sleeping'][Math.floor(Math.random() * 3)] as any) : 
           process.status,
-        runtime: process.runtime + 5
+        runtime: process.runtime + 8 // Adjusted for new interval
       })));
 
       setSystemMetrics(prev => ({
-        cpuUsage: Math.max(5, Math.min(95, prev.cpuUsage + (Math.random() - 0.5) * 5)),
-        memoryUsage: Math.max(20, Math.min(90, prev.memoryUsage + (Math.random() - 0.5) * 3)),
-        diskUsage: Math.max(40, Math.min(85, prev.diskUsage + (Math.random() - 0.5) * 1)),
-        networkIn: Math.max(0, prev.networkIn + (Math.random() - 0.5) * 200),
-        networkOut: Math.max(0, prev.networkOut + (Math.random() - 0.5) * 150),
-        temperature: Math.max(35, Math.min(70, prev.temperature + (Math.random() - 0.5) * 2)),
-        uptime: prev.uptime + 5
+        cpuUsage: Math.max(5, Math.min(95, prev.cpuUsage + (Math.random() - 0.5) * 3)),
+        memoryUsage: Math.max(20, Math.min(90, prev.memoryUsage + (Math.random() - 0.5) * 2)),
+        diskUsage: Math.max(40, Math.min(85, prev.diskUsage + (Math.random() - 0.5) * 0.5)),
+        networkIn: Math.max(0, prev.networkIn + (Math.random() - 0.5) * 150),
+        networkOut: Math.max(0, prev.networkOut + (Math.random() - 0.5) * 100),
+        temperature: Math.max(35, Math.min(70, prev.temperature + (Math.random() - 0.5) * 1.5)),
+        uptime: prev.uptime + 8
       }));
-    }, 5000);
+    }, 8000); // Increased from 5s to 8s (37.5% less frequent)
 
     return () => clearInterval(updateTimer);
   }, []);
 
-  const formatUptime = (seconds: number) => {
+  const formatUptime = useCallback((seconds: number) => {
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor((seconds % 86400) / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     return `${days}d ${hours}h ${minutes}m`;
-  };
+  }, []);
 
   return (
     <div className="system-monitor">

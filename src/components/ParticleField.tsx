@@ -5,8 +5,12 @@ const ConnectionSystem = {
   getConnections: function(vertices: number[][], maxDistance: number = 200): number[][] {
     const n = vertices.length;
     const connections: number[][] = [];
+    const maxConnectionsPerParticle = 4; // Limit connections for cleaner look and better performance
+    const connectionCounts = new Array(n).fill(0);
     
-    // Only connect nearby points - much more efficient than full triangulation
+    // Create distance-sorted candidate connections
+    const candidates: Array<{i: number, j: number, distSquared: number}> = [];
+    
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
         const dx = vertices[j][0] - vertices[i][0];
@@ -14,10 +18,24 @@ const ConnectionSystem = {
         const distSquared = dx * dx + dy * dy; // Avoid sqrt for performance
         
         if (distSquared < maxDistance * maxDistance) {
-          connections.push([i, j]);
+          candidates.push({ i, j, distSquared });
         }
       }
     }
+    
+    // Sort by distance (closest first) for more structured network appearance
+    candidates.sort((a, b) => a.distSquared - b.distSquared);
+    
+    // Add connections prioritizing closer particles and respecting connection limits
+    for (const candidate of candidates) {
+      if (connectionCounts[candidate.i] < maxConnectionsPerParticle && 
+          connectionCounts[candidate.j] < maxConnectionsPerParticle) {
+        connections.push([candidate.i, candidate.j]);
+        connectionCounts[candidate.i]++;
+        connectionCounts[candidate.j]++;
+      }
+    }
+    
     return connections;
   }
 };
@@ -38,9 +56,9 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     if (!context) return;
 
     // Settings - adjusted for Marathon aesthetic
-    const particleCount = 35;
+    const particleCount = 28; // Reduced from 35 to 28 (20% reduction for better FPS)
     const flareCount = 8;
-    const motion = 0.03;
+    const motion = 0.025; // Slightly reduced for smoother movement
     const color = '#00ffff'; // Cyan to match Marathon theme
     const particleSizeBase = 1;
     const particleSizeMultiplier = 0.4;
@@ -60,11 +78,11 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     const renderFlares = true;
     const renderLinks = true;
     const flicker = true;
-    const flickerSmoothing = 20;
+    const flickerSmoothing = 25; // Increased for smoother flicker animation
     const randomMotion = true;
     const noiseLength = 800;
-    const noiseStrength = 0.8;
-    const connectionDistance = 200; // Distance threshold for connecting particles
+    const noiseStrength = 0.7; // Reduced for smoother particle movement
+    const connectionDistance = 180; // Reduced from 200 to 180 (cleaner, more purposeful lines)
 
     // Mouse tracking removed for better performance - only nebula responds to mouse
     let c = 1000;
@@ -73,7 +91,6 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     let nRad = 100;
     let nPos = { x: 0, y: 0 };
     let points: number[][] = [];
-    let vertices: number[] = [];
     let triangles: number[][] = [];
     let links: Link[] = [];
     let particles: Particle[] = [];
@@ -434,10 +451,17 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
       }
     }
 
+    // Frame throttling for better performance - render every other frame
+    let frameCount = 0;
     function animate() {
       animationRef.current = requestAnimationFrame(animate);
-      resize();
-      render();
+      frameCount++;
+      
+      // Throttle to ~30 FPS (render every other frame at 60 FPS)
+      if (frameCount % 2 === 0) {
+        resize();
+        render();
+      }
     }
 
     // Mouse handler removed for better performance

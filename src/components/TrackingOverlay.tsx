@@ -23,7 +23,7 @@ interface NetworkNode {
 }
 
 const TrackingOverlay: React.FC = () => {
-  const [scanActive, setScanActive] = useState(false);
+  const [, setScanActive] = useState(false);
   const [dataPoints, setDataPoints] = useState<ScanData[]>([]);
   const [systemStatus, setSystemStatus] = useState({
     connection: Math.random() * 100,
