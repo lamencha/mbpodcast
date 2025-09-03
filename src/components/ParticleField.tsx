@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useMobileOptimizations } from '../hooks/useMobileOptimizations';
 
 // Optimized connection system - O(n²) instead of O(n³)
 const ConnectionSystem = {
@@ -47,6 +48,11 @@ interface ParticleFieldProps {
 const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
+  const {
+    getVisualEffectsSettings,
+    getAnimationSettings,
+    trackMobilePerformance
+  } = useMobileOptimizations();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -55,8 +61,12 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     const context = canvas.getContext('2d');
     if (!context) return;
 
-    // Settings - adjusted for Marathon aesthetic
-    const particleCount = 28; // Reduced from 35 to 28 (20% reduction for better FPS)
+    // Mobile-optimized settings
+    const visualSettings = getVisualEffectsSettings();
+    const animationSettings = getAnimationSettings();
+    
+    // Settings - adjusted for Marathon aesthetic with mobile optimizations
+    const particleCount = visualSettings.enabled ? visualSettings.particleCount : 15; // Further reduced for mobile
     const flareCount = 8;
     const motion = 0.025; // Slightly reduced for smoother movement
     const color = '#00ffff'; // Cyan to match Marathon theme
@@ -451,14 +461,26 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
       }
     }
 
-    // Frame throttling for better performance - render every other frame
+    // Adaptive frame throttling based on device capabilities
     let frameCount = 0;
-    function animate() {
+    let lastFPSCheck = 0;
+    let currentFPS = animationSettings.targetFPS;
+    
+    function animate(timestamp: number) {
       animationRef.current = requestAnimationFrame(animate);
       frameCount++;
       
-      // Throttle to ~30 FPS (render every other frame at 60 FPS)
-      if (frameCount % 2 === 0) {
+      // Calculate actual FPS for mobile performance tracking
+      if (timestamp - lastFPSCheck >= 1000) {
+        currentFPS = Math.round((frameCount * 1000) / (timestamp - lastFPSCheck));
+        trackMobilePerformance('particle-fps', currentFPS);
+        frameCount = 0;
+        lastFPSCheck = timestamp;
+      }
+      
+      // Dynamic throttling based on target FPS
+      const throttleRate = animationSettings.targetFPS <= 30 ? 2 : 1;
+      if (frameCount % throttleRate === 0) {
         resize();
         render();
       }
@@ -467,7 +489,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     // Mouse handler removed for better performance
 
     init();
-    animate();
+    animate(performance.now());
 
     const cleanup = () => {
       // Cancel animation frame
