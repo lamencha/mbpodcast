@@ -166,8 +166,8 @@
 
 .nav-item {
   padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: all 0.3s ease;
   flex: 1;
@@ -188,8 +188,8 @@
 }
 
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.45);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .nav-item.active {
@@ -362,7 +362,7 @@
 
 .data-label {
   font-size: 7px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: 2px;
 }
 
@@ -1096,7 +1096,6 @@
 @media (max-width: 768px) {
   .replicant-database {
     width: 95vw;
-    height: 95vh;
     font-size: 9px;
   }
   
