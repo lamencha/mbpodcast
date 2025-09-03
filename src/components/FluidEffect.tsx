@@ -208,8 +208,8 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
 
-        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // Cap pixel ratio for performance
         renderer.setClearColor(0x000000, 0); // Transparent background
 
         if (container) {
@@ -234,19 +234,26 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
 
       function onWindowResize() {
         if (renderer && uniforms) {
-          renderer.setSize(window.innerWidth, window.innerHeight);
+          // Scale down resolution on larger screens for better performance
+          const scale = Math.min(1.0, 1200 / Math.max(window.innerWidth, window.innerHeight));
+          const renderWidth = window.innerWidth * scale;
+          const renderHeight = window.innerHeight * scale;
+          
+          renderer.setSize(renderWidth, renderHeight);
+          renderer.domElement.style.width = window.innerWidth + 'px';
+          renderer.domElement.style.height = window.innerHeight + 'px';
           uniforms.u_resolution.value.x = renderer.domElement.width;
           uniforms.u_resolution.value.y = renderer.domElement.height;
           
-          rtTexture = new THREE.WebGLRenderTarget(window.innerWidth * 0.2, window.innerHeight * 0.2);
-          rtTexture2 = new THREE.WebGLRenderTarget(window.innerWidth * 0.2, window.innerHeight * 0.2);
+          rtTexture = new THREE.WebGLRenderTarget(window.innerWidth * 0.15, window.innerHeight * 0.15);
+          rtTexture2 = new THREE.WebGLRenderTarget(window.innerWidth * 0.15, window.innerHeight * 0.15);
         }
       }
 
       function renderTexture() {
         const odims = uniforms.u_resolution.value.clone();
-        uniforms.u_resolution.value.x = window.innerWidth * 0.2;
-        uniforms.u_resolution.value.y = window.innerHeight * 0.2;
+        uniforms.u_resolution.value.x = window.innerWidth * 0.15;
+        uniforms.u_resolution.value.y = window.innerHeight * 0.15;
 
         uniforms.u_buffer.value = rtTexture2.texture;
         uniforms.u_renderpass.value = true;
