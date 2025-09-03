@@ -26,12 +26,12 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
   const dockItems: DockItem[] = [
     {
       id: 1,
-      label: 'Playlist',
+      label: 'Podcast',
       icon: 'playlist_play',
       color: 'rgba(255, 255, 255, 0.8)',
       glowColor: 'rgba(255, 255, 255, 0.8)',
       action: onYouTubeClick,
-      windowTitle: 'Maidenless Behavior Playlist'
+      windowTitle: 'Maidenless Behavior Podcast'
     },
     {
       id: 2,

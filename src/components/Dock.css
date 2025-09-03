@@ -94,7 +94,7 @@
 /* Utilitarian Command Buttons */
 .dock-item {
   position: relative;
-  width: 56px;
+  width: 68px;
   height: 56px;
   cursor: pointer;
   display: flex;

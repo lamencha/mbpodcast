@@ -194,7 +194,7 @@ function App() {
   };
 
   const toggleYouTubePlaylist = () => {
-    const existingWindow = windows.find(w => w.title === 'Maidenless Behavior Playlist');
+    const existingWindow = windows.find(w => w.title === 'Maidenless Behavior Podcast');
     
     if (existingWindow) {
       if (existingWindow.isMinimized) {
@@ -203,15 +203,29 @@ function App() {
         updateWindow(existingWindow.id, { isMinimized: true });
       }
     } else {
+      // Calculate centered position above dock for main podcast window
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      const windowWidth = 640;
+      const windowHeight = 400;
+      const dockHeight = 120;
+      const topNavHeight = 40;
+      const buffer = 20;
+      
+      // Center horizontally
+      const centeredX = Math.max(buffer, (screenWidth - windowWidth) / 2);
+      // Position above dock with buffer
+      const centeredY = Math.max(topNavHeight + buffer, screenHeight - dockHeight - windowHeight - buffer);
+      
       openWindow({
-        title: 'Maidenless Behavior Playlist',
+        title: 'Maidenless Behavior Podcast',
         content: (
           <div className="youtube-embed">
             <iframe
               width="100%"
               height="315"
               src="https://www.youtube.com/embed/videoseries?list=PLxbvPE06_NH_5guGNKNW4Y_t5HQn348oi"
-              title="Maidenless Behavior Playlist"
+              title="Maidenless Behavior Podcast"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
               loading="lazy"
@@ -219,7 +233,8 @@ function App() {
             />
           </div>
         ),
-        size: { width: 640, height: 400 },
+        size: { width: windowWidth, height: windowHeight },
+        position: { x: centeredX, y: centeredY },
         isMinimized: false,
       });
     }
@@ -403,7 +418,7 @@ function App() {
         }
         break;
       case 'focus-youtube':
-        const youtubeWindow = windows.find(w => w.title === 'Maidenless Behavior Playlist');
+        const youtubeWindow = windows.find(w => w.title === 'Maidenless Behavior Podcast');
         if (youtubeWindow) {
           updateWindow(youtubeWindow.id, { isMinimized: false });
         } else {
