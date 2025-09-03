@@ -524,12 +524,12 @@
   .window {
     /* Transform into full-screen mobile app */
     position: fixed !important;
-    top: 44px !important; /* Account for mobile menu bar */
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 120px !important; /* Leave space for dock (dock height + safe spacing) */
-    width: 100vw !important;
-    height: calc(100vh - 164px) !important; /* Subtract menu bar + dock space */
+    top: max(44px, env(safe-area-inset-top, 44px)) !important; /* Account for mobile menu bar + notch */
+    left: env(safe-area-inset-left, 0) !important; /* Account for curved edges */
+    right: env(safe-area-inset-right, 0) !important; /* Account for curved edges */
+    bottom: max(120px, calc(env(safe-area-inset-bottom, 0px) + 120px)) !important; /* Leave space for dock + bottom navigation */
+    width: calc(100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) !important;
+    height: calc(100vh - max(44px, env(safe-area-inset-top, 44px)) - max(120px, calc(env(safe-area-inset-bottom, 0px) + 120px))) !important;
     min-width: unset !important;
     min-height: unset !important;
     max-width: unset !important;
