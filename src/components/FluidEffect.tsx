@@ -184,8 +184,19 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
 
         const geometry = new THREE.PlaneBufferGeometry(2, 2);
         
-        // Further reduce resolution for better performance
-        const resolutionScale = Math.min(window.devicePixelRatio, 1) * 0.15; // Reduced from 0.2 to 0.15
+        // Aggressive resolution scaling for all high-resolution displays
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const screenSize = window.innerWidth * window.innerHeight;
+        const isHighRes = screenSize > 2000000; // 2MP+ (e.g., 1440p, 4K)
+        
+        let resolutionScale;
+        if (isIOS) {
+          resolutionScale = 0.08;
+        } else if (isHighRes) {
+          resolutionScale = 0.08; // Same as iOS for high-res displays
+        } else {
+          resolutionScale = 0.12; // Reduced from 0.15 for better performance
+        }
         rtTexture = new THREE.WebGLRenderTarget(window.innerWidth * resolutionScale, window.innerHeight * resolutionScale);
         rtTexture2 = new THREE.WebGLRenderTarget(window.innerWidth * resolutionScale, window.innerHeight * resolutionScale);
 
@@ -211,7 +222,7 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
         scene.add(mesh);
 
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // Cap pixel ratio for performance
+        renderer.setPixelRatio((isIOS || isHighRes) ? 1 : Math.min(window.devicePixelRatio, 1.5)); // Force 1x on iOS and high-res
         renderer.setClearColor(0x000000, 0); // Transparent background
 
         if (container) {
@@ -227,8 +238,9 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
         let mouseThrottle = 0;
         mouseHandler = (e: PointerEvent) => {
           if (!container) return;
-          // Throttle mouse updates to every 3rd frame (~20fps instead of 60fps)
-          if (++mouseThrottle % 3 !== 0) return;
+          // More aggressive throttling on iOS
+          const throttleRate = isIOS ? 6 : 3;
+          if (++mouseThrottle % throttleRate !== 0) return;
           
           const rect = container.getBoundingClientRect();
           const ratio = window.innerHeight / window.innerWidth;
@@ -242,6 +254,10 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
 
       function onWindowResize() {
         if (renderer && uniforms) {
+          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+          const screenSize = window.innerWidth * window.innerHeight;
+          const isHighRes = screenSize > 2000000;
+          
           // Scale down resolution on larger screens for better performance
           const scale = Math.min(1.0, 1200 / Math.max(window.innerWidth, window.innerHeight));
           const renderWidth = window.innerWidth * scale;
@@ -253,15 +269,21 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
           uniforms.u_resolution.value.x = renderer.domElement.width;
           uniforms.u_resolution.value.y = renderer.domElement.height;
           
-          rtTexture = new THREE.WebGLRenderTarget(window.innerWidth * 0.15, window.innerHeight * 0.15);
-          rtTexture2 = new THREE.WebGLRenderTarget(window.innerWidth * 0.15, window.innerHeight * 0.15);
+          // Use same aggressive scaling for high-res displays
+          const rtScale = (isIOS || isHighRes) ? 0.08 : 0.12;
+          rtTexture = new THREE.WebGLRenderTarget(window.innerWidth * rtScale, window.innerHeight * rtScale);
+          rtTexture2 = new THREE.WebGLRenderTarget(window.innerWidth * rtScale, window.innerHeight * rtScale);
         }
       }
 
       function renderTexture() {
         const odims = uniforms.u_resolution.value.clone();
-        uniforms.u_resolution.value.x = window.innerWidth * 0.15;
-        uniforms.u_resolution.value.y = window.innerHeight * 0.15;
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const screenSize = window.innerWidth * window.innerHeight;
+        const isHighRes = screenSize > 2000000;
+        const rtScale = (isIOS || isHighRes) ? 0.08 : 0.12;
+        uniforms.u_resolution.value.x = window.innerWidth * rtScale;
+        uniforms.u_resolution.value.y = window.innerHeight * rtScale;
 
         uniforms.u_buffer.value = rtTexture2.texture;
         uniforms.u_renderpass.value = true;

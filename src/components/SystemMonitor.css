@@ -310,7 +310,7 @@
     rgba(255, 255, 255, 0.02) 1px,
     rgba(255, 255, 255, 0.02) 2px
   );
-  animation: scanlineFlicker 8s ease-in-out infinite;
+  /* Flicker animation disabled to reduce screen flickering */
 }
 
 @keyframes scanlineFlicker {

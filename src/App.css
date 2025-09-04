@@ -57,8 +57,7 @@ body {
   background-image: 
     radial-gradient(circle at 20% 50%, var(--glow-primary) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, var(--glow-secondary) 0%, transparent 50%);
-  /* Subtle animation for living interface */
-  animation: hudFlicker 8s ease-in-out infinite alternate;
+  /* Subtle animation disabled to reduce flickering */
 }
 
 /* Animated Particle Field Background */

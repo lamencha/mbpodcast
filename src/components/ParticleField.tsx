@@ -55,9 +55,20 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     const context = canvas.getContext('2d');
     if (!context) return;
 
-    // Settings - adjusted for Marathon aesthetic
-    const particleCount = 28; // Reduced from 35 to 28 (20% reduction for better FPS)
-    const flareCount = 8;
+    // Reduce particles for mobile and high-resolution displays
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const screenSize = window.innerWidth * window.innerHeight;
+    const isHighRes = screenSize > 2000000; // 2MP+ (e.g., 1440p, 4K)
+    
+    let particleCount;
+    if (isIOS) {
+      particleCount = 15;
+    } else if (isHighRes) {
+      particleCount = 20; // Reduced for high-res displays
+    } else {
+      particleCount = 28; // Full count for standard displays
+    }
+    const flareCount = (isIOS || isHighRes) ? 4 : 8; // Reduce flares on iOS and high-res
     const motion = 0.025; // Slightly reduced for smoother movement
     const color = '#00ffff'; // Cyan to match Marathon theme
     const particleSizeBase = 1;
@@ -77,12 +88,12 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     const renderParticleGlare = true;
     const renderFlares = true;
     const renderLinks = true;
-    const flicker = true;
+    const flicker = false; // Disabled to reduce screen flickering
     const flickerSmoothing = 25; // Increased for smoother flicker animation
     const randomMotion = true;
     const noiseLength = 800;
     const noiseStrength = 0.7; // Reduced for smoother particle movement
-    const connectionDistance = 180; // Reduced from 200 to 180 (cleaner, more purposeful lines)
+    const connectionDistance = (isIOS || isHighRes) ? 120 : 180; // Shorter connections on iOS and high-res
 
     // Mouse tracking removed for better performance - only nebula responds to mouse
     let c = 1000;
@@ -122,15 +133,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
         const r = ((this.z * particleSizeMultiplier) + particleSizeBase) * (sizeRatio() / 1000);
         let o = this.opacity;
 
-        if (flicker) {
-          const newVal = random(-0.5, 0.5, true);
-          this.flicker += (newVal - this.flicker) / flickerSmoothing;
-          if (this.flicker > 0.5) this.flicker = 0.5;
-          if (this.flicker < -0.5) this.flicker = -0.5;
-          o += this.flicker;
-          if (o > 1) o = 1;
-          if (o < 0) o = 0;
-        }
+        // Flicker disabled for smoother experience
 
         context.fillStyle = this.color;
         context.globalAlpha = o;
@@ -358,7 +361,10 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
 
     function resize() {
       if (canvas) {
-        canvas.width = window.innerWidth * (window.devicePixelRatio || 1);
+        // Force lower resolution on iOS and high-res displays to improve performance
+        const pixelRatio = (isIOS || isHighRes) ? 1 : (window.devicePixelRatio || 1);
+        const resolutionMultiplier = (isIOS || isHighRes) ? 0.6 : 0.8; // More aggressive scaling
+        canvas.width = window.innerWidth * pixelRatio * resolutionMultiplier;
         canvas.height = canvas.width * (canvas.clientHeight / canvas.clientWidth);
       }
     }
@@ -451,14 +457,15 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
       }
     }
 
-    // Frame throttling for better performance - render every other frame
+    // Aggressive frame throttling for iOS
     let frameCount = 0;
     function animate() {
       animationRef.current = requestAnimationFrame(animate);
       frameCount++;
       
-      // Throttle to ~30 FPS (render every other frame at 60 FPS)
-      if (frameCount % 2 === 0) {
+      // iOS/High-res: 15 FPS (every 4th frame), Desktop: 30 FPS (every 2nd frame)
+      const frameSkip = (isIOS || isHighRes) ? 4 : 2;
+      if (frameCount % frameSkip === 0) {
         resize();
         render();
       }

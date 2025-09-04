@@ -23,6 +23,9 @@ interface NetworkNode {
 }
 
 const TrackingOverlay: React.FC = () => {
+  // iOS performance optimization - disable heavy features on mobile
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  
   const [, setScanActive] = useState(false);
   const [dataPoints, setDataPoints] = useState<ScanData[]>([]);
   const [systemStatus, setSystemStatus] = useState({
@@ -35,7 +38,7 @@ const TrackingOverlay: React.FC = () => {
     encryption: Math.random() * 100 + 200
   });
   
-  // Network topology state
+  // Network topology state - disabled on iOS for performance
   const [networkNodes, setNetworkNodes] = useState<NetworkNode[]>([]);
 
   // Optimized scanning cycle - reduced frequency and combined state updates
@@ -43,7 +46,7 @@ const TrackingOverlay: React.FC = () => {
     const scanCycle = setInterval(() => {
       // Generate new data points during scan
       const newPoints: ScanData[] = [];
-      const pointCount = Math.floor(Math.random() * 3) + 1; // Reduced from 5+2 to 3+1
+      const pointCount = isIOS ? 1 : Math.floor(Math.random() * 3) + 1; // Single point on iOS
       
       for (let i = 0; i < pointCount; i++) {
         newPoints.push({
@@ -65,7 +68,7 @@ const TrackingOverlay: React.FC = () => {
         setScanActive(false);
       }, 2000); // 2 second scan duration
       
-    }, 15000 + Math.random() * 10000); // Random interval 15-25 seconds
+    }, isIOS ? 25000 + Math.random() * 15000 : 15000 + Math.random() * 10000); // Slower on iOS
 
     // Update system status less frequently
     const statusTimer = setInterval(() => {
@@ -78,12 +81,12 @@ const TrackingOverlay: React.FC = () => {
         threats: Math.max(0, Math.min(5, prev.threats + Math.floor((Math.random() - 0.5) * 1))),
         encryption: Math.max(128, Math.min(512, prev.encryption + (Math.random() - 0.5) * 10))
       }));
-    }, 5000); // Increased from 3s to 5s
+    }, isIOS ? 8000 : 5000); // Even slower status updates on iOS
 
     // Fade out old data points less frequently
     const cleanupTimer = setInterval(() => {
       setDataPoints(prev => prev.filter(point => Date.now() - point.timestamp < 12000)); // Keep longer
-    }, 2000); // Reduced frequency
+    }, isIOS ? 5000 : 2000); // Much slower cleanup on iOS
 
     return () => {
       clearInterval(scanCycle);
@@ -92,8 +95,10 @@ const TrackingOverlay: React.FC = () => {
     };
   }, []); // Removed problematic dependency array
 
-  // Network topology generation - Solar system inspired
+  // Network topology generation - disabled on iOS for performance
   useEffect(() => {
+    if (isIOS) return; // Skip network topology on iOS
+    
     // Initialize network topology on mount
     const initializeNetwork = () => {
       const nodes: NetworkNode[] = [
@@ -277,7 +282,7 @@ const TrackingOverlay: React.FC = () => {
     }, 4000);
 
     return () => clearInterval(networkTimer);
-  }, []);
+  }, [isIOS]);
 
   return (
     <div className="tracking-overlay">
@@ -358,65 +363,62 @@ const TrackingOverlay: React.FC = () => {
         </div>
       </div>
       
-      {/* Network Topology - Solar System Style */}
-      <div className="network-topology">
-        {/* Render connection lines first (behind nodes) */}
-        {networkNodes.map((node) =>
-          node.connections.map((targetId) => {
-            const target = networkNodes.find(n => n.id === targetId);
-            if (!target) return null;
-            
-            const dx = target.x - node.x;
-            const dy = target.y - node.y;
-            const length = Math.sqrt(dx * dx + dy * dy);
-            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-            
-            return (
-              <div
-                key={`${node.id}-${targetId}`}
-                className={`network-connection status-${node.status}`}
-                style={{
-                  left: `${node.x}%`,
-                  top: `${node.y}%`,
-                  width: `${length}%`,
-                  transform: `rotate(${angle}deg)`,
-                  transformOrigin: '0 50%'
-                }}
-              />
-            );
-          })
-        )}
-        
-        {/* Render nodes on top */}
-        {networkNodes.map((node) => (
-          <div
-            key={node.id}
-            className={`network-node node-${node.type} status-${node.status}`}
-            style={{
-              left: `${node.x}%`,
-              top: `${node.y}%`
-            }}
-          >
-            {/* Node core */}
-            <div className="node-core" />
-            
-            {/* Node label */}
-            <div className="node-label">{node.label}</div>
-            
-            {/* Real-time data overlay */}
-            <div className="node-data">
-              <div className="data-rate">{Math.floor(node.dataRate)}</div>
-              <div className="response-time">{Math.floor(node.responseTime)}ms</div>
+      {/* Network Topology - disabled on iOS for performance */}
+      {!isIOS && (
+        <div className="network-topology">
+          {/* Render connection lines first (behind nodes) */}
+          {networkNodes.map((node) =>
+            node.connections.map((targetId) => {
+              const target = networkNodes.find(n => n.id === targetId);
+              if (!target) return null;
+              
+              const dx = target.x - node.x;
+              const dy = target.y - node.y;
+              const length = Math.sqrt(dx * dx + dy * dy);
+              const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+              
+              return (
+                <div
+                  key={`${node.id}-${targetId}`}
+                  className={`network-connection status-${node.status}`}
+                  style={{
+                    left: `${node.x}%`,
+                    top: `${node.y}%`,
+                    width: `${length}%`,
+                    transform: `rotate(${angle}deg)`,
+                    transformOrigin: '0 50%'
+                  }}
+                />
+              );
+            })
+          )}
+          
+          {/* Render nodes on top */}
+          {networkNodes.map((node) => (
+            <div
+              key={node.id}
+              className={`network-node node-${node.type} status-${node.status}`}
+              style={{
+                left: `${node.x}%`,
+                top: `${node.y}%`
+              }}
+            >
+              {/* Node core */}
+              <div className="node-core" />
+              
+              {/* Node label */}
+              <div className="node-label">{node.label}</div>
+              
+              {/* Real-time data overlay */}
+              <div className="node-data">
+                <div className="data-rate">{Math.floor(node.dataRate)}</div>
+                <div className="response-time">{Math.floor(node.responseTime)}ms</div>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* Tracking reticle */}
-      <div className="tracking-reticle">
-        <div className="reticle-crosshair" />
-        <div className="reticle-rings" />
-      </div>
     </div>
   );
 };

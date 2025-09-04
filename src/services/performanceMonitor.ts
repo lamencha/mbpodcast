@@ -167,7 +167,12 @@ class PerformanceMonitor {
       warnings.push(`High memory usage: ${metrics.memoryUsage}MB`);
     }
     
-    if (metrics.interactionLatency > 100) {
+    // Adjust thresholds based on screen resolution
+    const screenSize = window.innerWidth * window.innerHeight;
+    const isHighRes = screenSize > 2000000;
+    const latencyThreshold = isHighRes ? 200 : 100; // Higher threshold for high-res displays
+    
+    if (metrics.interactionLatency > latencyThreshold) {
       warnings.push(`High interaction latency: ${metrics.interactionLatency}ms`);
     }
     
