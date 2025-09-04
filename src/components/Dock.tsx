@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { performanceMonitor } from '../services/performanceMonitor';
-import { useMobileOptimizations } from '../hooks/useMobileOptimizations';
 import './Dock.css';
 
 interface DockProps {
@@ -26,9 +25,6 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const dockItemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const animationCleanupRefs = useRef<(() => void)[]>([]);
-  
-  // Mobile optimizations hook (for future use)
-  useMobileOptimizations();
 
   const dockItems: DockItem[] = [
     {
@@ -78,8 +74,7 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
     }
   ];
 
-  // Optimized click handler with mobile touch support
-  const handleItemClick = useCallback((item: DockItem) => {
+  const handleItemClick = (item: DockItem) => {
     // Track interaction for performance monitoring
     performanceMonitor.trackInteractionStart();
     
@@ -138,7 +133,7 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
     
     // Track interaction end for performance monitoring
     setTimeout(() => performanceMonitor.trackInteractionEnd(), 0);
-  }, [onYouTubeClick, onPlaceholderClick, openWindows, onBringToFront, activeApp, onMinimize]);
+  };
 
   const handleItemHover = useCallback((itemId: number | null) => {
     setHoveredItem(itemId);
@@ -205,7 +200,7 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
                 console.log(`Dock item clicked: ${item.windowTitle}`);
                 handleItemClick(item);
               }}
-              onTouchStart={(_e) => {
+              onTouchStart={() => {
                 console.log(`Dock item touch started: ${item.windowTitle}`);
               }}
               onTouchEnd={(e) => {

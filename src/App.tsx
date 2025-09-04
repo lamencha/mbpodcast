@@ -6,9 +6,7 @@ import MenuBar from './components/MenuBar';
 import { YouTubePlaylistService } from './services/youtubePlaylistService';
 import { performanceMonitor } from './services/performanceMonitor';
 import { SWMessenger } from './services/serviceWorkerRegistration';
-import { useMobileOptimizations } from './hooks/useMobileOptimizations';
 import './App.css';
-import './styles/mobileOptimizations.css';
 
 // Lazy load core visual effects - loaded after initial render for better startup performance
 const ParticleField = lazy(() => import('./components/ParticleField'));
@@ -69,11 +67,6 @@ function App() {
   const [activeApp, setActiveApp] = useState('Finder');
   const [showAbout, setShowAbout] = useState(false);
   const [highestZIndex, setHighestZIndex] = useState(1000);
-
-  // Mobile optimizations
-  const {
-    getVisualEffectsSettings
-  } = useMobileOptimizations();
   
   // Performance monitoring
   useEffect(() => {
@@ -539,24 +532,17 @@ function App() {
     </Suspense>
   ) : null;
 
-  // Get mobile-optimized visual settings
-  const visualSettings = getVisualEffectsSettings();
-  
   return (
     <div className="app">
-      {/* Animated particle field background - conditionally rendered based on device capabilities */}
-      {visualSettings.enabled && (
-        <Suspense fallback={<div className="desktop-background" />}>
-          <ParticleField className="desktop-background" />
-        </Suspense>
-      )}
+      {/* Animated particle field background */}
+      <Suspense fallback={<div className="desktop-background" />}>
+        <ParticleField className="desktop-background" />
+      </Suspense>
       
-      {/* Fluid shader effect overlay - reduced quality on mobile */}
-      {visualSettings.enabled && visualSettings.enableBlur && (
-        <Suspense fallback={<div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 2 }} />}>
-          <FluidEffect />
-        </Suspense>
-      )}
+      {/* Fluid shader effect overlay */}
+      <Suspense fallback={<div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 2 }} />}>
+        <FluidEffect />
+      </Suspense>
       
       {/* Blade Runner 2049 inspired tracking overlay */}
       <div className="desktop-only-monitor">

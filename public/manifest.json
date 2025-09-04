@@ -13,16 +13,16 @@
   
   "icons": [
     {
-      "src": "/brand_assets/icon.svg",
+      "src": "/brand_assets/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "type": "image/png",
+      "purpose": "maskable any"
     },
     {
-      "src": "/brand_assets/icon.svg", 
+      "src": "/brand_assets/icon-512.png", 
       "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "type": "image/png",
+      "purpose": "maskable any"
     }
   ],
   
@@ -31,16 +31,42 @@
       "name": "Listen to Podcast",
       "short_name": "Podcast",
       "description": "Open the main podcast player",
-      "url": "/?action=podcast"
+      "url": "/?action=podcast",
+      "icons": [
+        {
+          "src": "/brand_assets/shortcut-podcast.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Music Player",
       "short_name": "Music",
       "description": "Open the iPod music player",
-      "url": "/?action=music"
+      "url": "/?action=music",
+      "icons": [
+        {
+          "src": "/brand_assets/shortcut-music.png", 
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
   
+  "screenshots": [
+    {
+      "src": "/brand_assets/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/brand_assets/screenshot-narrow.png",
+      "sizes": "390x844", 
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
 
   "share_target": {
     "action": "/share",

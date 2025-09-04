@@ -259,11 +259,6 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
       }
 
       function renderTexture() {
-        // Safety check to prevent null pointer errors
-        if (!renderer || !scene || !camera || !uniforms || !rtTexture || !rtTexture2) {
-          return;
-        }
-        
         const odims = uniforms.u_resolution.value.clone();
         uniforms.u_resolution.value.x = window.innerWidth * 0.15;
         uniforms.u_resolution.value.y = window.innerHeight * 0.15;
@@ -284,11 +279,6 @@ const FluidEffect: React.FC<FluidEffectProps> = ({ className = '' }) => {
       }
 
       function render() {
-        // Safety check to prevent null pointer errors
-        if (!renderer || !scene || !camera || !uniforms) {
-          return;
-        }
-        
         uniforms.u_mouse.value.x += (newmouse.x - uniforms.u_mouse.value.x) * divisor;
         uniforms.u_mouse.value.y += (newmouse.y - uniforms.u_mouse.value.y) * divisor;
         
