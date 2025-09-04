@@ -56,7 +56,7 @@
   height: 38px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 50%;
-  animation: hexRotate 20s linear infinite;
+  /* Hex rotation disabled for performance */
 }
 
 .header-circle::after {
@@ -66,7 +66,7 @@
   height: 44px;
   border: 1px dashed rgba(255, 255, 255, 0.4);
   border-radius: 50%;
-  animation: dashSpin 8s linear infinite;
+  /* Dash spinning disabled for performance */
 }
 
 .circle-inner {
@@ -103,7 +103,7 @@
   box-shadow: 
     0 0 6px rgba(128, 0, 255, 0.8),
     0 0 12px rgba(128, 0, 255, 0.5);
-  animation: envPulse 3s ease-in-out infinite;
+  /* Env pulse disabled for performance */
 }
 
 .status-dot.scanning {
@@ -111,7 +111,7 @@
   box-shadow: 
     0 0 6px rgba(255, 128, 0, 0.8),
     0 0 12px rgba(255, 128, 0, 0.5);
-  animation: scanPulse 1s ease-in-out infinite;
+  /* Scan pulse disabled for performance */
 }
 
 .scan-status {
@@ -156,7 +156,7 @@
   background: rgba(255, 255, 255, 0.15);
   border-radius: 50%;
   transform: translateY(-50%);
-  animation: navPulse 3s ease-in-out infinite;
+  /* Navigation pulse disabled for performance */
 }
 
 .nav-item {
@@ -293,7 +293,7 @@
     rgba(0, 255, 255, 0.2) 50%,
     transparent 100%
   );
-  animation: photoScan 4s ease-in-out infinite;
+  /* Photo scan disabled for performance */
 }
 
 .scan-line {
@@ -304,7 +304,7 @@
   height: 2px;
   background: rgba(0, 255, 255, 0.8);
   box-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
-  animation: scanLineMove 3s ease-in-out infinite;
+  /* Scan line movement disabled for performance */
 }
 
 .profile-data {
@@ -409,7 +409,7 @@
 .threat-level {
   font-size: 14px;
   font-weight: bold;
-  animation: threatPulse 2s ease-in-out infinite;
+  /* Threat pulse disabled for performance */
 }
 
 .threat-level.critical {
@@ -493,15 +493,15 @@
   height: 4px;
   border-radius: 50%;
   background: rgba(0, 255, 255, 0.6);
-  animation: dotPulse 1.5s ease-in-out infinite;
+  /* Dot pulse disabled for performance */
 }
 
 .analysis-dots .dot:nth-child(2) {
-  animation-delay: 0.3s;
+  /* Animation delay removed */
 }
 
 .analysis-dots .dot:nth-child(3) {
-  animation-delay: 0.6s;
+  /* Animation delay removed */
 }
 
 .background-text {
@@ -545,7 +545,7 @@
   height: 6px;
   background: rgba(0, 255, 255, 0.8);
   border-radius: 50%;
-  animation: dnaPulse 2s ease-in-out infinite;
+  /* DNA pulse disabled for performance */
 }
 
 .dna-container {
@@ -582,7 +582,7 @@
 }
 
 .strand-a {
-  animation: nebulaBreathingA 6s ease-in-out infinite;
+  /* Nebula breathing disabled for performance */
   background: radial-gradient(
     ellipse at 30% 50%,
     rgba(0, 255, 255, 0.5) 0%,
@@ -592,7 +592,7 @@
 }
 
 .strand-b {
-  animation: nebulaBreathingB 6s ease-in-out infinite 3s;
+  /* Nebula breathing disabled for performance */
   background: radial-gradient(
     ellipse at 70% 50%,
     rgba(255, 0, 128, 0.4) 0%,
@@ -613,7 +613,7 @@
   height: 20px;
   top: 50%;
   transform: translateY(-50%);
-  animation: bondPulse 2s ease-in-out infinite;
+  /* Bond pulse disabled for performance */
 }
 
 .bond-0 { background: rgba(255, 0, 0, 0.15); }
@@ -718,7 +718,7 @@
     linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
     linear-gradient(0deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 4px 4px;
-  animation: scannerGrid 3s ease-in-out infinite;
+  /* Scanner grid disabled for performance */
 }
 
 .bio-readings {
@@ -770,7 +770,7 @@
   height: 100%;
   background: rgba(0, 255, 255, 0.6);
   border-radius: 2px;
-  animation: barPulse 2s ease-in-out infinite;
+  /* Bar pulse disabled for performance */
 }
 
 .bar-value {
@@ -802,7 +802,7 @@
   width: 4px;
   background: rgba(255, 128, 0, 0.6);
   border-radius: 2px 2px 0 0;
-  animation: neuralWave 3s ease-in-out infinite;
+  /* Neural wave disabled for performance */
 }
 
 /* Additional Info Enhanced */
@@ -853,7 +853,7 @@
   height: 100%;
   background: rgba(255, 0, 0, 0.6);
   border-radius: 2px;
-  animation: threatPulse 2s ease-in-out infinite;
+  /* Threat pulse disabled for performance */
 }
 
 .info-column {
@@ -933,7 +933,7 @@
   );
   pointer-events: none;
   z-index: 10;
-  animation: envScanMove 12s linear infinite;
+  /* Environment scan movement disabled for performance */
 }
 
 /* Animations */

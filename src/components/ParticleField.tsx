@@ -60,7 +60,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     const screenSize = window.innerWidth * window.innerHeight;
     const isHighRes = screenSize > 2000000; // 2MP+ (e.g., 1440p, 4K)
     
-    let particleCount;
+    let particleCount: number;
     if (isIOS) {
       particleCount = 15;
     } else if (isHighRes) {
@@ -88,8 +88,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     const renderParticleGlare = true;
     const renderFlares = true;
     const renderLinks = true;
-    const flicker = false; // Disabled to reduce screen flickering
-    const flickerSmoothing = 25; // Increased for smoother flicker animation
+    // Flicker variables removed as they're no longer used
     const randomMotion = true;
     const noiseLength = 800;
     const noiseStrength = 0.7; // Reduced for smoother particle movement

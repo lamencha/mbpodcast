@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import './ReplicantDatabase.css';
 
 interface ReplicantData {
@@ -26,7 +26,7 @@ interface ReplicantDatabaseProps {
 
 const ReplicantDatabase: React.FC<ReplicantDatabaseProps> = ({ onClose }) => {
   const [selectedReplicant, setSelectedReplicant] = useState(0);
-  const [scanningActive, setScanningActive] = useState(true);
+  // Scanning animation removed for better performance
 
   // Memoize replicant data to prevent recreation on every render
   const replicants: ReplicantData[] = useMemo(() => [
@@ -86,13 +86,7 @@ const ReplicantDatabase: React.FC<ReplicantDatabaseProps> = ({ onClose }) => {
     }
   ], []); // Empty dependency array since data is static
 
-  useEffect(() => {
-    const scanTimer = setInterval(() => {
-      setScanningActive(prev => !prev);
-    }, 3000);
-
-    return () => clearInterval(scanTimer);
-  }, []);
+  // Scanning timer removed for better performance
 
   const currentReplicant = replicants[selectedReplicant];
 
@@ -119,9 +113,9 @@ const ReplicantDatabase: React.FC<ReplicantDatabaseProps> = ({ onClose }) => {
             </div>
           </div>
           <div className="header-status">
-            <div className={`status-dot ${scanningActive ? 'scanning' : 'active'}`}></div>
+            <div className="status-dot active"></div>
             <div className="scan-status">
-              {scanningActive ? 'BUFFERING...' : 'BUFFER COMPLETE'}
+              DATABASE READY
             </div>
           </div>
         </div>
@@ -384,8 +378,7 @@ const ReplicantDatabase: React.FC<ReplicantDatabaseProps> = ({ onClose }) => {
 
         </div>
 
-        {/* Scan Lines Overlay */}
-        <div className="database-scanlines"></div>
+        {/* Scanlines overlay removed for better performance */}
     </div>
   );
 };
