@@ -8,12 +8,10 @@ import { performanceMonitor } from './services/performanceMonitor';
 import { SWMessenger } from './services/serviceWorkerRegistration';
 import './App.css';
 
-// Lazy load core visual effects - loaded after initial render for better startup performance
-const ParticleField = lazy(() => import('./components/ParticleField'));
-const FluidEffect = lazy(() => import('./components/FluidEffect'));
-
-// Lazy load monitoring components - desktop only features
-const TrackingOverlay = lazy(() => import('./components/TrackingOverlay'));
+// Essential visual effects - Load immediately for smooth startup experience
+import ParticleField from './components/ParticleField';
+import FluidEffect from './components/FluidEffect';
+import TrackingOverlay from './components/TrackingOverlay';
 const SystemMonitor = lazy(() => import('./components/SystemMonitor'));
 const EnvironmentalMonitor = lazy(() => import('./components/EnvironmentalMonitor'));
 
@@ -535,20 +533,14 @@ function App() {
   return (
     <div className="app">
       {/* Animated particle field background */}
-      <Suspense fallback={<div className="desktop-background" />}>
-        <ParticleField className="desktop-background" />
-      </Suspense>
+      <ParticleField className="desktop-background" />
       
       {/* Fluid shader effect overlay */}
-      <Suspense fallback={<div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 2 }} />}>
-        <FluidEffect />
-      </Suspense>
+      <FluidEffect />
       
       {/* Blade Runner 2049 inspired tracking overlay */}
       <div className="desktop-only-monitor">
-        <Suspense fallback={<div />}>
-          <TrackingOverlay />
-        </Suspense>
+        <TrackingOverlay />
       </div>
       
       {/* System process monitor */}

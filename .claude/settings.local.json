@@ -15,7 +15,9 @@
       "Read(/C:\\Users\\THESTRAL\\Documents\\mbpodcast\\src\\components/**)",
       "Read(/C:\\Users\\THESTRAL\\Documents\\mbpodcast\\src\\components/**)",
       "Read(/C:\\Users\\THESTRAL\\Documents\\mbpodcast\\src\\components/**)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Read(/C:\\Users\\THESTRAL\\Documents\\mbpodcast\\src/**)",
+      "Read(/C:\\Users\\THESTRAL\\Documents\\mbpodcast\\src/**)"
     ],
     "deny": [],
     "ask": []
