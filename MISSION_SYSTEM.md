@@ -256,6 +256,20 @@ localStorage.setItem('debug-mission', 'true');
 - **Accessibility**: Proper button types and enhanced contrast for better usability
 - **Layout Optimization**: Improved spacing (12px gaps) and flex properties for better alignment
 
+### SWAT Team Button Consistency
+- **Unified Styling**: SWAT team add/remove buttons now match add/remove objective button styling exactly
+- **Add Button**: Transparent background with dashed white border, 8px/16px padding, 11px font
+- **Remove Button**: Circular 24x24px magenta-bordered buttons with hover fill effect
+- **Visual Harmony**: Perfect consistency across all add/remove operations in mission interface
+- **Professional Polish**: Subtle, clean styling that maintains BR2049 aesthetic throughout
+
+### Window Sizing Optimization
+- **Perfect Content Fit**: Mission window height optimized from 600px to 450px
+- **Eliminated Waste Space**: Removed excessive empty area below mission content
+- **Dual Configuration**: Updated both App.tsx window instances (720×450px) and CSS max-height (450px)
+- **Improved UX**: Better proportions within BR2049 desktop environment
+- **Content-First Design**: Window dimensions now precisely match actual content requirements
+
 ---
 
 *This documentation covers the complete LAPD Mission Control System as of Phase 24 implementation with January 2025 improvements. The system demonstrates enterprise-grade authentication, content management, and user interface design within the Blade Runner 2049 aesthetic framework.*

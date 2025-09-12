@@ -444,7 +444,7 @@ function App() {
               <MissionBriefing />
             </Suspense>
           ),
-          size: { width: 720, height: 600 },
+          size: { width: 720, height: 450 },
           isMinimized: false,
         });
       }
