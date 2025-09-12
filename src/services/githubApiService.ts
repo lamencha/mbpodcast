@@ -3,7 +3,7 @@ import { authService } from './authService';
 interface MissionData {
   title: string;
   classification: 'UNCLASSIFIED' | 'CONFIDENTIAL' | 'SECRET' | 'TOP SECRET';
-  briefingOfficer: string;
+  swatTeam: string[];
   missionDate: string;
   description: string;
   objectives: string[];
@@ -206,7 +206,7 @@ class GitHubApiService {
     return {
       title: "Operation: Nexus Infiltration",
       classification: "CONFIDENTIAL",
-      briefingOfficer: "Lt. Joshi",
+      swatTeam: ["Lt. Joshi", "Officer Chen"],
       missionDate: "2049.03.15",
       description: `Intelligence has identified anomalous behavior patterns within the replicant population of Los Angeles. 
       

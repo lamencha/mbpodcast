@@ -33,8 +33,8 @@ const Window: React.FC<WindowProps> = ({
   const windowRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
   const throttleRef = useRef<number>(0);
-  const minimizeTimeoutRef = useRef<number | null>(null);
-  const focusTimeoutRef = useRef<number | null>(null);
+  const minimizeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const focusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Unified pointer event handler for both mouse and touch
   const handlePointerDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {

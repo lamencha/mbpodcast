@@ -153,6 +153,36 @@ const MissionBriefing: React.FC<MissionBriefingProps> = ({ className = '' }) => 
     });
   };
 
+  const handleTeamMemberChange = (index: number, value: string) => {
+    if (!editedMission) return;
+    
+    const newSwatTeam = [...editedMission.swatTeam];
+    newSwatTeam[index] = value;
+    setEditedMission({
+      ...editedMission,
+      swatTeam: newSwatTeam
+    });
+  };
+
+  const addTeamMember = () => {
+    if (!editedMission) return;
+    
+    setEditedMission({
+      ...editedMission,
+      swatTeam: [...editedMission.swatTeam, '']
+    });
+  };
+
+  const removeTeamMember = (index: number) => {
+    if (!editedMission) return;
+    
+    const newSwatTeam = editedMission.swatTeam.filter((_, i) => i !== index);
+    setEditedMission({
+      ...editedMission,
+      swatTeam: newSwatTeam
+    });
+  };
+
   const formatDate = (dateString: string) => {
     try {
       return new Date(dateString).toLocaleString();
@@ -221,18 +251,40 @@ const MissionBriefing: React.FC<MissionBriefingProps> = ({ className = '' }) => 
         </div>
 
         <div className="mission-meta">
-          <div className="meta-row">
-            <span className="meta-label">BRIEFING OFFICER:</span>
+          <div className="meta-row swat-team-row">
+            <span className="meta-label">SWAT TEAM:</span>
             {isEditing ? (
-              <input
-                type="text"
-                value={editedMission?.briefingOfficer || ''}
-                onChange={(e) => handleInputChange('briefingOfficer', e.target.value)}
-                className="edit-input"
-                placeholder="Officer Name"
-              />
+              <div className="swat-team-edit">
+                {editedMission?.swatTeam?.map((member, index) => (
+                  <div key={index} className="team-member-edit">
+                    <input
+                      type="text"
+                      value={member}
+                      onChange={(e) => handleTeamMemberChange(index, e.target.value)}
+                      className="edit-input team-member-input"
+                      placeholder="Team Member Name"
+                    />
+                    <button
+                      onClick={() => removeTeamMember(index)}
+                      className="remove-team-member"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+                <button onClick={addTeamMember} className="add-team-member">
+                  + ADD MEMBER
+                </button>
+              </div>
             ) : (
-              <span className="meta-value">{displayMission.briefingOfficer}</span>
+              <div className="swat-team-display">
+                {displayMission.swatTeam?.map((member, index) => (
+                  <span key={index} className="team-member">
+                    {member}
+                    {index < displayMission.swatTeam.length - 1 && ', '}
+                  </span>
+                ))}
+              </div>
             )}
           </div>
           <div className="meta-row">

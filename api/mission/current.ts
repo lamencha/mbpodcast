@@ -33,7 +33,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const defaultMission = {
         title: "Operation: Nexus Infiltration",
         classification: "CONFIDENTIAL",
-        briefingOfficer: "Lt. Joshi",
+        swatTeam: ["Lt. Joshi", "Officer Chen"],
         missionDate: "2049.03.15",
         description: `Intelligence has identified anomalous behavior patterns within the replicant population of Los Angeles. 
         

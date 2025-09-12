@@ -61,6 +61,7 @@
   line-height: 1.4;
   padding: 20px;
   height: 100%;
+  max-height: 500px; /* Make window shorter */
   overflow-y: auto;
   position: relative;
   
@@ -68,6 +69,17 @@
   background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 20px 20px;
   background-attachment: fixed;
+}
+
+/* Fix text selection colors */
+.mission-briefing ::selection {
+  background: var(--primary-accent);
+  color: var(--void-black);
+}
+
+.mission-briefing ::-moz-selection {
+  background: var(--primary-accent);
+  color: var(--void-black);
 }
 
 /* Loading State */
@@ -355,7 +367,7 @@
 }
 
 .edit-select {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--void-black);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: var(--void-white);
   padding: 6px 12px;
@@ -367,6 +379,83 @@
 .edit-select:focus {
   outline: none;
   border-color: var(--primary-accent);
+}
+
+.edit-select option {
+  background: var(--void-black);
+  color: var(--void-white);
+}
+
+/* SWAT Team Styling */
+.swat-team-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.swat-team-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.team-member-edit {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.team-member-input {
+  flex: 1;
+}
+
+.remove-team-member {
+  background: transparent;
+  border: 1px solid var(--secondary-accent);
+  color: var(--secondary-accent);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.remove-team-member:hover {
+  background: var(--secondary-accent);
+  color: var(--void-black);
+}
+
+.add-team-member {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 6px 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
+
+.add-team-member:hover {
+  border-color: var(--primary-accent);
+  color: var(--primary-accent);
+}
+
+.swat-team-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.team-member {
+  color: var(--void-white);
 }
 
 /* Footer */
