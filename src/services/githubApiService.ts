@@ -70,6 +70,12 @@ class GitHubApiService {
     }
 
     try {
+      // Ensure repository exists first
+      const repoExists = await this.ensureRepository();
+      if (!repoExists) {
+        throw new Error('Failed to create or access repository');
+      }
+
       // Get current file SHA (required for updates)
       const currentFile = await this.getFileInfo(this.MISSION_FILE_PATH);
       
@@ -99,8 +105,14 @@ class GitHubApiService {
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(`GitHub API error: ${error.message}`);
+        const error = await response.json().catch(() => ({ message: response.statusText }));
+        console.error('GitHub API Error Response:', {
+          status: response.status,
+          statusText: response.statusText,
+          url: response.url,
+          error
+        });
+        throw new Error(`GitHub API error: ${error.message || response.statusText}`);
       }
 
       return true;
