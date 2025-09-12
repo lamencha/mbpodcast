@@ -9,7 +9,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const REPO_OWNER = process.env.VITE_ADMIN_GITHUB_USERNAME;
     const REPO_NAME = process.env.VITE_GITHUB_REPO_NAME || 'mbpodcast-missions';
-    const GITHUB_TOKEN = process.env.GITHUB_CLIENT_SECRET; // We can reuse this for API access
+    const GITHUB_TOKEN = process.env.GITHUB_ACCESS_TOKEN; // Use Personal Access Token
     
     if (!REPO_OWNER || !GITHUB_TOKEN) {
       console.error('Missing GitHub configuration');
