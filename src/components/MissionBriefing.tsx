@@ -17,6 +17,7 @@ const MissionBriefing: React.FC<MissionBriefingProps> = ({ className = '' }) => 
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<GitHubUser | null>(null);
   const [showAuthCallback, setShowAuthCallback] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Check for OAuth callback in URL
   useEffect(() => {
@@ -82,15 +83,31 @@ const MissionBriefing: React.FC<MissionBriefingProps> = ({ className = '' }) => 
     if (!editedMission) return;
 
     setSaving(true);
+    setError(null); // Clear any previous errors
+    
     try {
       const success = await githubApiService.updateMission(editedMission);
+      console.log('Mission save result:', success);
+      
       if (success) {
-        setMission(editedMission);
+        // Update the mission state with the saved data
+        const updatedMission = {
+          ...editedMission,
+          lastUpdated: new Date().toISOString()
+        };
+        setMission(updatedMission);
+        setEditedMission(updatedMission);
         setIsEditing(false);
+        setSuccessMessage('Mission briefing saved successfully!');
+        console.log('Mission UI updated successfully');
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => setSuccessMessage(null), 3000);
       } else {
-        setError('Failed to save mission data');
+        setError('Failed to save mission data to GitHub');
       }
     } catch (err) {
+      console.error('Save mission error:', err);
       setError(err instanceof Error ? err.message : 'Failed to save mission');
     } finally {
       setSaving(false);
@@ -367,6 +384,13 @@ const MissionBriefing: React.FC<MissionBriefingProps> = ({ className = '' }) => 
         <div className="mission-error-toast">
           {error}
           <button onClick={() => setError(null)}>×</button>
+        </div>
+      )}
+      
+      {successMessage && (
+        <div className="mission-success-toast">
+          {successMessage}
+          <button onClick={() => setSuccessMessage(null)}>×</button>
         </div>
       )}
     </div>
