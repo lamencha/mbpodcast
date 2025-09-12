@@ -1,4 +1,15 @@
 {
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "functions": {
+    "api/auth/github.ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "headers": [
     {
       "source": "/assets/(.*)\\.css$",
