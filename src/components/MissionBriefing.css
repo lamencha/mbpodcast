@@ -653,7 +653,7 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .mission-briefing {
-    padding: 16px;
+    padding: 16px 16px 40px 16px;
     font-size: 13px;
   }
 
