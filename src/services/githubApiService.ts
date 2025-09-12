@@ -33,6 +33,12 @@ class GitHubApiService {
    * Fetch current mission data from our API endpoint
    */
   async getCurrentMission(): Promise<MissionData | null> {
+    // In development, skip API call and use default mission
+    if (import.meta.env.DEV) {
+      console.log('Development mode: using default mission data');
+      return this.getDefaultMission();
+    }
+
     try {
       const response = await fetch('/api/mission/current');
 
@@ -41,8 +47,23 @@ class GitHubApiService {
         return this.getDefaultMission();
       }
 
-      const missionData = await response.json() as MissionData;
-      return missionData;
+      // Check content type to ensure we're getting JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        console.warn(`Mission API returned non-JSON content: ${contentType}, using default mission`);
+        return this.getDefaultMission();
+      }
+
+      const responseText = await response.text();
+      
+      // Try to parse JSON, catch parsing errors
+      try {
+        const missionData = JSON.parse(responseText) as MissionData;
+        return missionData;
+      } catch (parseError) {
+        console.warn('Mission API returned invalid JSON, using default mission. Response:', responseText.substring(0, 100) + '...');
+        return this.getDefaultMission();
+      }
     } catch (error) {
       console.error('Error fetching mission:', error);
       return this.getDefaultMission();

@@ -62,13 +62,13 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
     
     let particleCount: number;
     if (isIOS) {
-      particleCount = 15;
+      particleCount = 12; // Further reduced for iOS
     } else if (isHighRes) {
-      particleCount = 20; // Reduced for high-res displays
+      particleCount = 16; // Further reduced for high-res displays
     } else {
-      particleCount = 28; // Full count for standard displays
+      particleCount = 22; // Reduced for better performance on all displays
     }
-    const flareCount = (isIOS || isHighRes) ? 4 : 8; // Reduce flares on iOS and high-res
+    const flareCount = (isIOS || isHighRes) ? 3 : 6; // Further reduced flares
     const motion = 0.025; // Slightly reduced for smoother movement
     const color = '#00ffff'; // Cyan to match Marathon theme
     const particleSizeBase = 1;
@@ -462,8 +462,8 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ className = '' }) => {
       animationRef.current = requestAnimationFrame(animate);
       frameCount++;
       
-      // iOS/High-res: 15 FPS (every 4th frame), Desktop: 30 FPS (every 2nd frame)
-      const frameSkip = (isIOS || isHighRes) ? 4 : 2;
+      // iOS/High-res: 12 FPS (every 5th frame), Desktop: 20 FPS (every 3rd frame)
+      const frameSkip = (isIOS || isHighRes) ? 5 : 3;
       if (frameCount % frameSkip === 0) {
         resize();
         render();

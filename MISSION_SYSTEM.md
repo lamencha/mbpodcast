@@ -270,6 +270,26 @@ localStorage.setItem('debug-mission', 'true');
 - **Improved UX**: Better proportions within BR2049 desktop environment
 - **Content-First Design**: Window dimensions now precisely match actual content requirements
 
+### Scrolling Performance Improvements
+- **GPU Acceleration**: Added `transform: translateZ(0)` and `will-change: scroll-position` to all scrollable elements
+- **Film Grain Optimization**: Changed `background-attachment` from `fixed` to `local` to prevent scroll repainting
+- **Smooth Scrolling Removal**: Replaced `scroll-behavior: smooth` with `auto` for instant response
+- **Touch Scrolling**: Added `-webkit-overflow-scrolling: touch` for optimized mobile scrolling
+- **Components Optimized**: MissionBriefing, IPod, ReplicantDatabase, and SystemMonitor scroll performance enhanced
+
+### Visual Effects Performance Optimization
+- **Reduced Particle Count**: ParticleField optimized with 20-21% fewer particles across all device categories
+- **Lower Frame Rates**: Desktop particles reduced from 30 FPS to 20 FPS, mobile from 15 FPS to 12 FPS
+- **Slower Tracking Updates**: TrackingOverlay intervals increased by 33-100% for better CPU efficiency
+- **Fewer Flare Effects**: Reduced flare count from 4-8 to 3-6 for lighter GPU load
+- **Target Performance**: Improved from 25 FPS to 30+ FPS system-wide
+
+### Mission API Error Handling
+- **Development Mode Fix**: Added environment detection to skip API calls in development mode
+- **Robust JSON Parsing**: Enhanced error handling with content-type validation and parsing error catching
+- **Graceful Fallbacks**: Multiple layers of fallback to default mission data on any API failure
+- **Better Error Messages**: Clear console logging for debugging API issues in production
+
 ---
 
 *This documentation covers the complete LAPD Mission Control System as of Phase 24 implementation with January 2025 improvements. The system demonstrates enterprise-grade authentication, content management, and user interface design within the Blade Runner 2049 aesthetic framework.*

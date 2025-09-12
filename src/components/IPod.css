@@ -106,9 +106,12 @@
 .menu-items {
   height: 100%;
   overflow-y: auto;
-  scroll-behavior: smooth;
+  scroll-behavior: auto; /* Remove smooth scrolling for better performance */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer/Edge */
+  /* Performance optimizations */
+  will-change: scroll-position;
+  transform: translateZ(0);
 }
 
 .menu-items::-webkit-scrollbar {

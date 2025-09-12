@@ -68,7 +68,7 @@ const TrackingOverlay: React.FC = () => {
         setScanActive(false);
       }, 2000); // 2 second scan duration
       
-    }, isIOS ? 25000 + Math.random() * 15000 : 15000 + Math.random() * 10000); // Slower on iOS
+    }, isIOS ? 35000 + Math.random() * 20000 : 20000 + Math.random() * 15000); // Even slower for performance
 
     // Update system status less frequently
     const statusTimer = setInterval(() => {
@@ -81,12 +81,12 @@ const TrackingOverlay: React.FC = () => {
         threats: Math.max(0, Math.min(5, prev.threats + Math.floor((Math.random() - 0.5) * 1))),
         encryption: Math.max(128, Math.min(512, prev.encryption + (Math.random() - 0.5) * 10))
       }));
-    }, isIOS ? 8000 : 5000); // Even slower status updates on iOS
+    }, isIOS ? 12000 : 8000); // Much slower status updates for performance
 
     // Fade out old data points less frequently
     const cleanupTimer = setInterval(() => {
       setDataPoints(prev => prev.filter(point => Date.now() - point.timestamp < 12000)); // Keep longer
-    }, isIOS ? 5000 : 2000); // Much slower cleanup on iOS
+    }, isIOS ? 8000 : 4000); // Even slower cleanup for performance
 
     return () => {
       clearInterval(scanCycle);

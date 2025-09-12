@@ -65,10 +65,15 @@
   overflow-y: auto;
   position: relative;
   
-  /* Film grain overlay */
+  /* Performance optimizations */
+  will-change: scroll-position;
+  transform: translateZ(0);
+  -webkit-overflow-scrolling: touch;
+  
+  /* Film grain overlay - optimized for performance */
   background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 20px 20px;
-  background-attachment: fixed;
+  background-attachment: local;
 }
 
 /* Fix text selection colors */
