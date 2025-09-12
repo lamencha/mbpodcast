@@ -169,14 +169,14 @@ const MissionBriefing: React.FC<MissionBriefingProps> = ({ className = '' }) => 
     
     setEditedMission({
       ...editedMission,
-      swatTeam: [...editedMission.swatTeam, '']
+      swatTeam: [...(editedMission.swatTeam || []), '']
     });
   };
 
   const removeTeamMember = (index: number) => {
     if (!editedMission) return;
     
-    const newSwatTeam = editedMission.swatTeam.filter((_, i) => i !== index);
+    const newSwatTeam = (editedMission.swatTeam || []).filter((_, i) => i !== index);
     setEditedMission({
       ...editedMission,
       swatTeam: newSwatTeam
@@ -255,7 +255,7 @@ const MissionBriefing: React.FC<MissionBriefingProps> = ({ className = '' }) => 
             <span className="meta-label">SWAT TEAM:</span>
             {isEditing ? (
               <div className="swat-team-edit">
-                {editedMission?.swatTeam?.map((member, index) => (
+                {(editedMission?.swatTeam || []).map((member, index) => (
                   <div key={index} className="team-member-edit">
                     <input
                       type="text"
@@ -265,6 +265,7 @@ const MissionBriefing: React.FC<MissionBriefingProps> = ({ className = '' }) => 
                       placeholder="Team Member Name"
                     />
                     <button
+                      type="button"
                       onClick={() => removeTeamMember(index)}
                       className="remove-team-member"
                     >
@@ -272,16 +273,20 @@ const MissionBriefing: React.FC<MissionBriefingProps> = ({ className = '' }) => 
                     </button>
                   </div>
                 ))}
-                <button onClick={addTeamMember} className="add-team-member">
+                <button 
+                  type="button"
+                  onClick={addTeamMember} 
+                  className="add-team-member"
+                >
                   + ADD MEMBER
                 </button>
               </div>
             ) : (
               <div className="swat-team-display">
-                {displayMission.swatTeam?.map((member, index) => (
+                {(displayMission.swatTeam || []).map((member, index) => (
                   <span key={index} className="team-member">
                     {member}
-                    {index < displayMission.swatTeam.length - 1 && ', '}
+                    {index < (displayMission.swatTeam || []).length - 1 && ', '}
                   </span>
                 ))}
               </div>

@@ -61,7 +61,7 @@
   line-height: 1.4;
   padding: 20px;
   height: 100%;
-  max-height: 500px; /* Make window shorter */
+  max-height: 400px; /* Shorter mission window */
   overflow-y: auto;
   position: relative;
   
