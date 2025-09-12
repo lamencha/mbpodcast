@@ -73,7 +73,9 @@ class GitHubApiService {
         lastUpdated: new Date().toISOString()
       };
       
-      const content = btoa(JSON.stringify(updatedData, null, 2)); // Encode as base64
+      // Unicode-safe base64 encoding
+      const jsonString = JSON.stringify(updatedData, null, 2);
+      const content = btoa(unescape(encodeURIComponent(jsonString)));
       
       // Update file
       const response = await fetch(

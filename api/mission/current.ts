@@ -62,7 +62,8 @@ Approach with extreme caution. These subjects may possess enhanced capabilities 
     }
 
     const fileData = await response.json();
-    const content = atob(fileData.content); // Decode base64
+    // Unicode-safe base64 decoding
+    const content = decodeURIComponent(escape(atob(fileData.content)));
     const missionData = JSON.parse(content);
 
     // Set cache headers for better performance
