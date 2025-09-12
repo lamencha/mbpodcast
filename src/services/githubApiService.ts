@@ -30,31 +30,19 @@ class GitHubApiService {
   }
 
   /**
-   * Fetch current mission data from GitHub
+   * Fetch current mission data from our API endpoint
    */
   async getCurrentMission(): Promise<MissionData | null> {
     try {
-      const response = await fetch(
-        `https://api.github.com/repos/${this.REPO_OWNER}/${this.REPO_NAME}/contents/${this.MISSION_FILE_PATH}`,
-        {
-          headers: {
-            'Accept': 'application/vnd.github.v3+json',
-          }
-        }
-      );
+      const response = await fetch('/api/mission/current');
 
-      if (response.status === 404) {
-        // File doesn't exist yet, return default mission
+      if (!response.ok) {
+        console.warn(`Mission API error: ${response.status}, using default mission`);
         return this.getDefaultMission();
       }
 
-      if (!response.ok) {
-        throw new Error(`GitHub API error: ${response.status}`);
-      }
-
-      const file: GitHubFile = await response.json();
-      const content = atob(file.content); // Decode base64
-      return JSON.parse(content) as MissionData;
+      const missionData = await response.json() as MissionData;
+      return missionData;
     } catch (error) {
       console.error('Error fetching mission:', error);
       return this.getDefaultMission();
