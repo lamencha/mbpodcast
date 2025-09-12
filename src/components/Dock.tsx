@@ -65,12 +65,12 @@ const Dock: React.FC<DockProps> = ({ onYouTubeClick, onPlaceholderClick, openWin
     },
     {
       id: 5,
-      label: 'System',
+      label: 'Mission',
       icon: 'settings',
       color: 'rgba(255, 255, 255, 0.8)',
       glowColor: 'rgba(255, 255, 255, 0.8)',
       action: () => onPlaceholderClick(5),
-      windowTitle: 'App 5'
+      windowTitle: 'LAPD Mission Control'
     }
   ];
 

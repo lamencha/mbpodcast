@@ -18,6 +18,7 @@ const EnvironmentalMonitor = lazy(() => import('./components/EnvironmentalMonito
 // Lazy load window content components
 const IPod = lazy(() => import('./components/IPod'));
 const ReplicantDatabase = lazy(() => import('./components/ReplicantDatabase'));
+const MissionBriefing = lazy(() => import('./components/MissionBriefing'));
 
 // Loading fallback component with BR2049 styling
 const LoadingFallback: React.FC = () => (
@@ -423,6 +424,30 @@ function App() {
           isMinimized: false,
         });
       }
+    } else if (buttonNumber === 5) {
+      // Mission Briefing for button 5
+      const windowTitle = "LAPD Mission Control";
+      const existingWindow = windows.find(w => w.title === windowTitle);
+      
+      if (existingWindow) {
+        if (existingWindow.isMinimized) {
+          updateWindow(existingWindow.id, { isMinimized: false });
+          bringWindowToFront(existingWindow.id);
+        } else {
+          updateWindow(existingWindow.id, { isMinimized: true });
+        }
+      } else {
+        openWindow({
+          title: windowTitle,
+          content: (
+            <Suspense fallback={<LoadingFallback />}>
+              <MissionBriefing />
+            </Suspense>
+          ),
+          size: { width: 720, height: 600 },
+          isMinimized: false,
+        });
+      }
     } else {
       // Other placeholder windows
       const windowTitle = `App ${buttonNumber}`;
@@ -471,6 +496,33 @@ function App() {
       console.log('No non-minimized windows, setting active app to Finder');
       setActiveApp('Finder');
     }
+  }, [windows]);
+
+  // Handle OAuth callback route
+  useEffect(() => {
+    const handleOAuthCallback = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (window.location.pathname === '/auth/callback' && urlParams.has('code')) {
+        // Open Mission Briefing window to handle the callback
+        const windowTitle = "LAPD Mission Control";
+        const existingWindow = windows.find(w => w.title === windowTitle);
+        
+        if (!existingWindow) {
+          openWindow({
+            title: windowTitle,
+            content: (
+              <Suspense fallback={<LoadingFallback />}>
+                <MissionBriefing />
+              </Suspense>
+            ),
+            size: { width: 720, height: 600 },
+            isMinimized: false,
+          });
+        }
+      }
+    };
+
+    handleOAuthCallback();
   }, [windows]);
 
   // Handle menu bar actions

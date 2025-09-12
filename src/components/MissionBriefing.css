@@ -1,0 +1,585 @@
+/* LAPD Mission Briefing - BR2049 Terminal Interface */
+
+/* Auth Callback Styles */
+.auth-callback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--void-white);
+  text-align: center;
+}
+
+.auth-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.auth-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid var(--primary-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.success-icon {
+  font-size: 32px;
+  color: var(--success-accent);
+  font-weight: bold;
+}
+
+.error-icon {
+  font-size: 32px;
+  color: var(--secondary-accent);
+  font-weight: bold;
+}
+
+.auth-message {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+.mission-briefing {
+  background: var(--void-black);
+  color: var(--void-white);
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
+  
+  /* Film grain overlay */
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-attachment: fixed;
+}
+
+/* Loading State */
+.mission-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  gap: 16px;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid var(--primary-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  font-size: 12px;
+  opacity: 0.8;
+  animation: pulse 2s infinite;
+}
+
+/* Error States */
+.mission-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  gap: 12px;
+}
+
+.error-icon {
+  font-size: 24px;
+  color: var(--secondary-accent);
+}
+
+.error-text {
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.8;
+  max-width: 300px;
+}
+
+.retry-button {
+  background: transparent;
+  border: 1px solid var(--void-white);
+  color: var(--void-white);
+  padding: 8px 16px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Mission Header */
+.mission-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+.mission-classification {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 11px;
+}
+
+.classification-label {
+  opacity: 0.6;
+}
+
+.classification-level {
+  font-weight: bold;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid;
+}
+
+.level-unclassified { border-color: var(--success-accent); color: var(--success-accent); }
+.level-confidential { border-color: var(--primary-accent); color: var(--primary-accent); }
+.level-secret { border-color: #ff8c00; color: #ff8c00; }
+.level-top-secret { border-color: var(--secondary-accent); color: var(--secondary-accent); }
+
+.mission-title h1 {
+  font-size: 24px;
+  font-weight: normal;
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.mission-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.meta-row {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.meta-label {
+  width: 140px;
+  opacity: 0.6;
+}
+
+.meta-value {
+  flex: 1;
+}
+
+.threat-level {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.level-low { color: var(--success-accent); }
+.level-moderate { color: var(--primary-accent); }
+.level-high { color: #ff8c00; }
+.level-critical { color: var(--secondary-accent); }
+
+/* Mission Sections */
+.mission-section {
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+  color: var(--primary-accent);
+}
+
+.mission-description {
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.mission-description p {
+  margin: 0 0 12px 0;
+}
+
+/* Objectives */
+.objectives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.objective-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.objective-number {
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid var(--primary-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--primary-accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.objective-text {
+  flex: 1;
+  line-height: 1.5;
+  padding-top: 2px;
+}
+
+.objective-edit {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.objective-input {
+  flex: 1;
+}
+
+.remove-objective {
+  background: transparent;
+  border: 1px solid var(--secondary-accent);
+  color: var(--secondary-accent);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.remove-objective:hover {
+  background: var(--secondary-accent);
+  color: var(--void-black);
+}
+
+.add-objective {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 8px 16px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.add-objective:hover {
+  border-color: var(--primary-accent);
+  color: var(--primary-accent);
+}
+
+/* Edit Controls */
+.edit-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--void-white);
+  padding: 8px 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+.title-input {
+  font-size: 24px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  width: 100%;
+}
+
+.edit-textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--void-white);
+  padding: 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  width: 100%;
+  resize: vertical;
+  min-height: 120px;
+  transition: all 0.2s ease;
+}
+
+.edit-textarea:focus {
+  outline: none;
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+.edit-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--void-white);
+  padding: 6px 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.edit-select:focus {
+  outline: none;
+  border-color: var(--primary-accent);
+}
+
+/* Footer */
+.mission-footer {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.mission-timestamp {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.timestamp-label {
+  margin-right: 8px;
+}
+
+/* Admin Controls */
+.admin-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.admin-name {
+  font-size: 12px;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-button {
+  background: transparent;
+  border: 1px solid var(--void-white);
+  color: var(--void-white);
+  padding: 8px 16px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-button:hover:not(:disabled) {
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.login-button:hover {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: var(--primary-accent);
+  color: var(--primary-accent);
+}
+
+.edit-button:hover {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: var(--primary-accent);
+  color: var(--primary-accent);
+}
+
+.save-button {
+  border-color: var(--success-accent);
+  color: var(--success-accent);
+}
+
+.save-button:hover:not(:disabled) {
+  background: rgba(0, 255, 65, 0.1);
+}
+
+.save-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancel-button:hover {
+  background: rgba(255, 0, 128, 0.1);
+  border-color: var(--secondary-accent);
+  color: var(--secondary-accent);
+}
+
+.logout-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Error Toast */
+.mission-error-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 0, 128, 0.9);
+  color: var(--void-white);
+  padding: 12px 16px;
+  border: 1px solid var(--secondary-accent);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1000;
+}
+
+.mission-error-toast button {
+  background: none;
+  border: none;
+  color: var(--void-white);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.4; }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .mission-briefing {
+    padding: 16px;
+    font-size: 13px;
+  }
+
+  .mission-title h1 {
+    font-size: 20px;
+    letter-spacing: 1px;
+  }
+
+  .mission-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .admin-panel {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .admin-actions,
+  .edit-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .admin-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .meta-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .meta-label {
+    width: auto;
+    font-size: 11px;
+  }
+
+  .objective-item {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .objective-edit {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .remove-objective {
+    align-self: flex-end;
+  }
+}
